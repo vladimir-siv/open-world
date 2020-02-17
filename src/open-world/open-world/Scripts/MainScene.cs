@@ -57,8 +57,6 @@ namespace open_world.Scripts
 		private vec3 LightSourceColor { get; } = new vec3(1.0f, 1.0f, 1.0f);
 		private float LightSourcePower { get; } = 60.0f; // Watts for instance
 
-		private Camera MainCamera { get; } = new Camera(new vec3(-30.0f, 20.0f, 30.0f));
-
 		private vec2 ShapeRotationAngle { get; set; } = new vec2(0.0f, 0.0f);
 		private float Scroll { get; set; } = 0.0f;
 		private vec2 LastMousePosition { get; set; } = new vec2(Cursor.Position.X, Cursor.Position.Y);
@@ -121,6 +119,7 @@ namespace open_world.Scripts
 
 		public override void Init(OpenGLControl control, float width, float height)
 		{
+			MainCamera = new Camera(new vec3(-30.0f, 20.0f, 30.0f));
 			control.MouseWheel += (s, e) => Scroll += e.Delta / System.Windows.Forms.SystemInformation.MouseWheelScrollDelta;
 			LoadShader(control.OpenGL);
 			LoadSceneData(control.OpenGL);
@@ -176,11 +175,10 @@ namespace open_world.Scripts
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 			gl.Viewport(0, 0, control.Width, control.Height);
 
+			MainCamera.SetAspectRatio((float)control.Width / (float)control.Height);
+
 			Update(control);
 			LateUpdate(control);
-
-			var project = glm.perspective(+60.0f * (float)Math.PI / 180.0f, (float)control.Width / (float)control.Height, +0.1f, +100.0f);
-			var view = MainCamera.WorldToView;
 
 			// Render Model
 			gl.BindVertexArray(ArrayIds[0]);
@@ -196,8 +194,8 @@ namespace open_world.Scripts
 					ShapeRotationAngle.x * (float)Math.PI / 180.0f, new vec3(+1.0f, +0.0f, +0.0f)
 			);
 			
-			gl.UniformMatrix4(ProjectMatrixLocation, 1, false, project.to_array());
-			gl.UniformMatrix4(ViewMatrixLocation, 1, false, view.to_array());
+			gl.UniformMatrix4(ProjectMatrixLocation, 1, false, MainCamera.ViewToProject.to_array());
+			gl.UniformMatrix4(ViewMatrixLocation, 1, false, MainCamera.WorldToView.to_array());
 			gl.UniformMatrix4(TranslateMatrixLocation, 1, false, translate.to_array());
 			gl.UniformMatrix4(ScaleMatrixLocation, 1, false, scale.to_array());
 			gl.UniformMatrix4(RotateMatrixLocation, 1, false, rotate.to_array());

@@ -10,6 +10,8 @@ namespace XEngine.Core
 
 		public string SceneId { get; internal set; } = string.Empty;
 
+		public Camera MainCamera { get; protected set; }
+
 		public virtual void Init(OpenGLControl control, float width, float height) { }
 		public virtual void Draw(OpenGLControl control) { }
 		public virtual void Exit(OpenGLControl control) { }

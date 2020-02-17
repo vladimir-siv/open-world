@@ -82,8 +82,11 @@
     <Compile Include="Scripts\Controller.cs" />
     <Compile Include="Scripts\MainScene.cs" />
     <Compile Include="XEngine\Core\Camera.cs" />
+    <Compile Include="XEngine\Core\GameObject.cs" />
+    <Compile Include="XEngine\Core\Mesh.cs" />
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
+    <Compile Include="XEngine\Core\Transform.cs" />
     <Compile Include="XEngine\Data\vertex.cs" />
     <Compile Include="XEngine\Extensions\Numbers.cs" />
     <Compile Include="XEngine\Host.cs" />

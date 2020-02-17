@@ -80,15 +80,17 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\Controller.cs" />
-    <Compile Include="Scripts\TestScene.cs" />
+    <Compile Include="Scripts\MainScene.cs" />
     <Compile Include="XEngine\Core\Camera.cs" />
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
     <Compile Include="XEngine\Data\vertex.cs" />
+    <Compile Include="XEngine\Extensions\Numbers.cs" />
     <Compile Include="XEngine\Host.cs" />
     <Compile Include="XEngine\ManifestResourceManager.cs" />
     <Compile Include="XEngine\Models\Model.cs" />
     <Compile Include="XEngine\Shaders\ShaderProgram.cs" />
+    <Compile Include="XEngine\Data\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
     <Compile Include="XEngine\Shapes\GeometricShape.cs" />
     <Compile Include="XEngine\Shapes\ShapeData.cs" />
@@ -127,9 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NT.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="XEngine\Shapes\cube.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

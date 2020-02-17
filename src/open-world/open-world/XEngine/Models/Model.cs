@@ -17,7 +17,7 @@ namespace XEngine.Models
 		public static async Task<GeometricShape> Load(string model)
 		{
 			var positions = new List<vec3>(1024);
-			var color = new vec3(232 / 255f, 176 / 255f, 141 / 255f);
+			var color = new vec3(0.0f, 0.0f, 0.0f);
 			var normals = new List<vec3>(1024);
 
 			var vertices = new List<vertex>(1024);
@@ -64,7 +64,7 @@ namespace XEngine.Models
 									{
 										case ' ': positions.Add(vector); break;
 										case 'n': normals.Add(vector); break;
-										case 't': /* DoSomething(vector); */ break;
+										case 't': /* uvs.Add(vector.xy); */ break;
 										default: break;
 									}
 								}

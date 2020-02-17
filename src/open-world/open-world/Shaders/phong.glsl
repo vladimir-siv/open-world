@@ -1,7 +1,7 @@
 ﻿Phong Shader with Ambiental, Diffuse and Specular light components.
 
 #pragma shader vertex
-	
+
 	#version 430 core
 	
 	uniform mat4 project;
@@ -9,14 +9,13 @@
 	uniform mat4 translate;
 	uniform mat4 scale;
 	uniform mat4 rotate;
-
+	
 	in layout(location = 0) vec4 in_position;
-	in layout(location = 1) vec4 in_color;
-	in layout(location = 2) vec4 in_normal;
-
+	in layout(location = 1) vec4 in_normal;
+	
 	out vec3 position;
 	out vec3 normal;
-
+	
 	void main(void)
 	{
 		vec4 world_position = translate * scale * rotate * in_position;
@@ -24,7 +23,7 @@
 		
 		position = world_position.xyz;
 		normal = world_normal.xyz;
-
+		
 		gl_Position = project * view * world_position;
 	}
 
@@ -36,18 +35,18 @@
 	
 	uniform vec3 ambient_light_color;
 	uniform float ambient_light_power;
-
+	
 	uniform vec3 light_source_position;
 	uniform vec3 light_source_color;
 	uniform float light_source_power;
-
+	
 	uniform vec3 eye_position;
-
+	
 	in vec3 position;	// fragment position
 	in vec3 normal;		// fragment normal
-
+	
 	out vec4 out_color;
-
+	
 	void main(void)
 	{
 		vec3 normal_vector = normalize(normal);
@@ -61,6 +60,6 @@
 		
 		float diffuse = clamp(dot(light_vector, normal_vector), 0.0f, 1.0f); // cos(angle)
 		float specular = pow(clamp(dot(reflect(-light_vector, normal_vector), eye_vector), 0.0f, 1.0f), 21.0f); // cos(angle)^21
-
+		
 		out_color = vec4(material_color * (ambient + light_source * (diffuse + specular) / attenuation), 1.0f);
 	}

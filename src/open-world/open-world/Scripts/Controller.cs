@@ -6,7 +6,7 @@ namespace open_world.Scripts
 	[XEngineActivation(nameof(Init))]
 	public static class Controller
 	{
-		private static readonly string MainScene = "OpenWorld.TestScene";
+		private static readonly string MainScene = "OpenWorld.MainScene";
 
 		private static void Init()
 		{

@@ -3,49 +3,50 @@
 namespace XEngine.Shapes
 {
 	using XEngine.Data;
+	using XEngine.Extensions;
 
 	public struct ShapeData
 	{
 		public vertex[] Vertices { get; private set; }
 		public ushort[] Indices { get; private set; }
 
-		public float[] Data
+		public float[] SerializeData(VertexAttribute attributes)
 		{
-			get
+			if (attributes == VertexAttribute.NONE) throw new ArgumentException("Cannot serialize shape data with no selected attributes.");
+
+			var attribcount = Math.Min(((uint)attributes).BitCount(), vertex.AttribCount);
+			var vertexsize = vertex.AttribSize * attribcount;
+			var dataLength = Vertices.Length * vertexsize;
+			var data = new float[dataLength];
+
+			for (int i = 0; i < Vertices.Length; ++i)
 			{
-				var dataLength = Indices.Length * vertex.Size;
+				var vertex = Vertices[i];
+				var c = 0;
 
-				var data = new float[dataLength];
-
-				for (int i = 0; i < Indices.Length; ++i)
+				if (attributes.HasFlag(VertexAttribute.POSITION))
 				{
-					var index = Indices[i];
-					var vertex = Vertices[index];
-
-					for (int c = 0; c < vertex.Size; ++c)
-					{
-						float value = 0.0f;
-
-						switch (c)
-						{
-							case 0: value = vertex.position.x; break;
-							case 1: value = vertex.position.y; break;
-							case 2: value = vertex.position.z; break;
-							case 3: value = vertex.color.x; break;
-							case 4: value = vertex.color.y; break;
-							case 5: value = vertex.color.z; break;
-							case 6: value = vertex.normal.x; break;
-							case 7: value = vertex.normal.y; break;
-							case 8: value = vertex.normal.z; break;
-							default: value = 0.0f; break;
-						}
-
-						data[index * vertex.Size + c] = value;
-					}
+					data[i * vertexsize + c++] = vertex.position.x;
+					data[i * vertexsize + c++] = vertex.position.y;
+					data[i * vertexsize + c++] = vertex.position.z;
 				}
 
-				return data;
+				if (attributes.HasFlag(VertexAttribute.COLOR))
+				{
+					data[i * vertexsize + c++] = vertex.color.x;
+					data[i * vertexsize + c++] = vertex.color.y;
+					data[i * vertexsize + c++] = vertex.color.z;
+				}
+
+				if (attributes.HasFlag(VertexAttribute.NORMAL))
+				{
+					data[i * vertexsize + c++] = vertex.normal.x;
+					data[i * vertexsize + c++] = vertex.normal.y;
+					data[i * vertexsize + c++] = vertex.normal.z;
+				}
 			}
+
+			return data;
 		}
 
 		public ShapeData(vertex[] vertices, ushort[] indices = null)

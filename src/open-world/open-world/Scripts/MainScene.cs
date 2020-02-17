@@ -6,6 +6,7 @@ using SharpGL;
 
 using XEngine;
 using XEngine.Core;
+using XEngine.Data;
 using XEngine.Shapes;
 using XEngine.Models;
 using XEngine.Shaders;
@@ -16,8 +17,8 @@ using MouseButtons = System.Windows.Forms.MouseButtons;
 
 namespace open_world.Scripts
 {
-	[GenerateScene("OpenWorld.TestScene")]
-	public class TestScene : Scene
+	[GenerateScene("OpenWorld.MainScene")]
+	public class MainScene : Scene
 	{
 		#region Shader Program Properties
 
@@ -92,7 +93,8 @@ namespace open_world.Scripts
 			var modelLoader = Model.Load("male_head");
 			modelLoader.Wait();
 			Shape = modelLoader.Result;
-
+			Shape.Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL;
+			
 			gl.Enable(OpenGL.GL_DEPTH_TEST);
 			gl.Enable(OpenGL.GL_CULL_FACE);
 
@@ -105,18 +107,16 @@ namespace open_world.Scripts
 			gl.BindVertexArray(ArrayIds[0]);
 			gl.GenBuffers(ModelBufferIds.Length, ModelBufferIds);
 
-			gl.BindBuffer(OpenGL.GL_ELEMENT_ARRAY_BUFFER, ModelBufferIds[0]);
-			gl.BufferData(OpenGL.GL_ELEMENT_ARRAY_BUFFER, Shape.Indices, OpenGL.GL_STATIC_DRAW);
-
-			gl.BindBuffer(OpenGL.GL_ARRAY_BUFFER, ModelBufferIds[1]);
+			gl.BindBuffer(OpenGL.GL_ARRAY_BUFFER, ModelBufferIds[0]);
 			gl.BufferData(OpenGL.GL_ARRAY_BUFFER, Shape.Data, OpenGL.GL_STATIC_DRAW);
+
+			gl.BindBuffer(OpenGL.GL_ELEMENT_ARRAY_BUFFER, ModelBufferIds[1]);
+			gl.BufferData(OpenGL.GL_ELEMENT_ARRAY_BUFFER, Shape.Indices, OpenGL.GL_STATIC_DRAW);
 
 			gl.EnableVertexAttribArray(0);
 			gl.EnableVertexAttribArray(1);
-			gl.EnableVertexAttribArray(2);
 			gl.VertexAttribPointer(0, Shape.GetAttribSize(0), Shape.GetAttribType(0), Shape.ShouldAttribNormalize(0), Shape.GetAttribStride(0), Shape.GetAttribOffset(0));
 			gl.VertexAttribPointer(1, Shape.GetAttribSize(1), Shape.GetAttribType(1), Shape.ShouldAttribNormalize(1), Shape.GetAttribStride(1), Shape.GetAttribOffset(1));
-			gl.VertexAttribPointer(2, Shape.GetAttribSize(2), Shape.GetAttribType(2), Shape.ShouldAttribNormalize(2), Shape.GetAttribStride(2), Shape.GetAttribOffset(2));
 		}
 
 		public override void Init(OpenGLControl control, float width, float height)

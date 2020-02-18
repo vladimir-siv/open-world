@@ -7,28 +7,49 @@ namespace XEngine.Core
 		internal static Dictionary<string, Scene> SceneCache = new Dictionary<string, Scene>();
 		public static Scene Resolve(string sceneId) => SceneCache[sceneId];
 
-		private bool Initialized = false;
-
 		public string SceneId { get; internal set; } = string.Empty;
 		public Camera MainCamera { get; protected set; } = new Camera();
-		public LinkedList<GameObject> GameObjects { get; private set; } = new LinkedList<GameObject>();
+
+		private bool Initialized = false;
+		private LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
+
+		public void Add(GameObject gameObject)
+		{
+			GameObjects.AddLast(gameObject);
+			
+			if (Initialized)
+			{
+				gameObject.Awake();
+				gameObject.Start();
+			}
+		}
+		public void Clear()
+		{
+			foreach (var gameObject in GameObjects) gameObject.Dispose();
+			GameObjects.Clear();
+		}
 
 		internal void _Init()
 		{
 			if (Initialized) return;
 			Init();
+			foreach (var gameObject in GameObjects) gameObject.Awake();
+			foreach (var gameObject in GameObjects) gameObject.Start();
 			Initialized = true;
 		}
 		internal void _Draw()
 		{
-			if (Initialized) Draw();
+			if (!Initialized) return;
+			MainCamera.SetAspectRatio((float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height);
+			foreach (var gameObject in GameObjects) gameObject.Update();
+			foreach (var gameObject in GameObjects) gameObject.Late();
+			Draw();
 		}
 		internal void _Exit()
 		{
 			if (!Initialized) return;
 			Exit();
-			foreach (var gameObject in GameObjects) gameObject.Dispose();
-			GameObjects.Clear();
+			Clear();
 			Initialized = false;
 		}
 

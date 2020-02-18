@@ -79,6 +79,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\Behaviours\UserController.cs" />
     <Compile Include="Scripts\Controller.cs" />
     <Compile Include="Scripts\MainScene.cs" />
     <Compile Include="XEngine\Core\Camera.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="XEngine\Interaction\Input.cs" />
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
+    <Compile Include="XEngine\Scripting\XBehaviour.cs" />
     <Compile Include="XEngine\Shaders\Color.cs" />
     <Compile Include="XEngine\Core\GameObject.cs" />
     <Compile Include="XEngine\Core\Mesh.cs" />

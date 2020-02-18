@@ -5,14 +5,16 @@ using XEngine;
 using XEngine.Core;
 using XEngine.Data;
 using XEngine.Shading;
-using XEngine.Interaction;
 
 namespace open_world.Scripts
 {
+	using Behaviours;
+
 	[GenerateScene("OpenWorld.MainScene")]
 	public class MainScene : Scene
 	{
 		private GameObject MaleHead;
+		private GameObject UserController;
 
 		protected override void Init()
 		{
@@ -35,40 +37,9 @@ namespace open_world.Scripts
 			MaleHead.mesh.material.Set("light_source_position", new vec3(-15.0f, 40.0f, 30.0f));
 			MaleHead.mesh.material.Set("light_source_color", new vec3(1.0f, 1.0f, 1.0f));
 			MaleHead.mesh.material.Set("light_source_power", 60.0f);
-		}
 
-		private void Update()
-		{
-			if (!Host.CurrentApplicationIsActive) return;
-
-			if (Input.IsCursorInsideRenderingArea)
-			{
-				var delta = Input.MouseDelta;
-
-				// Rotate camera
-				if (Input.MouseButtonsPressed(MouseButtons.Middle))
-				{
-					MainCamera.Rotate(delta);
-				}
-
-				// Rotate shape
-				if (Input.MouseButtonsPressed(MouseButtons.Left))
-				{
-					MaleHead.transform.rotation += new vec3(delta.y, delta.x, 0.0f);
-				}
-			}
-
-			// Move camera
-			var moveDelta = new vec3(0.0f, 0.0f, -Input.ScrollDelta);
-			
-			if (Input.IsKeyDown(Key.W)) moveDelta.z -= 1.0f;
-			if (Input.IsKeyDown(Key.S)) moveDelta.z += 1.0f;
-			if (Input.IsKeyDown(Key.A)) moveDelta.x -= 1.0f;
-			if (Input.IsKeyDown(Key.D)) moveDelta.x += 1.0f;
-			if (Input.MouseButtonsPressed(MouseButtons.XButton1)) moveDelta.y -= 1.0f;
-			if (Input.MouseButtonsPressed(MouseButtons.XButton2)) moveDelta.y += 1.0f;
-
-			MainCamera.Move(moveDelta);
+			UserController = new GameObject("UserController");
+			UserController.AttachBehavior(new UserController { MaleHead = MaleHead });
 		}
 
 		protected override void Draw()
@@ -76,12 +47,11 @@ namespace open_world.Scripts
 			var gl = XEngineContext.Graphics;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
-			MainCamera.SetAspectRatio((float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height);
-
-			Update();
 			
-			MaleHead.SyncTransform();
+			MaleHead.Sync();
 			MaleHead.Draw();
+			UserController.Sync();
+			UserController.Draw();
 		}
 	}
 }

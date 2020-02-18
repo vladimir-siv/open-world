@@ -15,12 +15,14 @@ namespace open_world
 
 		private void OpenGLControl_OpenGLInitialized(object sender, EventArgs e)
 		{
+			XEngine.Interaction.Input.Init(OpenGLControl); // move this from here later
 			SceneManager.CurrentScene._Init(OpenGLControl, Width, Height);
 		}
 
 		private void OpenGLControl_OpenGLDraw(object sender, RenderEventArgs args)
 		{
 			SceneManager.CurrentScene._Draw(OpenGLControl);
+			XEngine.Interaction.Input.Update(); // move this from here later
 		}
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)

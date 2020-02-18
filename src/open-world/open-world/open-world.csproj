@@ -83,6 +83,9 @@
     <Compile Include="Scripts\MainScene.cs" />
     <Compile Include="XEngine\Core\Camera.cs" />
     <Compile Include="XEngine\Extensions\Serialization.cs" />
+    <Compile Include="XEngine\Interaction\Input.cs" />
+    <Compile Include="XEngine\Interaction\Key.cs" />
+    <Compile Include="XEngine\Interaction\MouseButtons.cs" />
     <Compile Include="XEngine\Shaders\Color.cs" />
     <Compile Include="XEngine\Core\GameObject.cs" />
     <Compile Include="XEngine\Core\Mesh.cs" />

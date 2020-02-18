@@ -59,7 +59,6 @@ namespace XEngine.Shading
 		internal void Prepare()
 		{
 			if (shader == null) return;
-			shader.BeginInit();
 			foreach (var v in ParamsInt) shader.Set(v.Key, v.Value);
 			foreach (var v in ParamsUInt) shader.Set(v.Key, v.Value);
 			foreach (var v in ParamsFloat) shader.Set(v.Key, v.Value);
@@ -82,7 +81,6 @@ namespace XEngine.Shading
 			foreach (var v in ParamsMat4s) shader.Set(v.Key, v.Value.Item1, v.Value.Item2);
 			foreach (var v in Params3f) shader.Set(v.Key, v.Value.Item1, v.Value.Item2, v.Value.Item2);
 			foreach (var v in Params4f) shader.Set(v.Key, v.Value.Item1, v.Value.Item2, v.Value.Item3);
-			shader.EndInit();
 		}
 	}
 }

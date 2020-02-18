@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using XEngine;
 
 namespace open_world
 {
@@ -10,7 +9,6 @@ namespace open_world
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			XEngineActivator.InitEngine();
 			Application.Run(new MainForm());
 		}
 	}

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
-
 using SharpGL;
-using XEngine.Core;
+using XEngine;
 
 namespace open_world
 {
@@ -15,19 +14,17 @@ namespace open_world
 
 		private void OpenGLControl_OpenGLInitialized(object sender, EventArgs e)
 		{
-			XEngine.Interaction.Input.Init(OpenGLControl); // move this from here later
-			SceneManager.CurrentScene._Init(OpenGLControl, Width, Height);
+			XEngineActivator.InitEngine(OpenGLControl);
 		}
 
 		private void OpenGLControl_OpenGLDraw(object sender, RenderEventArgs args)
 		{
-			SceneManager.CurrentScene._Draw(OpenGLControl);
-			XEngine.Interaction.Input.Update(); // move this from here later
+			XEngineContext.Draw();
 		}
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			SceneManager.CurrentScene._Exit(OpenGLControl);
+			XEngineActivator.Shutdown();
 		}
 	}
 }

@@ -16,11 +16,9 @@ namespace open_world.Scripts
 
 		protected override void Init()
 		{
-			var gl = Graphics;
-
+			var gl = XEngineContext.Graphics;
 			gl.Enable(OpenGL.GL_DEPTH_TEST);
 			gl.Enable(OpenGL.GL_CULL_FACE);
-
 			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 
@@ -75,10 +73,10 @@ namespace open_world.Scripts
 
 		protected override void Draw()
 		{
-			var gl = Graphics;
+			var gl = XEngineContext.Graphics;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
-			gl.Viewport(0, 0, GraphicsControl.Width, GraphicsControl.Height);
-			MainCamera.SetAspectRatio((float)GraphicsControl.Width / (float)GraphicsControl.Height);
+			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
+			MainCamera.SetAspectRatio((float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height);
 
 			Update();
 			

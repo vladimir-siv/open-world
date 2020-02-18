@@ -105,7 +105,7 @@
     <Compile Include="XEngine\Shapes\ShapeData.cs" />
     <Compile Include="XEngine\Shapes\Square.cs" />
     <Compile Include="XEngine\Shapes\Triangle.cs" />
-    <Compile Include="XEngine\XEngineActivator.cs" />
+    <Compile Include="XEngine\XEngine.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -60,7 +60,7 @@ namespace XEngine.Core
 			if (ArrayIds[0] != 0u) throw new InvalidOperationException("Cannot reinitialize mesh while the last one was not disposed.");
 			if (shape == null) throw new InvalidOperationException("Shape not provided.");
 
-			var gl = SceneManager.CurrentScene.Graphics;
+			var gl = XEngineContext.Graphics;
 			gl.GenVertexArrays(ArrayIds.Length, ArrayIds);
 			
 			gl.BindVertexArray(ArrayIds[0]);
@@ -83,7 +83,7 @@ namespace XEngine.Core
 		{
 			if (ArrayIds[0] == 0u) throw new InvalidOperationException("Already disposed.");
 
-			var gl = SceneManager.CurrentScene.Graphics;
+			var gl = XEngineContext.Graphics;
 			gl.DeleteBuffers(BufferIds.Length, BufferIds);
 			gl.DeleteVertexArrays(ArrayIds.Length, ArrayIds);
 
@@ -95,7 +95,7 @@ namespace XEngine.Core
 			if (shape == null || material == null || material.shader == null || VertexArrayId == 0) return;
 			var camera = SceneManager.CurrentScene.MainCamera;
 			material.shader.Use();
-			var gl = SceneManager.CurrentScene.Graphics;
+			var gl = XEngineContext.Graphics;
 			gl.BindVertexArray(VertexArrayId);
 			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProject.to_array());
 			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToView.to_array());

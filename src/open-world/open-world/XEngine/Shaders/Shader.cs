@@ -6,10 +6,9 @@ using GlmNet;
 
 namespace XEngine.Shading
 {
-	using XEngine.Core;
 	using XEngine.Extensions;
 
-	public sealed class Shader
+	public sealed class Shader : IDisposable
 	{
 		private static (string, string) Preprocess(string code)
 		{
@@ -50,17 +49,12 @@ namespace XEngine.Shading
 			var vertex_shader = part1type == "vertex" ? part1 : part2;
 			var fragment_shader = part1type == "fragment" ? part1 : part2;
 
-			//var use_project		= vertex_shader.Contains("uniform mat4 project;")		||	fragment_shader.Contains("uniform mat4 project;");
-			//var use_view		= vertex_shader.Contains("uniform mat4 view;")			||	fragment_shader.Contains("uniform mat4 view;");
-			//var use_translate	= vertex_shader.Contains("uniform mat4 translate;")		||	fragment_shader.Contains("uniform mat4 translate;");
-			//var use_scale		= vertex_shader.Contains("uniform mat4 scale;")			||	fragment_shader.Contains("uniform mat4 scale;");
-			//var use_rotate		= vertex_shader.Contains("uniform mat4 rotate;")		||	fragment_shader.Contains("uniform mat4 rotate;");
-			//var use_eye			= vertex_shader.Contains("uniform vec3 eye_position;")	||	fragment_shader.Contains("uniform vec3 eye_position;");
-
 			return (vertex_shader, fragment_shader);
 		}
-		private static uint Build(OpenGL gl, string shaderName)
+		private static uint Build(string shaderName)
 		{
+			var gl = XEngineContext.Graphics;
+
 			string GetCompileError(uint shaderId)
 			{
 				var compileStatus = new int[1];
@@ -124,18 +118,16 @@ namespace XEngine.Shading
 
 		public static Shader Find(string shaderName)
 		{
-			var shaders = SceneManager.CurrentScene.Shaders;
+			var shaders = XEngineContext.Shaders;
 			var found = shaders.TryGetValue(shaderName, out var shader);
 			if (found) return shader;
-			var id = Build(SceneManager.CurrentScene.Graphics, shaderName);
-			shader = new Shader(SceneManager.CurrentScene.GraphicsControl, id, shaderName);
+			var id = Build(shaderName);
+			shader = new Shader(id, shaderName);
 			shaders.Add(shaderName, shader);
 			return shader;
 		}
 
 		public static uint CurrentShaderId = 0;
-
-		private OpenGLControl Context { get; set; }
 
 		public uint Id { get; private set; }
 		public string Name { get; private set; }
@@ -149,13 +141,12 @@ namespace XEngine.Shading
 
 		private readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
 
-		private Shader(OpenGLControl context, uint id, string name)
+		private Shader(uint id, string name)
 		{
-			Context = context;
 			Id = id;
 			Name = name;
 
-			var gl = SceneManager.CurrentScene.Graphics;
+			var gl = XEngineContext.Graphics;
 			Project = gl.GetUniformLocation(id, "project");
 			View = gl.GetUniformLocation(id, "view");
 			Translate = gl.GetUniformLocation(id, "translate");
@@ -164,19 +155,32 @@ namespace XEngine.Shading
 			Eye = gl.GetUniformLocation(id, "eye_position");
 		}
 
+		internal void Clean()
+		{
+			var gl = XEngineContext.Graphics;
+			if (CurrentShaderId == Id) gl.UseProgram(0);
+			gl.DeleteProgram(Id);
+			Id = 0;
+		}
+		public void Dispose()
+		{
+			Clean();
+			XEngineContext.Shaders.Remove(Name);
+		}
+
 		public void Use()
 		{
-			if (Context != SceneManager.CurrentScene.GraphicsControl) throw new InvalidOperationException("Scene context was changed, cannot use this shader unless the creating context is restored.");
+			if (Id == 0) throw new InvalidOperationException("Shader object was disposed.");
 			if (Id == CurrentShaderId) return;
-			var gl = SceneManager.CurrentScene.Graphics;
+			var gl = XEngineContext.Graphics;
 			gl.UseProgram(Id);
 			CurrentShaderId = Id;
 		}
 
-		private int GetLocation(string name)
+		public int GetLocation(string name)
 		{
-			if (Context != SceneManager.CurrentScene.GraphicsControl) throw new InvalidOperationException("Scene context was changed, cannot use this shader unless the creating context is restored.");
-			var gl = SceneManager.CurrentScene.Graphics;
+			if (Id == 0) throw new InvalidOperationException("Shader object was disposed.");
+			var gl = XEngineContext.Graphics;
 			var found = Uniforms.TryGetValue(name, out var location);
 			if (found) return location;
 			location = gl.GetUniformLocation(Id, name);
@@ -185,34 +189,27 @@ namespace XEngine.Shading
 			return location;
 		}
 
-		#region Uniforms
-
-		private OpenGL gl = null;
-		public void BeginInit() { gl = SceneManager.CurrentScene.Graphics; }
-		public void Set(string name, int value) => gl.Uniform1(GetLocation(name), value);
-		public void Set(string name, uint value) => gl.Uniform1(GetLocation(name), value);
-		public void Set(string name, float value) => gl.Uniform1(GetLocation(name), value);
-		public void Set(string name, Color value) => gl.Uniform4(GetLocation(name), value.r, value.g, value.b, value.a);
-		public void Set(string name, vec2 value) => gl.Uniform2(GetLocation(name), value.x, value.y);
-		public void Set(string name, vec3 value) => gl.Uniform3(GetLocation(name), value.x, value.y, value.z);
-		public void Set(string name, vec4 value) => gl.Uniform4(GetLocation(name), value.x, value.y, value.z, value.w);
-		public void Set(string name, mat2 value, bool transpose = false) => gl.UniformMatrix2(GetLocation(name), 1, transpose, value.to_array());
-		public void Set(string name, mat3 value, bool transpose = false) => gl.UniformMatrix3(GetLocation(name), 1, transpose, value.to_array());
-		public void Set(string name, mat4 value, bool transpose = false) => gl.UniformMatrix4(GetLocation(name), 1, transpose, value.to_array());
-		public void Set(string name, int[] values) => gl.Uniform1(GetLocation(name), values.Length, values);
-		public void Set(string name, uint[] values) => gl.Uniform1(GetLocation(name), values.Length, values);
-		public void Set(string name, float[] values) => gl.Uniform1(GetLocation(name), values.Length, values);
-		public void Set(string name, Color[] values, bool includeAlpha = true) => gl.Uniform4(GetLocation(name), values.Length, values.Serialize(includeAlpha));
-		public void Set(string name, vec2[] values) => gl.Uniform2(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, vec3[] values) => gl.Uniform3(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, vec4[] values) => gl.Uniform4(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, mat2[] values, bool transpose = false) => gl.UniformMatrix2(GetLocation(name), values.Length, transpose, values.Serialize());
-		public void Set(string name, mat3[] values, bool transpose = false) => gl.UniformMatrix3(GetLocation(name), values.Length, transpose, values.Serialize());
-		public void Set(string name, mat4[] values, bool transpose = false) => gl.UniformMatrix4(GetLocation(name), values.Length, transpose, values.Serialize());
-		public void Set(string name, float x, float y, float z) => gl.Uniform3(GetLocation(name), x, y, z);
-		public void Set(string name, float x, float y, float z, float w) => gl.Uniform4(GetLocation(name), x, y, z, w);
-		public void EndInit() { gl = null; }
-
-		#endregion
+		public void Set(string name, int value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		public void Set(string name, uint value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		public void Set(string name, float value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		public void Set(string name, Color value) => XEngineContext.Graphics.Uniform4(GetLocation(name), value.r, value.g, value.b, value.a);
+		public void Set(string name, vec2 value) => XEngineContext.Graphics.Uniform2(GetLocation(name), value.x, value.y);
+		public void Set(string name, vec3 value) => XEngineContext.Graphics.Uniform3(GetLocation(name), value.x, value.y, value.z);
+		public void Set(string name, vec4 value) => XEngineContext.Graphics.Uniform4(GetLocation(name), value.x, value.y, value.z, value.w);
+		public void Set(string name, mat2 value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), 1, transpose, value.to_array());
+		public void Set(string name, mat3 value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), 1, transpose, value.to_array());
+		public void Set(string name, mat4 value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), 1, transpose, value.to_array());
+		public void Set(string name, int[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		public void Set(string name, uint[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		public void Set(string name, float[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		public void Set(string name, Color[] values, bool includeAlpha = true) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.Serialize(includeAlpha));
+		public void Set(string name, vec2[] values) => XEngineContext.Graphics.Uniform2(GetLocation(name), values.Length, values.Serialize());
+		public void Set(string name, vec3[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length, values.Serialize());
+		public void Set(string name, vec4[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.Serialize());
+		public void Set(string name, mat2[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), values.Length, transpose, values.Serialize());
+		public void Set(string name, mat3[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), values.Length, transpose, values.Serialize());
+		public void Set(string name, mat4[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), values.Length, transpose, values.Serialize());
+		public void Set(string name, float x, float y, float z) => XEngineContext.Graphics.Uniform3(GetLocation(name), x, y, z);
+		public void Set(string name, float x, float y, float z, float w) => XEngineContext.Graphics.Uniform4(GetLocation(name), x, y, z, w);
 	}
 }

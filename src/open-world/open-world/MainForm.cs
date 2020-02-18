@@ -15,17 +15,17 @@ namespace open_world
 
 		private void OpenGLControl_OpenGLInitialized(object sender, EventArgs e)
 		{
-			SceneManager.CurrentScene.Init((OpenGLControl)sender, Width, Height);
+			SceneManager.CurrentScene._Init(OpenGLControl, Width, Height);
 		}
 
-		private void OpenGLControl_OpenGLDraw(object sender, SharpGL.RenderEventArgs args)
+		private void OpenGLControl_OpenGLDraw(object sender, RenderEventArgs args)
 		{
-			SceneManager.CurrentScene.Draw((OpenGLControl)sender);
+			SceneManager.CurrentScene._Draw(OpenGLControl);
 		}
 
 		private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			SceneManager.CurrentScene.Exit(OpenGLControl);
+			SceneManager.CurrentScene._Exit(OpenGLControl);
 		}
 	}
 }

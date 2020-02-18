@@ -22,12 +22,9 @@ namespace XEngine.Core
 		public mat4 WorldToView => glm.lookAt(Position, Position + ViewDirection, IdentY);
 		public mat4 ViewToProject { get; private set; }
 
-		public Camera() : this(new vec3(0.0f, 0.0f, 0.0f)) { }
-		public Camera(vec3 initialPosition)
+		public Camera()
 		{
 			SetProjection(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
-			Position = initialPosition;
-			LookAt(new vec3(0.0f, 0.0f, 0.0f));
 		}
 
 		public void SetFieldOfView(float fov) => SetProjection(fov, AspectRatio, NearClipPlane, FarClipPlane);

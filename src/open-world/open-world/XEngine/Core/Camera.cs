@@ -7,7 +7,7 @@ namespace XEngine.Core
 
 	public sealed class Camera
 	{
-		public GameObject Following { get; private set; } = null;
+		public GameObject Following { get; set; } = null;
 
 		public float FieldOfView { get; private set; } = 60.0f;
 		public float AspectRatio { get; private set; } = 1.0f;
@@ -23,7 +23,7 @@ namespace XEngine.Core
 		public vec3 LocalRotation { get; set; } = vector3.zero;
 		public vec3 Rotation { get; private set; } = vector3.zero;
 
-		public mat4 WorldToView => glm.lookAt(Position, Position + ViewDirection, FlyDirection);
+		public mat4 WorldToView { get; private set; }
 		public mat4 ViewToProject { get; private set; }
 
 		public float[] WorldToViewData { get; private set; } = new float[16];
@@ -79,38 +79,23 @@ namespace XEngine.Core
 			}
 		}
 
-		public void Follow(GameObject gameObject) => Follow(gameObject, LocalPosition, LocalRotation);
-		public void Follow(GameObject gameObject, vec3 localPosition, vec3 localRotation)
-		{
-			if (Following == gameObject) return;
-			Following = gameObject;
-			LocalPosition = localPosition;
-			LocalRotation = localRotation;
-		}
-
 		public void Adjust()
 		{
-			var transform4d = mat4.identity();
+			var transform = Following?.transform_model.clone() ?? mat4.identity();
+			var rotate = Following?.rotate_model.clone() ?? mat4.identity();
 
-			if (Following != null)
-			{
-				transform4d = glm.translate(transform4d, Following.transform.position);
-				transform4d = quaternion.euler(transform4d, Following.transform.rotation);
-			}
+			transform = glm.translate(transform, LocalPosition);
+			transform = quaternion.euler(transform, LocalRotation);
+			rotate = quaternion.euler(rotate, LocalRotation);
 
-			transform4d = glm.translate(transform4d, LocalPosition);
-			transform4d = quaternion.euler(transform4d, LocalRotation);
+			Position = (transform * vector4.neutral).to_vec3();
+			Rotation = (rotate * vector4.neutral).to_vec3();
 
-			var rotate4d = quaternion.euler(LocalRotation + (Following?.transform.rotation ?? vector3.zero));
+			ViewDirection = (rotate * vector4.forward).to_vec3();
+			StrafeDirection = (rotate * vector4.right).to_vec3();
+			FlyDirection = (rotate * vector4.up).to_vec3();
 
-			var zero4d = new vec4(0.0f, 0.0f, 0.0f, 1.0f);
-			Position = (transform4d * zero4d).to_vec3();
-			Rotation = (rotate4d * zero4d).to_vec3();
-
-			ViewDirection = (rotate4d * vector4.forward).to_vec3();
-			StrafeDirection = (rotate4d * vector4.right).to_vec3();
-			FlyDirection = (rotate4d * vector4.up).to_vec3();
-
+			WorldToView = glm.lookAt(Position, Position + ViewDirection, FlyDirection);
 			WorldToView.serialize(WorldToViewData);
 		}
 	}

@@ -7,7 +7,6 @@ using XEngine.Data;
 using XEngine.Shapes;
 using XEngine.Lighting;
 using XEngine.Shading;
-using XEngine.Common;
 
 namespace open_world.Scenes
 {
@@ -44,7 +43,7 @@ namespace open_world.Scenes
 			Model.mesh.material.Set("light_source_color", PointLight.color.rgb);
 			Model.mesh.material.Set("light_source_power", PointLight.power);
 			
-			User = new GameObject("UserController");
+			User = new GameObject("User");
 			User.mesh = new Mesh();
 			User.mesh.shape = new Cube();
 			User.mesh.material = new Material(Shader.Find("basic"));
@@ -66,7 +65,7 @@ namespace open_world.Scenes
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 
-			MainCamera.Follow(User, vector3.zero, vector3.zero);
+			MainCamera.Following = User;
 
 			// [Uncomment for testing]
 			//MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);

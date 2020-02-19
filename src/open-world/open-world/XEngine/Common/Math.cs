@@ -62,5 +62,15 @@ namespace XEngine.Common
 		{
 			return glm.rotate(glm.rotate(glm.rotate(mat, y.ToRad(), vector3.up), x.ToRad(), vector3.right), z.ToRad(), vector3.backward);
 		}
+
+		public static mat4 clone(this mat4 mat)
+		{
+			var clone = mat4.identity();
+			clone[0] = mat[0];
+			clone[1] = mat[1];
+			clone[2] = mat[2];
+			clone[3] = mat[3];
+			return clone;
+		}
 	}
 }

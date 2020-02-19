@@ -15,13 +15,13 @@ namespace XEngine.Core
 		public Transform transform = new Transform(vector3.zero, vector3.zero, vector3.one);
 		public Mesh mesh = null;
 
-		private mat4 transform_model = mat4.identity();
-		private readonly float[] model = new float[16];
-		private mat4 rotate_model = mat4.identity();
-		private readonly float[] rotate = new float[16];
+		internal mat4 transform_model = mat4.identity();
+		internal readonly float[] model = new float[16];
+		internal mat4 rotate_model = mat4.identity();
+		internal readonly float[] rotate = new float[16];
 
 		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
-		
+
 		public GameObject(string name, params XBehaviour[] scripts)
 		{
 			this.name = name;
@@ -50,8 +50,8 @@ namespace XEngine.Core
 
 		public void Sync()
 		{
-			transform_model = parent?.transform_model ?? mat4.identity();
-			rotate_model = parent?.rotate_model ?? mat4.identity();
+			transform_model = parent?.transform_model.clone() ?? mat4.identity();
+			rotate_model = parent?.rotate_model.clone() ?? mat4.identity();
 
 			transform_model = glm.translate(transform_model, transform.position);
 			transform_model = glm.scale(transform_model, transform.scale);
@@ -64,7 +64,7 @@ namespace XEngine.Core
 		public void Draw()
 		{
 			if (mesh == null) return;
-			mesh.Draw(model, rotate);
+			mesh.Draw(this);
 		}
 
 		public void Dispose()

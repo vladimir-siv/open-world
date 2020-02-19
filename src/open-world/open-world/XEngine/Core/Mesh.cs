@@ -9,7 +9,7 @@ namespace XEngine.Core
 	using XEngine.Shapes;
 	using XEngine.Models;
 	using XEngine.Shading;
-	using XEngine.Extensions;
+	using XEngine.Common;
 
 	public sealed class Mesh : IDisposable
 	{

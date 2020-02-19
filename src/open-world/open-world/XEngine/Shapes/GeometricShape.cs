@@ -4,7 +4,7 @@ using SharpGL;
 namespace XEngine.Shapes
 {
 	using XEngine.Data;
-	using XEngine.Extensions;
+	using XEngine.Common;
 
 	public class GeometricShape : IDisposable
 	{

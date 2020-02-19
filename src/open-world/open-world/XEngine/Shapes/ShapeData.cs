@@ -3,7 +3,7 @@
 namespace XEngine.Shapes
 {
 	using XEngine.Data;
-	using XEngine.Extensions;
+	using XEngine.Common;
 
 	public struct ShapeData : IDisposable
 	{

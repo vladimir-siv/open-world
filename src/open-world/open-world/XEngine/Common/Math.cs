@@ -1,9 +1,9 @@
 ﻿using System;
 using GlmNet;
 
-namespace XEngine.Extensions
+namespace XEngine.Common
 {
-	public static class Common
+	public static class scalar
 	{
 		public static uint BitCount(this uint v)
 		{

@@ -6,6 +6,7 @@ namespace XEngine.Core
 {
 	public static class SceneManager
 	{
+		public static string MainSceneId { get; private set; } = null;
 		public static Scene CurrentScene { get; private set; } = null;
 
 		static SceneManager()
@@ -18,13 +19,15 @@ namespace XEngine.Core
 				var scene = (Scene)Activator.CreateInstance(type);
 				scene.SceneId = attr.SceneId;
 				Scene.SceneCache.Add(scene.SceneId, scene);
+				if (attr.IsMain) MainSceneId = scene.SceneId;
 			}
 		}
 
-		public static void LoadScene(string sceneId, bool endLast = true)
+		public static void LoadScene(string sceneId, bool endLast = true) => LoadScene(Scene.Resolve(sceneId), endLast);
+		public static void LoadScene(Scene scene, bool endLast = true)
 		{
 			if (endLast) CurrentScene?._Exit();
-			CurrentScene = Scene.Resolve(sceneId);
+			CurrentScene = scene;
 			CurrentScene._Init();
 		}
 	}
@@ -33,6 +36,12 @@ namespace XEngine.Core
 	public class GenerateSceneAttribute : Attribute
 	{
 		public string SceneId { get; }
-		public GenerateSceneAttribute(string sceneId) => SceneId = sceneId;
+		public bool IsMain { get; }
+
+		public GenerateSceneAttribute(string sceneId, bool isMain = false)
+		{
+			SceneId = sceneId;
+			IsMain = isMain;
+		}
 	}
 }

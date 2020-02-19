@@ -6,7 +6,7 @@ using GlmNet;
 
 namespace XEngine.Shading
 {
-	using XEngine.Extensions;
+	using XEngine.Common;
 
 	public sealed class Shader : IDisposable
 	{

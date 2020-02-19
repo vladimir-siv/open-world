@@ -3,7 +3,7 @@ using GlmNet;
 
 namespace XEngine.Core
 {
-	using XEngine.Extensions;
+	using XEngine.Common;
 
 	public sealed class Camera
 	{

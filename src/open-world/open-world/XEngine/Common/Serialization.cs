@@ -1,7 +1,7 @@
 ﻿using System;
 using GlmNet;
 
-namespace XEngine.Extensions
+namespace XEngine.Common
 {
 	using XEngine.Shading;
 

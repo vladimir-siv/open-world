@@ -2,13 +2,13 @@
 using XEngine.Core;
 using XEngine.Scripting;
 using XEngine.Interaction;
-using XEngine.Extensions;
+using XEngine.Common;
 
-namespace open_world.Scripts.Behaviours
+namespace open_world.Scripts
 {
 	public class UserController : XBehaviour
 	{
-		public GameObject MaleHead = null;
+		public GameObject Model = null;
 		public float MovementSpeed = 1.0f;
 		public float RotationSpeed = 0.2f;
 
@@ -32,7 +32,7 @@ namespace open_world.Scripts.Behaviours
 			if (Input.MouseButtonsPressed(MouseButtons.Middle)) gameObject.transform.rotation -= rotation * RotationSpeed;
 			var directions = gameObject.transform.WorldSpaceUnits;
 			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed;
-			if (Input.MouseButtonsPressed(MouseButtons.Left)) MaleHead.transform.rotation += rotation;
+			if (Input.MouseButtonsPressed(MouseButtons.Left)) Model.transform.rotation += rotation;
 		}
 	}
 }

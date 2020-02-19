@@ -18,6 +18,8 @@ namespace XEngine
 			if (XEngineContext.GLControl != null) return;
 			XEngineContext.GLControl = control;
 
+			Input.Init();
+
 			foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass))
 			{
 				var engActivateAttr = type.GetCustomAttributes(typeof(XEngineActivationAttribute), false);
@@ -26,7 +28,7 @@ namespace XEngine
 				type.GetMethod(attr.MethodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
 			}
 
-			Input.Init();
+			SceneManager.LoadScene(SceneManager.MainSceneId);
 		}
 
 		public static void Shutdown()

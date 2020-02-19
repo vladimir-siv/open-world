@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace XEngine.Shapes
+namespace XEngine.Shading
 {
-	using XEngine.Shading;
 	using XEngine.Common;
 
 	public struct ShapeData

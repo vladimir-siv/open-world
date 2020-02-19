@@ -1,9 +1,8 @@
 ﻿using System;
 using SharpGL;
 
-namespace XEngine.Shapes
+namespace XEngine.Shading
 {
-	using XEngine.Shading;
 	using XEngine.Common;
 
 	public class GeometricShape : IDisposable

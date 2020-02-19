@@ -104,9 +104,9 @@
     <Compile Include="XEngine\Shading\Shader.cs" />
     <Compile Include="XEngine\Shading\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
-    <Compile Include="XEngine\Shapes\GeometricShape.cs" />
+    <Compile Include="XEngine\Shading\GeometricShape.cs" />
     <Compile Include="XEngine\Shapes\Plane.cs" />
-    <Compile Include="XEngine\Shapes\ShapeData.cs" />
+    <Compile Include="XEngine\Shading\ShapeData.cs" />
     <Compile Include="XEngine\Shapes\Square.cs" />
     <Compile Include="XEngine\Shapes\Triangle.cs" />
     <Compile Include="XEngine\XEngine.cs" />

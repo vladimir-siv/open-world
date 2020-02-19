@@ -26,6 +26,9 @@ namespace XEngine.Core
 		public mat4 WorldToView => glm.lookAt(Position, Position + ViewDirection, FlyDirection);
 		public mat4 ViewToProject { get; private set; }
 
+		public float[] WorldToViewData { get; private set; } = new float[16];
+		public float[] ViewToProjectData { get; private set; } = new float[16];
+
 		public Camera()
 		{
 			SetProjection(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
@@ -69,7 +72,11 @@ namespace XEngine.Core
 				change = true;
 			}
 
-			if (change) ViewToProject = glm.perspective(fov * (float)Math.PI / 180.0f, aspect, near, far);
+			if (change)
+			{
+				ViewToProject = glm.perspective(fov * (float)Math.PI / 180.0f, aspect, near, far);
+				ViewToProject.serialize(ViewToProjectData);
+			}
 		}
 
 		public void Follow(GameObject gameObject) => Follow(gameObject, LocalPosition, LocalRotation);
@@ -101,6 +108,8 @@ namespace XEngine.Core
 			ViewDirection = (rotate4d * vector4.forward).to_vec3();
 			StrafeDirection = (rotate4d * vector4.right).to_vec3();
 			FlyDirection = (rotate4d * vector4.up).to_vec3();
+
+			WorldToView.serialize(WorldToViewData);
 		}
 	}
 }

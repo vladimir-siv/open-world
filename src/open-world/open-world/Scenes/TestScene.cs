@@ -5,6 +5,7 @@ using XEngine;
 using XEngine.Core;
 using XEngine.Data;
 using XEngine.Shapes;
+using XEngine.Lighting;
 using XEngine.Shading;
 using XEngine.Common;
 
@@ -17,6 +18,12 @@ namespace open_world.Scenes
 	{
 		private GameObject Model;
 		private GameObject User;
+		private GameObject Light;
+		private GameObject Ground;
+
+		private Color ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
+		private AmbientLight AmbientLight = AmbientLight.Bright;
+		private PointLight PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 
 		protected override void Init()
 		{
@@ -30,26 +37,41 @@ namespace open_world.Scenes
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
 			Model.mesh.material = new Material(Shader.Find("phong"));
-			Model.mesh.material.Set("material_color", new vec3(232 / 255f, 176 / 255f, 141 / 255f));
-			Model.mesh.material.Set("ambient_light_color", new vec3(1.0f, 1.0f, 1.0f));
-			Model.mesh.material.Set("ambient_light_power", 0.25f);
-			Model.mesh.material.Set("light_source_position", new vec3(-15.0f, 40.0f, 30.0f));
-			Model.mesh.material.Set("light_source_color", new vec3(1.0f, 1.0f, 1.0f));
-			Model.mesh.material.Set("light_source_power", 60.0f);
+			Model.mesh.material.Set("material_color", ModelColor.rgb);
+			Model.mesh.material.Set("ambient_light_color", AmbientLight.color.rgb);
+			Model.mesh.material.Set("ambient_light_power", AmbientLight.power);
+			Model.mesh.material.Set("light_source_position", PointLight.position);
+			Model.mesh.material.Set("light_source_color", PointLight.color.rgb);
+			Model.mesh.material.Set("light_source_power", PointLight.power);
 			
 			User = new GameObject("UserController");
 			User.mesh = new Mesh();
 			User.mesh.shape = new Cube();
-			User.mesh.shape.Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
-			User.mesh.shape.Release(); // [optimization]
-			User.mesh.material = new Material(Shader.Find("unlit"));
-
-			User.AttachBehavior(new UserController { Model = Model });
+			User.mesh.material = new Material(Shader.Find("basic"));
 			User.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
 			User.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
+			User.AttachBehavior(new UserController { Model = Model });
+
+			Light = new GameObject("Light");
+			Light.mesh = new Mesh();
+			Light.mesh.shape = new Cube();
+			Light.mesh.material = new Material(Shader.Find("basic"));
+			Light.transform.position = PointLight.position;
+
+			Ground = new GameObject("Ground");
+			Ground.mesh = new Mesh();
+			Ground.mesh.shape = new Plane();
+			Ground.mesh.material = new Material(Shader.Find("unlit"));
+			Ground.mesh.material.Set("material_color", new Color(1.0f, 1.0f, 1.0f));
+			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
+			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 
 			MainCamera.Follow(User, vector3.zero, vector3.zero);
-			//MainCamera.LocalPosition = new vec3(-4.0f, 4.0f, 10.0f);
+
+			// [Uncomment for testing]
+			MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
+			Model.parent = User;
+			Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
 		}
 
 		protected override void Draw()
@@ -57,14 +79,18 @@ namespace open_world.Scenes
 			var gl = XEngineContext.Graphics;
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
-			
-			Model.Sync();
+
 			User.Sync();
+			Model.Sync();
+			Light.Sync();
+			Ground.Sync();
 
 			MainCamera.Adjust();
 
 			Model.Draw();
 			User.Draw();
+			Light.Draw();
+			Ground.Draw();
 		}
 	}
 }

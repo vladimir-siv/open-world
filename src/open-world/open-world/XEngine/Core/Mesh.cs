@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using SharpGL;
-using GlmNet;
 
 namespace XEngine.Core
 {
@@ -9,7 +8,6 @@ namespace XEngine.Core
 	using XEngine.Shapes;
 	using XEngine.Models;
 	using XEngine.Shading;
-	using XEngine.Common;
 
 	public sealed class Mesh : IDisposable
 	{
@@ -95,18 +93,18 @@ namespace XEngine.Core
 			ArrayIds[0] = 0u;
 		}
 
-		public void Draw(Transform transform)
+		internal void Draw(float[] translate, float[] rotate, float[] scale)
 		{
 			if (shape == null || material == null || material.shader == null || VertexArrayId == 0) return;
 			var camera = SceneManager.CurrentScene.MainCamera;
 			material.shader.Use();
 			var gl = XEngineContext.Graphics;
 			gl.BindVertexArray(VertexArrayId);
-			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProject.to_array());
-			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToView.to_array());
-			if (material.shader.Translate != -1) gl.UniformMatrix4(material.shader.Translate, 1, false, glm.translate(mat4.identity(), transform.position).to_array());
-			if (material.shader.Scale != -1) gl.UniformMatrix4(material.shader.Scale, 1, false, glm.scale(mat4.identity(), transform.scale).to_array());
-			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, glm.rotate(glm.rotate(glm.rotate(transform.rotation.y.ToRad(), vector3.up), transform.rotation.x.ToRad(), vector3.right), transform.rotation.z.ToRad(), vector3.backward).to_array());
+			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProjectData);
+			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToViewData);
+			if (material.shader.Translate != -1) gl.UniformMatrix4(material.shader.Translate, 1, false, translate);
+			if (material.shader.Scale != -1) gl.UniformMatrix4(material.shader.Scale, 1, false, scale);
+			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
 			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
 			material.Prepare();
 			gl.DrawElements(shape.OpenGLShapeType, shape.Indices.Length, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);

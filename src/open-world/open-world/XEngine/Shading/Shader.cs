@@ -202,13 +202,13 @@ namespace XEngine.Shading
 		public void Set(string name, int[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
 		public void Set(string name, uint[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
 		public void Set(string name, float[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
-		public void Set(string name, Color[] values, bool includeAlpha = true) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.Serialize(includeAlpha));
-		public void Set(string name, vec2[] values) => XEngineContext.Graphics.Uniform2(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, vec3[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, vec4[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.Serialize());
-		public void Set(string name, mat2[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), values.Length, transpose, values.Serialize());
-		public void Set(string name, mat3[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), values.Length, transpose, values.Serialize());
-		public void Set(string name, mat4[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), values.Length, transpose, values.Serialize());
+		public void Set(string name, Color[] values, bool includeAlpha = true) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.serialize(includeAlpha));
+		public void Set(string name, vec2[] values) => XEngineContext.Graphics.Uniform2(GetLocation(name), values.Length, values.serialize());
+		public void Set(string name, vec3[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length, values.serialize());
+		public void Set(string name, vec4[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length, values.serialize());
+		public void Set(string name, mat2[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), values.Length, transpose, values.serialize());
+		public void Set(string name, mat3[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), values.Length, transpose, values.serialize());
+		public void Set(string name, mat4[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), values.Length, transpose, values.serialize());
 		public void Set(string name, float x, float y, float z) => XEngineContext.Graphics.Uniform3(GetLocation(name), x, y, z);
 		public void Set(string name, float x, float y, float z, float w) => XEngineContext.Graphics.Uniform4(GetLocation(name), x, y, z, w);
 	}

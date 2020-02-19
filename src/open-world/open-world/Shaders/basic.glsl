@@ -11,9 +11,13 @@
 	uniform mat4 rotate;
 	
 	in layout(location = 0) vec4 in_position;
+	in layout(location = 1) vec4 in_color;
+	
+	out vec4 color;
 	
 	void main(void)
 	{
+		color = in_color;
 		gl_Position = project * view * translate * scale * rotate * in_position;
 	}
 
@@ -21,11 +25,11 @@
 
 	#version 430 core
 	
-	uniform vec4 material_color;
+	in vec4 color;
 	
 	out vec4 out_color;
 	
 	void main(void)
 	{
-		out_color = material_color;
+		out_color = color;
 	}

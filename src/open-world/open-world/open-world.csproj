@@ -86,6 +86,8 @@
     <Compile Include="XEngine\Interaction\Input.cs" />
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
+    <Compile Include="XEngine\Lighting\AmbientLight.cs" />
+    <Compile Include="XEngine\Lighting\PointLight.cs" />
     <Compile Include="XEngine\Scripting\XBehaviour.cs" />
     <Compile Include="XEngine\Shading\Color.cs" />
     <Compile Include="XEngine\Core\GameObject.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="XEngine\Data\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
     <Compile Include="XEngine\Shapes\GeometricShape.cs" />
+    <Compile Include="XEngine\Shapes\Plane.cs" />
     <Compile Include="XEngine\Shapes\ShapeData.cs" />
     <Compile Include="XEngine\Shapes\Square.cs" />
     <Compile Include="XEngine\Shapes\Triangle.cs" />
@@ -133,6 +136,7 @@
     </Compile>
     <EmbeddedResource Include="Resources\male_head.obj" />
     <EmbeddedResource Include="Shaders\phong.glsl" />
+    <EmbeddedResource Include="Shaders\basic.glsl" />
     <EmbeddedResource Include="Shaders\unlit.glsl" />
   </ItemGroup>
   <ItemGroup>

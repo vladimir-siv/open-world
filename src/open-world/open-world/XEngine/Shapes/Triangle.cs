@@ -54,7 +54,7 @@ namespace XEngine.Shapes
 
 		private Triangle(vertex[] vertices) : base(new ShapeData(vertices))
 		{
-
+			Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
 		}
 	}
 }

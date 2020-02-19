@@ -4,21 +4,21 @@ namespace XEngine.Shapes
 {
 	using XEngine.Data;
 
-	public class Square : GeometricShape
+	public class Plane : GeometricShape
 	{
-		public Square() :
+		public Plane() :
 			this
 			(
-				-1.0f, +1.0f, +0.0f, +1.0f, +0.0f, +0.0f,
-				-1.0f, -1.0f, +0.0f, +0.0f, +0.0f, +1.0f,
-				+1.0f, -1.0f, +0.0f, +0.0f, +0.0f, +1.0f,
-				+1.0f, +1.0f, +0.0f, +1.0f, +0.0f, +0.0f
+				-10.0f, +0.0f, -10.0f, +1.0f, +0.0f, +0.0f,
+				-10.0f, +0.0f, +10.0f, +0.0f, +0.0f, +1.0f,
+				+10.0f, +0.0f, +10.0f, +0.0f, +0.0f, +1.0f,
+				+10.0f, +0.0f, -10.0f, +1.0f, +0.0f, +0.0f
 			)
 		{
 
 		}
 
-		public Square
+		public Plane
 		(
 			float x1, float y1, float z1, float r1, float g1, float b1,
 			float x2, float y2, float z2, float r2, float g2, float b2,
@@ -36,7 +36,7 @@ namespace XEngine.Shapes
 
 		}
 
-		public Square
+		public Plane
 		(
 			vec3 p1, vec3 c1,
 			vec3 p2, vec3 c2,
@@ -62,7 +62,7 @@ namespace XEngine.Shapes
 
 		}
 
-		private Square(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
+		private Plane(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
 		{
 			Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
 		}

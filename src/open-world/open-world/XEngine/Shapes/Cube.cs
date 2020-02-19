@@ -262,7 +262,7 @@ namespace XEngine.Shapes
 
 		private Cube(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
 		{
-
+			Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
 		}
 	}
 }

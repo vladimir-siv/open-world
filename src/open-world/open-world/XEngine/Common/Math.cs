@@ -38,7 +38,9 @@ namespace XEngine.Common
 
 	public static class vector4
 	{
-		public static readonly vec4 zero		= new vec4(+0.0f, +0.0f, +0.0f, +1.0f);
+		public static readonly vec4 neutral		= new vec4(+0.0f, +0.0f, +0.0f, +1.0f);
+
+		public static readonly vec4 zero		= new vec4(+0.0f, +0.0f, +0.0f, +0.0f);
 		public static readonly vec4 one			= new vec4(+1.0f, +1.0f, +1.0f, +1.0f);
 		public static readonly vec4 forward		= new vec4(+0.0f, +0.0f, -1.0f, +1.0f);
 		public static readonly vec4 backward	= new vec4(+0.0f, +0.0f, +1.0f, +1.0f);
@@ -48,7 +50,7 @@ namespace XEngine.Common
 		public static readonly vec4 down		= new vec4(+0.0f, -1.0f, +0.0f, +1.0f);
 
 		public static vec4 normalize(this vec4 v) => v != zero ? glm.normalize(v) : zero;
-		public static vec3 to_vec3(this vec4 v) => new vec3(v.x, v.y, v.z);
+		public static vec3 to_vec3(this vec4 v, bool suppress = false) => suppress ? new vec3(v.x / v.w, v.y / v.w, v.z / v.w) : new vec3(v.x, v.y, v.z);
 	}
 
 	public static class quaternion

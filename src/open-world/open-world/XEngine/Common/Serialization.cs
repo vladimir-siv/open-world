@@ -7,7 +7,23 @@ namespace XEngine.Common
 
 	public static class Serialization
 	{
-		public static float[] Serialize(this Color[] colors, bool includeAlpha = true)
+		public static void serialize(this mat2 value, float[] array)
+		{
+			if (array == null || array.Length != 4) throw new ArgumentException("Array null or of invalid length.");
+			for (var c = 0; c < 4; ++c) array[c] = value[c / 2, c % 2];
+		}
+		public static void serialize(this mat3 value, float[] array)
+		{
+			if (array == null || array.Length != 9) throw new ArgumentException("Array null or of invalid length.");
+			for (var c = 0; c < 9; ++c) array[c] = value[c / 3, c % 3];
+		}
+		public static void serialize(this mat4 value, float[] array)
+		{
+			if (array == null || array.Length != 16) throw new ArgumentException("Array null or of invalid length.");
+			for (var c = 0; c < 16; ++c) array[c] = value[c / 4, c % 4];
+		}
+
+		public static float[] serialize(this Color[] colors, bool includeAlpha = true)
 		{
 			if (colors == null) throw new ArgumentNullException(nameof(colors));
 
@@ -39,7 +55,7 @@ namespace XEngine.Common
 				return serialized;
 			}
 		}
-		public static float[] Serialize(this vec2[] values)
+		public static float[] serialize(this vec2[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 
@@ -53,7 +69,7 @@ namespace XEngine.Common
 
 			return serialized;
 		}
-		public static float[] Serialize(this vec3[] values)
+		public static float[] serialize(this vec3[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 
@@ -68,7 +84,7 @@ namespace XEngine.Common
 
 			return serialized;
 		}
-		public static float[] Serialize(this vec4[] values)
+		public static float[] serialize(this vec4[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 
@@ -84,7 +100,7 @@ namespace XEngine.Common
 
 			return serialized;
 		}
-		public static float[] Serialize(this mat2[] values)
+		public static float[] serialize(this mat2[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 
@@ -96,7 +112,7 @@ namespace XEngine.Common
 
 			return serialized;
 		}
-		public static float[] Serialize(this mat3[] values)
+		public static float[] serialize(this mat3[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 
@@ -108,7 +124,7 @@ namespace XEngine.Common
 
 			return serialized;
 		}
-		public static float[] Serialize(this mat4[] values)
+		public static float[] serialize(this mat4[] values)
 		{
 			if (values == null) throw new ArgumentNullException(nameof(values));
 

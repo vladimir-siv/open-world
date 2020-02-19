@@ -8,7 +8,8 @@ namespace XEngine.Shapes
 
 	public class GeometricShape : IDisposable
 	{
-		protected ShapeData ShapeData { get; private set; }
+		private ShapeData _ShapeData;
+		protected ShapeData ShapeData => _ShapeData;
 
 		public uint AttribCount { get; private set; } = vertex.AttribCount;
 		private void UpdateAttribCount() => AttribCount = Math.Min(((uint)Attributes).BitCount(), vertex.AttribCount);
@@ -23,7 +24,9 @@ namespace XEngine.Shapes
 		public ushort[] Indices => ShapeData.Indices;
 		public float[] Data => ShapeData.SerializeData(Attributes);
 
-		internal GeometricShape(ShapeData shapeData) { ShapeData = shapeData; }
+		public int IndexCount { get; }
+
+		internal GeometricShape(ShapeData shapeData) { _ShapeData = shapeData; IndexCount = Indices.Length; }
 		public virtual uint OpenGLShapeType => OpenGL.GL_TRIANGLES;
 
 		protected uint GLAttribCount => AttribCount == 1u ? 0u : AttribCount;
@@ -34,7 +37,6 @@ namespace XEngine.Shapes
 		public virtual int GetAttribStride(uint index) => (int)(vertex.AttribSize * GLAttribCount * sizeof(float));
 		public virtual IntPtr GetAttribOffset(uint index) => new IntPtr(index * vertex.AttribSize * sizeof(float));
 
-		public void Dispose() => Release();
-		public virtual void Release() => ShapeData.Dispose();
+		public void Dispose() => _ShapeData.Release();
 	}
 }

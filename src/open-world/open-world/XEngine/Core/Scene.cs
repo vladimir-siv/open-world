@@ -10,7 +10,7 @@ namespace XEngine.Core
 		public string SceneId { get; internal set; } = string.Empty;
 		public Camera MainCamera { get; protected set; } = new Camera();
 
-		private readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
+		internal readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
 		private bool Initialized = false;
 		
 		public void Add(GameObject gameObject)

@@ -9,6 +9,16 @@ namespace XEngine.Core
 
 	public sealed class GameObject : IDisposable
 	{
+		public static GameObject FindByName(string name)
+		{
+			foreach (var gameObject in SceneManager.CurrentScene.GameObjects)
+			{
+				if (gameObject.name == name) return gameObject;
+			}
+
+			return null;
+		}
+
 		public string name;
 
 		public GameObject parent = null;
@@ -24,6 +34,7 @@ namespace XEngine.Core
 
 		public GameObject(string name, params XBehaviour[] scripts)
 		{
+			if (string.IsNullOrEmpty(name)) throw new ArgumentException("GameObject name cannot be null or empty.");
 			this.name = name;
 			foreach (var script in scripts) AttachBehavior(script);
 			SceneManager.CurrentScene.Add(this);

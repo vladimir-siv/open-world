@@ -31,6 +31,7 @@ namespace XEngine.Core
 				if (_shape != null) Dispose();
 				_shape = value;
 				Generate();
+				_shape.Dispose();
 			}
 		}
 		private Material _material = null;
@@ -51,7 +52,6 @@ namespace XEngine.Core
 			var model = await Model.Load(name);
 			model.Attributes = attributes;
 			shape = model;
-			shape.Release();
 		}
 
 		private void Generate()
@@ -86,7 +86,6 @@ namespace XEngine.Core
 			gl.DeleteBuffers(BufferIds.Length, BufferIds);
 			gl.DeleteVertexArrays(ArrayIds.Length, ArrayIds);
 
-			_shape?.Dispose();
 			_shape = null;
 			_material = null;
 
@@ -106,7 +105,7 @@ namespace XEngine.Core
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, gameObject.rotate);
 			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
 			material.Prepare();
-			gl.DrawElements(shape.OpenGLShapeType, shape.Indices.Length, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);
+			gl.DrawElements(shape.OpenGLShapeType, shape.IndexCount, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);
 		}
 	}
 }

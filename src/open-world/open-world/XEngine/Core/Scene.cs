@@ -2,6 +2,9 @@
 
 namespace XEngine.Core
 {
+	using XEngine.Structures;
+	using XEngine.Shading;
+
 	public abstract class Scene
 	{
 		internal static Dictionary<string, Scene> SceneCache = new Dictionary<string, Scene>();
@@ -56,5 +59,42 @@ namespace XEngine.Core
 		protected virtual void Init() { }
 		protected virtual void Draw() { }
 		protected virtual void Exit() { }
+
+		#region Sync Scene
+
+		protected void SyncScene()
+		{
+
+		}
+
+		#endregion
+
+		#region Draw Scene
+
+		private Pouch<Shader, GameObject> DrawableObjectPouch = new Pouch<Shader, GameObject>();
+
+		protected void DrawScene()
+		{
+			// [Assert: DrawableObjectPouch.Count == 0]
+
+			foreach (var gameObject in GameObjects)
+			{
+				if (!gameObject.IsDrawable) continue;
+				var shader = gameObject.mesh.material.shader;
+				DrawableObjectPouch.Add(shader, gameObject);
+			}
+
+			foreach (var shader in Shader.CompiledShaders)
+			{
+				while (DrawableObjectPouch.Retrieve(shader, out var gameObject))
+				{
+					gameObject.Draw();
+				}
+			}
+
+			// [Assert: DrawableObjectPouch.Count == 0]
+		}
+
+		#endregion
 	}
 }

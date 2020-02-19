@@ -24,6 +24,7 @@ namespace XEngine.Core
 		public GameObject parent = null;
 		public Transform transform = new Transform(vector3.zero, vector3.zero, vector3.one);
 		public Mesh mesh = null;
+		public bool IsDrawable => mesh?.IsDrawable ?? false;
 
 		internal mat4 transform_model = mat4.identity();
 		internal readonly float[] model = new float[16];
@@ -72,11 +73,7 @@ namespace XEngine.Core
 			transform_model.serialize(model);
 			rotate_model.serialize(rotate);
 		}
-		public void Draw()
-		{
-			if (mesh == null) return;
-			mesh.Draw(this);
-		}
+		public void Draw() => mesh?.Draw(this);
 
 		public void Dispose()
 		{

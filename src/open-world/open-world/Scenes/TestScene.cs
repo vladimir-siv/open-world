@@ -3,9 +3,9 @@ using SharpGL;
 
 using XEngine;
 using XEngine.Core;
-using XEngine.Shapes;
 using XEngine.Lighting;
 using XEngine.Shading;
+using XEngine.Shapes;
 
 namespace open_world.Scenes
 {
@@ -84,11 +84,7 @@ namespace open_world.Scenes
 			Ground.Sync();
 
 			MainCamera.Adjust();
-
-			Model.Draw();
-			User.Draw();
-			Light.Draw();
-			Ground.Draw();
+			DrawScene();
 		}
 	}
 }

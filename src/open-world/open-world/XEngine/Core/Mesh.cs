@@ -4,7 +4,6 @@ using SharpGL;
 
 namespace XEngine.Core
 {
-	using XEngine.Shapes;
 	using XEngine.Models;
 	using XEngine.Shading;
 
@@ -45,6 +44,8 @@ namespace XEngine.Core
 				_material = value;
 			}
 		}
+
+		internal bool IsDrawable => shape != null && material?.shader != null && VertexArrayId != 0;
 
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
 		{
@@ -93,7 +94,7 @@ namespace XEngine.Core
 
 		internal void Draw(GameObject gameObject)
 		{
-			if (shape == null || material == null || material.shader == null || VertexArrayId == 0) return;
+			if (!IsDrawable) return;
 			var camera = SceneManager.CurrentScene.MainCamera;
 			material.shader.Use();
 			var gl = XEngineContext.Graphics;

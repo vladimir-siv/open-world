@@ -10,6 +10,8 @@ namespace XEngine.Shading
 
 	public sealed class Shader : IDisposable
 	{
+		internal static LinkedList<Shader> CompiledShaders = new LinkedList<Shader>();
+
 		private static (string, string) Preprocess(string code)
 		{
 			int LineCount(string str) { return str.Length - str.Replace("\n", string.Empty).Length; }
@@ -124,6 +126,7 @@ namespace XEngine.Shading
 			var id = Build(shaderName);
 			shader = new Shader(id, shaderName);
 			shaders.Add(shaderName, shader);
+			CompiledShaders.AddLast(shader);
 			return shader;
 		}
 

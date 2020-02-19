@@ -3,7 +3,6 @@ using SharpGL;
 
 using XEngine;
 using XEngine.Core;
-using XEngine.Data;
 using XEngine.Shapes;
 using XEngine.Lighting;
 using XEngine.Shading;

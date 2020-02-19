@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace XEngine.Data
+namespace XEngine.Shading
 {
 	[Flags] public enum VertexAttribute
 	{

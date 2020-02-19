@@ -1,6 +1,6 @@
 ﻿using GlmNet;
 
-namespace XEngine.Data
+namespace XEngine.Shading
 {
 	public struct vertex
 	{

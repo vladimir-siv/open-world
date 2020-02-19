@@ -2,7 +2,7 @@
 
 namespace XEngine.Shapes
 {
-	using XEngine.Data;
+	using XEngine.Shading;
 	using XEngine.Common;
 
 	public struct ShapeData

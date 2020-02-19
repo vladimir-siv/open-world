@@ -4,7 +4,6 @@ using SharpGL;
 
 namespace XEngine.Core
 {
-	using XEngine.Data;
 	using XEngine.Shapes;
 	using XEngine.Models;
 	using XEngine.Shading;

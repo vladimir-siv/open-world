@@ -9,8 +9,8 @@ using GlmNet;
 namespace XEngine.Models
 {
 	using XEngine;
-	using XEngine.Data;
 	using XEngine.Shapes;
+	using XEngine.Shading;
 
     public static class Model
 	{

@@ -95,14 +95,14 @@
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
     <Compile Include="XEngine\Core\Transform.cs" />
-    <Compile Include="XEngine\Data\Vertex.cs" />
+    <Compile Include="XEngine\Shading\Vertex.cs" />
     <Compile Include="XEngine\Common\Math.cs" />
     <Compile Include="XEngine\Host.cs" />
     <Compile Include="XEngine\ManifestResourceManager.cs" />
     <Compile Include="XEngine\Models\Model.cs" />
     <Compile Include="XEngine\Shading\Material.cs" />
     <Compile Include="XEngine\Shading\Shader.cs" />
-    <Compile Include="XEngine\Data\VertexAttribute.cs" />
+    <Compile Include="XEngine\Shading\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
     <Compile Include="XEngine\Shapes\GeometricShape.cs" />
     <Compile Include="XEngine\Shapes\Plane.cs" />

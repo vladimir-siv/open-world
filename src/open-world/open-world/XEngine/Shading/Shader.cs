@@ -134,8 +134,7 @@ namespace XEngine.Shading
 
 		public int Project { get; private set; }
 		public int View { get; private set; }
-		public int Translate { get; private set; }
-		public int Scale { get; private set; }
+		public int Model { get; private set; }
 		public int Rotate { get; private set; }
 		public int Eye { get; private set; }
 
@@ -149,8 +148,7 @@ namespace XEngine.Shading
 			var gl = XEngineContext.Graphics;
 			Project = gl.GetUniformLocation(id, "project");
 			View = gl.GetUniformLocation(id, "view");
-			Translate = gl.GetUniformLocation(id, "translate");
-			Scale = gl.GetUniformLocation(id, "scale");
+			Model = gl.GetUniformLocation(id, "model");
 			Rotate = gl.GetUniformLocation(id, "rotate");
 			Eye = gl.GetUniformLocation(id, "eye_position");
 		}

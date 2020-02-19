@@ -93,7 +93,7 @@ namespace XEngine.Core
 			ArrayIds[0] = 0u;
 		}
 
-		internal void Draw(float[] translate, float[] rotate, float[] scale)
+		internal void Draw(float[] model, float[] rotate)
 		{
 			if (shape == null || material == null || material.shader == null || VertexArrayId == 0) return;
 			var camera = SceneManager.CurrentScene.MainCamera;
@@ -102,8 +102,7 @@ namespace XEngine.Core
 			gl.BindVertexArray(VertexArrayId);
 			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProjectData);
 			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToViewData);
-			if (material.shader.Translate != -1) gl.UniformMatrix4(material.shader.Translate, 1, false, translate);
-			if (material.shader.Scale != -1) gl.UniformMatrix4(material.shader.Scale, 1, false, scale);
+			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, model);
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
 			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
 			material.Prepare();

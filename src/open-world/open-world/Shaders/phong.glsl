@@ -6,8 +6,7 @@
 	
 	uniform mat4 project;
 	uniform mat4 view;
-	uniform mat4 translate;
-	uniform mat4 scale;
+	uniform mat4 model;
 	uniform mat4 rotate;
 	
 	in layout(location = 0) vec4 in_position;
@@ -18,7 +17,7 @@
 	
 	void main(void)
 	{
-		vec4 world_position = translate * scale * rotate * in_position;
+		vec4 world_position = model * in_position;
 		vec4 world_normal = rotate * in_normal;
 		
 		position = world_position.xyz;

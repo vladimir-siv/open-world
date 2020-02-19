@@ -16,9 +16,8 @@ namespace XEngine.Core
 		public Mesh mesh = null;
 
 		private Transform world_transform = new Transform(vector3.zero, vector3.zero, vector3.one);
-		private readonly float[] translate = new float[16];
+		private readonly float[] model = new float[16];
 		private readonly float[] rotate = new float[16];
-		private readonly float[] scale = new float[16];
 
 		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
 		
@@ -50,37 +49,34 @@ namespace XEngine.Core
 
 		public void Sync()
 		{
-			var position_vec = transform.position;
-			var rotate_vec = transform.rotation;
-			var scale_vec = transform.scale;
+			world_transform.rotation = transform.rotation;
+			world_transform.scale = transform.scale;
+
+			var _model = mat4.identity();
+
+			if (parent != null)
+			{
+				_model = glm.translate(_model, parent.world_transform.position);
+				_model = glm.scale(_model, parent.world_transform.scale);
+				_model = quaternion.euler(_model, parent.world_transform.rotation);
+
+				world_transform.rotation += parent.world_transform.rotation;
+				world_transform.scale *= parent.world_transform.scale;
+			}
+
+			_model = glm.translate(_model, transform.position);
+			_model = glm.scale(_model, transform.scale);
+			_model = quaternion.euler(_model, transform.rotation);
+
+			world_transform.position = (_model * vector4.neutral).to_vec3();
 			
-			if (parent != null)
-			{
-				rotate_vec += parent.world_transform.rotation;
-				scale_vec *= parent.world_transform.scale;
-			}
-
-			var translate = glm.translate(mat4.identity(), parent != null ? parent.world_transform.position : position_vec);
-			var rotate = quaternion.euler(mat4.identity(), rotate_vec);
-			var scale = glm.scale(mat4.identity(), scale_vec);
-
-			if (parent != null)
-			{
-				translate = quaternion.euler(translate, parent.world_transform.rotation);
-				translate = glm.translate(translate, transform.position);
-				translate = quaternion.euler(translate, transform.rotation);
-				translate = glm.translate(mat4.identity(), position_vec = (translate * vector4.neutral).to_vec3());
-			}
-
-			world_transform = new Transform(position_vec, rotate_vec, scale_vec);
-			translate.serialize(this.translate);
-			rotate.serialize(this.rotate);
-			scale.serialize(this.scale);
+			_model.serialize(model);
+			quaternion.euler(world_transform.rotation).serialize(rotate);
 		}
 		public void Draw()
 		{
 			if (mesh == null) return;
-			mesh.Draw(translate, rotate, scale);
+			mesh.Draw(model, rotate);
 		}
 
 		public void Dispose()

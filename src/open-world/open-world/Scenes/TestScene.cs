@@ -69,9 +69,9 @@ namespace open_world.Scenes
 			MainCamera.Follow(User, vector3.zero, vector3.zero);
 
 			// [Uncomment for testing]
-			MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
-			Model.parent = User;
-			Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
+			//MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
+			//Model.parent = User;
+			//Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
 		}
 
 		protected override void Draw()

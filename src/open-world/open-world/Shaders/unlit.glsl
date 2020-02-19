@@ -6,15 +6,13 @@
 	
 	uniform mat4 project;
 	uniform mat4 view;
-	uniform mat4 translate;
-	uniform mat4 scale;
-	uniform mat4 rotate;
+	uniform mat4 model;
 	
 	in layout(location = 0) vec4 in_position;
 	
 	void main(void)
 	{
-		gl_Position = project * view * translate * scale * rotate * in_position;
+		gl_Position = project * view * model * in_position;
 	}
 
 #pragma shader fragment

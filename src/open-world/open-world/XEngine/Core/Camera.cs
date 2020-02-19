@@ -90,16 +90,18 @@ namespace XEngine.Core
 
 		public void Adjust()
 		{
-			var parentRotate = Following?.transform.rotation ?? vector3.zero;
-			var parentTranslate = Following?.transform.position ?? vector3.zero;
-
 			var transform4d = mat4.identity();
-			transform4d = glm.translate(transform4d, parentTranslate);
-			transform4d = quaternion.euler(transform4d, parentRotate);
+
+			if (Following != null)
+			{
+				transform4d = glm.translate(transform4d, Following.transform.position);
+				transform4d = quaternion.euler(transform4d, Following.transform.rotation);
+			}
+
 			transform4d = glm.translate(transform4d, LocalPosition);
 			transform4d = quaternion.euler(transform4d, LocalRotation);
 
-			var rotate4d = quaternion.euler(LocalRotation + parentRotate);
+			var rotate4d = quaternion.euler(LocalRotation + (Following?.transform.rotation ?? vector3.zero));
 
 			var zero4d = new vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			Position = (transform4d * zero4d).to_vec3();

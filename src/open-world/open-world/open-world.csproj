@@ -95,7 +95,7 @@
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
     <Compile Include="XEngine\Core\Transform.cs" />
-    <Compile Include="XEngine\Data\vertex.cs" />
+    <Compile Include="XEngine\Data\vertex1.cs" />
     <Compile Include="XEngine\Common\Math.cs" />
     <Compile Include="XEngine\Host.cs" />
     <Compile Include="XEngine\ManifestResourceManager.cs" />

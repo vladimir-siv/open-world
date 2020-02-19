@@ -15,8 +15,9 @@ namespace XEngine.Core
 		public Transform transform = new Transform(vector3.zero, vector3.zero, vector3.one);
 		public Mesh mesh = null;
 
-		private Transform world_transform = new Transform(vector3.zero, vector3.zero, vector3.one);
+		private mat4 transform_model = mat4.identity();
 		private readonly float[] model = new float[16];
+		private mat4 rotate_model = mat4.identity();
 		private readonly float[] rotate = new float[16];
 
 		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
@@ -49,29 +50,16 @@ namespace XEngine.Core
 
 		public void Sync()
 		{
-			world_transform.rotation = transform.rotation;
-			world_transform.scale = transform.scale;
+			transform_model = parent?.transform_model ?? mat4.identity();
+			rotate_model = parent?.rotate_model ?? mat4.identity();
 
-			var _model = mat4.identity();
+			transform_model = glm.translate(transform_model, transform.position);
+			transform_model = glm.scale(transform_model, transform.scale);
+			transform_model = quaternion.euler(transform_model, transform.rotation);
+			rotate_model = quaternion.euler(rotate_model, transform.rotation);
 
-			if (parent != null)
-			{
-				_model = glm.translate(_model, parent.world_transform.position);
-				_model = glm.scale(_model, parent.world_transform.scale);
-				_model = quaternion.euler(_model, parent.world_transform.rotation);
-
-				world_transform.rotation += parent.world_transform.rotation;
-				world_transform.scale *= parent.world_transform.scale;
-			}
-
-			_model = glm.translate(_model, transform.position);
-			_model = glm.scale(_model, transform.scale);
-			_model = quaternion.euler(_model, transform.rotation);
-
-			world_transform.position = (_model * vector4.neutral).to_vec3();
-			
-			_model.serialize(model);
-			quaternion.euler(world_transform.rotation).serialize(rotate);
+			transform_model.serialize(model);
+			rotate_model.serialize(rotate);
 		}
 		public void Draw()
 		{

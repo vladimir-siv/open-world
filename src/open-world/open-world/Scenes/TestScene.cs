@@ -1,16 +1,12 @@
 ﻿using GlmNet;
-using SharpGL;
 
-using XEngine;
 using XEngine.Core;
 using XEngine.Lighting;
 using XEngine.Shading;
 using XEngine.Shapes;
 
-namespace open_world.Scenes
+namespace open_world
 {
-	using Scripts;
-
 	[GenerateScene("OpenWorld.TestScene", isMain: true)]
 	public class TestScene : Scene
 	{
@@ -25,12 +21,6 @@ namespace open_world.Scenes
 
 		protected override void Init()
 		{
-			var gl = XEngineContext.Graphics;
-			gl.Enable(OpenGL.GL_DEPTH_TEST);
-			gl.Enable(OpenGL.GL_CULL_FACE);
-			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
-
 			Model = new GameObject("Model");
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
@@ -70,21 +60,6 @@ namespace open_world.Scenes
 			//MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
 			//Model.parent = User;
 			//Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
-		}
-
-		protected override void Draw()
-		{
-			var gl = XEngineContext.Graphics;
-			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
-			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
-
-			User.Sync();
-			Model.Sync();
-			Light.Sync();
-			Ground.Sync();
-
-			MainCamera.Adjust();
-			DrawScene();
 		}
 	}
 }

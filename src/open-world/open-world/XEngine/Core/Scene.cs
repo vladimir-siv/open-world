@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SharpGL;
 
 namespace XEngine.Core
 {
@@ -7,16 +8,37 @@ namespace XEngine.Core
 
 	public abstract class Scene
 	{
+		private class Algorithms
+		{
+			public readonly Pouch<GameObject, GameObject> SyncObjectPouch = new Pouch<GameObject, GameObject>();
+			public readonly Queue<GameObject> ObjectQueue = new Queue<GameObject>();
+			public readonly Pouch<Shader, GameObject> DrawableObjectPouch = new Pouch<Shader, GameObject>();
+			
+			public IEnumerable<GameObject> SyncLevelOrder(GameObject gameObject)
+			{
+				ObjectQueue.Enqueue(gameObject);
+				while (ObjectQueue.Count > 0)
+				{
+					var current = ObjectQueue.Dequeue();
+					yield return current;
+					while (SyncObjectPouch.Retrieve(current, out var child)) ObjectQueue.Enqueue(child);
+				}
+			}
+		}
+
 		internal static Dictionary<string, Scene> SceneCache = new Dictionary<string, Scene>();
 		public static Scene Resolve(string sceneId) => SceneCache[sceneId];
 
 		public string SceneId { get; internal set; } = string.Empty;
 		public Camera MainCamera { get; protected set; } = new Camera();
 
-		internal readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
+		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT;
+
 		private bool Initialized = false;
+		private readonly Algorithms Algs = new Algorithms();
+		internal readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
 		
-		public void Add(GameObject gameObject)
+		internal void Add(GameObject gameObject)
 		{
 			GameObjects.AddLast(gameObject);
 			
@@ -35,6 +57,10 @@ namespace XEngine.Core
 		internal void _Init()
 		{
 			if (Initialized) return;
+			var gl = XEngineContext.Graphics;
+			gl.Enable(OpenGL.GL_DEPTH_TEST);
+			gl.Enable(OpenGL.GL_CULL_FACE);
+			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			Init();
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
@@ -46,6 +72,9 @@ namespace XEngine.Core
 			MainCamera.SetAspectRatio((float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height);
 			foreach (var gameObject in GameObjects) gameObject.Update();
 			foreach (var gameObject in GameObjects) gameObject.Late();
+			var gl = XEngineContext.Graphics;
+			if (ClearStrategy != 0u) gl.Clear(ClearStrategy);
+			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
 			Draw();
 		}
 		internal void _Exit()
@@ -57,44 +86,49 @@ namespace XEngine.Core
 		}
 
 		protected virtual void Init() { }
-		protected virtual void Draw() { }
+		protected virtual void Draw() { Prepare(); SyncScene(); DrawScene(); }
 		protected virtual void Exit() { }
 
-		#region Sync Scene
-
-		protected void SyncScene()
+		protected void Prepare()
 		{
-
-		}
-
-		#endregion
-
-		#region Draw Scene
-
-		private Pouch<Shader, GameObject> DrawableObjectPouch = new Pouch<Shader, GameObject>();
-
-		protected void DrawScene()
-		{
-			// [Assert: DrawableObjectPouch.Count == 0]
+			// [Assert: Algs.SyncObjectPouch.Count == 0]
+			// [Assert: Algs.ObjectQueue.Count == 0]
+			// [Assert: Algs.DrawableObjectPouch.Count == 0]
 
 			foreach (var gameObject in GameObjects)
 			{
-				if (!gameObject.IsDrawable) continue;
-				var shader = gameObject.mesh.material.shader;
-				DrawableObjectPouch.Add(shader, gameObject);
+				if (gameObject.parent != null) Algs.SyncObjectPouch.Add(gameObject.parent, gameObject);
+				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.mesh.material.shader, gameObject);
+			}
+		}
+		protected void SyncScene()
+		{
+			foreach (var gameObject in GameObjects)
+			{
+				if (gameObject.parent != null) continue;
+				
+				foreach (var obj in Algs.SyncLevelOrder(gameObject))
+				{
+					obj.Sync();
+				}
 			}
 
+			MainCamera.Adjust();
+
+			// [Assert: Algs.SyncObjectPouch.Count == 0]
+			// [Assert: Algs.ObjectQueue.Count == 0]
+		}
+		protected void DrawScene()
+		{
 			foreach (var shader in Shader.CompiledShaders)
 			{
-				while (DrawableObjectPouch.Retrieve(shader, out var gameObject))
+				while (Algs.DrawableObjectPouch.Retrieve(shader, out var gameObject))
 				{
 					gameObject.Draw();
 				}
 			}
 
-			// [Assert: DrawableObjectPouch.Count == 0]
+			// [Assert: Algs.DrawableObjectPouch.Count == 0]
 		}
-
-		#endregion
 	}
 }

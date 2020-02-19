@@ -4,7 +4,7 @@ using XEngine.Scripting;
 using XEngine.Interaction;
 using XEngine.Common;
 
-namespace open_world.Scripts
+namespace open_world
 {
 	public class UserController : XBehaviour
 	{

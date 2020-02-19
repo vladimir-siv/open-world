@@ -12,7 +12,7 @@ namespace XEngine
 		[DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
 		private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
 
-		public static bool CurrentApplicationIsActive
+		internal static bool CurrentApplicationIsActive
 		{
 			get
 			{
@@ -20,8 +20,7 @@ namespace XEngine
 				if (activatedHandle == IntPtr.Zero) return false;
 
 				var procId = Process.GetCurrentProcess().Id;
-				int activeProcId;
-				GetWindowThreadProcessId(activatedHandle, out activeProcId);
+				GetWindowThreadProcessId(activatedHandle, out var activeProcId);
 
 				return activeProcId == procId;
 			}

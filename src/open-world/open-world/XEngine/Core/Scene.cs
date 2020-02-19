@@ -48,9 +48,9 @@ namespace XEngine.Core
 		internal void _Exit()
 		{
 			if (!Initialized) return;
+			Initialized = false;
 			Exit();
 			Clear();
-			Initialized = false;
 		}
 
 		protected virtual void Init() { }

@@ -3,23 +3,27 @@ using GlmNet;
 
 namespace XEngine.Core
 {
+	using XEngine.Extensions;
+
 	public sealed class Camera
 	{
-		private static readonly vec3 IdentY = new vec3(0.0f, 1.0f, 0.0f);
-		private vec3 StrafeDirection = new vec3(1.0f, 0.0f, 0.0f);
-
-		public vec3 Position { get; set; } = new vec3(0.0f, 0.0f, 0.0f);
-
-		public float RotationSpeed { get; set; } = 0.005f;
-		public float MovementSpeed { get; set; } = 1.0f;
+		public GameObject Following { get; private set; } = null;
 
 		public float FieldOfView { get; private set; } = 60.0f;
 		public float AspectRatio { get; private set; } = 1.0f;
 		public float NearClipPlane { get; private set; } = +0.1f;
 		public float FarClipPlane { get; private set; } = +100.0f;
 
-		public vec3 ViewDirection { get; private set; } = new vec3(0.0f, 0.0f, -1.0f);
-		public mat4 WorldToView => glm.lookAt(Position, Position + ViewDirection, IdentY);
+		public vec3 ViewDirection { get; private set; } = vector3.forward;
+		public vec3 StrafeDirection { get; private set; } = vector3.right;
+		public vec3 FlyDirection { get; private set; } = vector3.up;
+
+		public vec3 LocalPosition { get; set; } = vector3.zero;
+		public vec3 Position { get; private set; } = vector3.zero;
+		public vec3 LocalRotation { get; set; } = vector3.zero;
+		public vec3 Rotation { get; private set; } = vector3.zero;
+
+		public mat4 WorldToView => glm.lookAt(Position, Position + ViewDirection, FlyDirection);
 		public mat4 ViewToProject { get; private set; }
 
 		public Camera()
@@ -68,25 +72,35 @@ namespace XEngine.Core
 			if (change) ViewToProject = glm.perspective(fov * (float)Math.PI / 180.0f, aspect, near, far);
 		}
 
-		public void Rotate(vec2 delta)
+		public void Follow(GameObject gameObject) => Follow(gameObject, LocalPosition, LocalRotation);
+		public void Follow(GameObject gameObject, vec3 localPosition, vec3 localRotation)
 		{
-			StrafeDirection = glm.cross(ViewDirection, IdentY);
-			var rotx = glm.rotate(-delta.x * RotationSpeed, IdentY);
-			var roty = glm.rotate(-delta.y * RotationSpeed, StrafeDirection);
-			ViewDirection = (rotx * roty).to_mat3() * ViewDirection;
+			if (Following == gameObject) return;
+			Following = gameObject;
+			LocalPosition = localPosition;
+			LocalRotation = localRotation;
 		}
 
-		public void Move(vec3 delta)
+		public void Adjust()
 		{
-			Position += MovementSpeed * StrafeDirection * delta.x;
-			Position += MovementSpeed * IdentY * delta.y;
-			Position += MovementSpeed * ViewDirection * -delta.z;
-		}
+			var parentRotate = Following?.transform.rotation ?? vector3.zero;
+			var parentTranslate = Following?.transform.position ?? vector3.zero;
 
-		public void LookAt(vec3 point)
-		{
-			ViewDirection = glm.normalize(-1f * Position + point);
-			StrafeDirection = glm.cross(ViewDirection, IdentY);
+			var transform4d = mat4.identity();
+			transform4d = glm.translate(transform4d, parentTranslate);
+			transform4d = quaternion.euler(transform4d, parentRotate);
+			transform4d = glm.translate(transform4d, LocalPosition);
+			transform4d = quaternion.euler(transform4d, LocalRotation);
+
+			var rotate4d = quaternion.euler(LocalRotation + parentRotate);
+
+			var zero4d = new vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			Position = (transform4d * zero4d).to_vec3();
+			Rotation = (rotate4d * zero4d).to_vec3();
+
+			ViewDirection = (rotate4d * vector4.forward).to_vec3();
+			StrafeDirection = (rotate4d * vector4.right).to_vec3();
+			FlyDirection = (rotate4d * vector4.up).to_vec3();
 		}
 	}
 }

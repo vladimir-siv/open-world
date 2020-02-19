@@ -23,7 +23,7 @@ namespace XEngine.Core
 
 		public static void LoadScene(string sceneId, bool endLast = true)
 		{
-			if (endLast && CurrentScene != null) CurrentScene._Exit();
+			if (endLast) CurrentScene?._Exit();
 			CurrentScene = Scene.Resolve(sceneId);
 			CurrentScene._Init();
 		}

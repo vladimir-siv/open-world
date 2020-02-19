@@ -48,8 +48,9 @@ namespace XEngine
 
 		public static void Draw()
 		{
-			SceneManager.CurrentScene._Draw();
 			Input.Update();
+			SceneManager.CurrentScene._Draw();
+			Input.Late();
 		}
 	}
 

@@ -4,7 +4,9 @@ using SharpGL;
 using XEngine;
 using XEngine.Core;
 using XEngine.Data;
+using XEngine.Shapes;
 using XEngine.Shading;
+using XEngine.Extensions;
 
 namespace open_world.Scripts
 {
@@ -24,9 +26,6 @@ namespace open_world.Scripts
 			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			gl.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT);
 
-			MainCamera.Position = new vec3(-30.0f, 20.0f, 30.0f);
-			MainCamera.LookAt(new vec3(0.0f, 0.0f, 0.0f));
-
 			MaleHead = new GameObject("MaleHead");
 			MaleHead.mesh = new Mesh();
 			MaleHead.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
@@ -37,9 +36,20 @@ namespace open_world.Scripts
 			MaleHead.mesh.material.Set("light_source_position", new vec3(-15.0f, 40.0f, 30.0f));
 			MaleHead.mesh.material.Set("light_source_color", new vec3(1.0f, 1.0f, 1.0f));
 			MaleHead.mesh.material.Set("light_source_power", 60.0f);
-
+			
 			UserController = new GameObject("UserController");
+			UserController.mesh = new Mesh();
+			UserController.mesh.shape = new Cube();
+			UserController.mesh.shape.Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
+			UserController.mesh.shape.Release(); // [optimization]
+			UserController.mesh.material = new Material(Shader.Find("unlit"));
+
 			UserController.AttachBehavior(new UserController { MaleHead = MaleHead });
+			UserController.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
+			UserController.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
+
+			MainCamera.Follow(UserController, vector3.zero, vector3.zero);
+			//MainCamera.LocalPosition = new vec3(-4.0f, 4.0f, 10.0f);
 		}
 
 		protected override void Draw()
@@ -49,8 +59,11 @@ namespace open_world.Scripts
 			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
 			
 			MaleHead.Sync();
-			MaleHead.Draw();
 			UserController.Sync();
+
+			MainCamera.Adjust();
+
+			MaleHead.Draw();
 			UserController.Draw();
 		}
 	}

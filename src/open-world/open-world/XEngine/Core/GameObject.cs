@@ -14,13 +14,13 @@ namespace XEngine.Core
 		public Transform transform = new Transform(new vec3(0.0f, 0.0f, 0.0f), new vec3(0.0f, 0.0f, 0.0f), new vec3(1.0f, 1.0f, 1.0f));
 		public Mesh mesh = null;
 
+		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
 		private Transform worldTransform = new Transform(new vec3(0.0f, 0.0f, 0.0f), new vec3(0.0f, 0.0f, 0.0f), new vec3(1.0f, 1.0f, 1.0f));
-		private LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
-
+		
 		public GameObject(string name, params XBehaviour[] scripts)
 		{
 			this.name = name;
-			foreach (var script in Scripts) AttachBehavior(script);
+			foreach (var script in scripts) AttachBehavior(script);
 			SceneManager.CurrentScene.Add(this);
 		}
 

@@ -32,7 +32,7 @@ namespace XEngine.Core
 				if (_shape == value) return;
 				if (_shape != null) Dispose();
 				_shape = value;
-				Init();
+				Generate();
 			}
 		}
 		private Material _material = null;
@@ -53,9 +53,10 @@ namespace XEngine.Core
 			var model = await Model.Load(name);
 			model.Attributes = attributes;
 			shape = model;
+			shape.Release();
 		}
 
-		private void Init()
+		private void Generate()
 		{
 			if (ArrayIds[0] != 0u) throw new InvalidOperationException("Cannot reinitialize mesh while the last one was not disposed.");
 			if (shape == null) throw new InvalidOperationException("Shape not provided.");
@@ -87,6 +88,10 @@ namespace XEngine.Core
 			gl.DeleteBuffers(BufferIds.Length, BufferIds);
 			gl.DeleteVertexArrays(ArrayIds.Length, ArrayIds);
 
+			_shape?.Dispose();
+			_shape = null;
+			_material = null;
+
 			ArrayIds[0] = 0u;
 		}
 
@@ -101,7 +106,7 @@ namespace XEngine.Core
 			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToView.to_array());
 			if (material.shader.Translate != -1) gl.UniformMatrix4(material.shader.Translate, 1, false, glm.translate(mat4.identity(), transform.position).to_array());
 			if (material.shader.Scale != -1) gl.UniformMatrix4(material.shader.Scale, 1, false, glm.scale(mat4.identity(), transform.scale).to_array());
-			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, glm.rotate(glm.rotate(glm.rotate(transform.rotation.y.ToRad(), vec.up), transform.rotation.x.ToRad(), vec.right), transform.rotation.z.ToRad(), vec.backward).to_array());
+			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, glm.rotate(glm.rotate(glm.rotate(transform.rotation.y.ToRad(), vector3.up), transform.rotation.x.ToRad(), vector3.right), transform.rotation.z.ToRad(), vector3.backward).to_array());
 			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
 			material.Prepare();
 			gl.DrawElements(shape.OpenGLShapeType, shape.Indices.Length, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);

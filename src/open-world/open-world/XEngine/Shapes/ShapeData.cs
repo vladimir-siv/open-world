@@ -5,7 +5,7 @@ namespace XEngine.Shapes
 	using XEngine.Data;
 	using XEngine.Extensions;
 
-	public struct ShapeData
+	public struct ShapeData : IDisposable
 	{
 		public vertex[] Vertices { get; private set; }
 		public ushort[] Indices { get; private set; }
@@ -64,6 +64,12 @@ namespace XEngine.Shapes
 			}
 			
 			Indices = indices;
+		}
+
+		public void Dispose()
+		{
+			Vertices = null;
+			Indices = null;
 		}
 	}
 }

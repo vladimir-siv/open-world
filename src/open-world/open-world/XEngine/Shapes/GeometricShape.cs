@@ -6,7 +6,7 @@ namespace XEngine.Shapes
 	using XEngine.Data;
 	using XEngine.Extensions;
 
-	public class GeometricShape
+	public class GeometricShape : IDisposable
 	{
 		protected ShapeData ShapeData { get; private set; }
 
@@ -16,7 +16,7 @@ namespace XEngine.Shapes
 		public VertexAttribute Attributes
 		{
 			get { return _Attributes; }
-			set { _Attributes = value; UpdateAttribCount(); }
+			set { if (_Attributes == value) return; _Attributes = value; UpdateAttribCount(); }
 		}
 
 		public vertex[] Vertices => ShapeData.Vertices;
@@ -33,5 +33,8 @@ namespace XEngine.Shapes
 		public virtual bool ShouldAttribNormalize(uint index) => false;
 		public virtual int GetAttribStride(uint index) => (int)(vertex.AttribSize * GLAttribCount * sizeof(float));
 		public virtual IntPtr GetAttribOffset(uint index) => new IntPtr(index * vertex.AttribSize * sizeof(float));
+
+		public void Dispose() => Release();
+		public virtual void Release() => ShapeData.Dispose();
 	}
 }

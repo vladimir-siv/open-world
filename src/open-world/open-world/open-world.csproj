@@ -88,7 +88,7 @@
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
     <Compile Include="XEngine\Scripting\XBehaviour.cs" />
-    <Compile Include="XEngine\Shaders\Color.cs" />
+    <Compile Include="XEngine\Shading\Color.cs" />
     <Compile Include="XEngine\Core\GameObject.cs" />
     <Compile Include="XEngine\Core\Mesh.cs" />
     <Compile Include="XEngine\Core\Scene.cs" />
@@ -99,8 +99,8 @@
     <Compile Include="XEngine\Host.cs" />
     <Compile Include="XEngine\ManifestResourceManager.cs" />
     <Compile Include="XEngine\Models\Model.cs" />
-    <Compile Include="XEngine\Shaders\Material.cs" />
-    <Compile Include="XEngine\Shaders\Shader.cs" />
+    <Compile Include="XEngine\Shading\Material.cs" />
+    <Compile Include="XEngine\Shading\Shader.cs" />
     <Compile Include="XEngine\Data\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
     <Compile Include="XEngine\Shapes\GeometricShape.cs" />
@@ -134,6 +134,7 @@
     </Compile>
     <EmbeddedResource Include="Resources\male_head.obj" />
     <EmbeddedResource Include="Shaders\phong.glsl" />
+    <EmbeddedResource Include="Shaders\unlit.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -15,10 +15,11 @@ namespace XEngine.Interaction
 
 		public static vec2 LastMousePosition { get; private set; } = new vec2(Cursor.Position.X, Cursor.Position.Y);
 		public static vec2 MousePosition { get; private set; } = new vec2(Cursor.Position.X, Cursor.Position.Y);
-		public static vec2 MouseDelta => MousePosition - LastMousePosition;
+		public static vec2 MouseDelta { get; private set; } = new vec2(0.0f, 0.0f);
 		public static float ScrollDelta { get; private set; } = 0.0f;
 
-		public static bool IsCursorInsideRenderingArea => XEngineContext.GLControl.ClientRectangle.Contains(XEngineContext.GLControl.PointToClient(Cursor.Position));
+		public static bool IsCurrentApplicationActive { get; private set; }
+		public static bool IsCursorInsideRenderingArea { get; private set; }
 
 		public static bool IsKeyDown(Key key) => Keyboard.IsKeyDown((System.Windows.Input.Key)key);
 		public static bool MouseButtonsPressed(MouseButtons buttons) => Control.MouseButtons.HasFlag((System.Windows.Forms.MouseButtons)buttons);
@@ -32,9 +33,21 @@ namespace XEngine.Interaction
 		internal static void Update()
 		{
 			if (!Initialized) return;
-			if (!Host.CurrentApplicationIsActive) return;
+
+			IsCurrentApplicationActive = Host.CurrentApplicationIsActive;
+			IsCursorInsideRenderingArea = XEngineContext.GLControl.ClientRectangle.Contains(XEngineContext.GLControl.PointToClient(Cursor.Position));
+
+			if (!IsCurrentApplicationActive) return;
 			LastMousePosition = MousePosition;
 			MousePosition = new vec2(Cursor.Position.X, Cursor.Position.Y);
+			MouseDelta = MousePosition - LastMousePosition;
+		}
+		internal static void Late()
+		{
+			if (!Initialized) return;
+
+			if (!IsCurrentApplicationActive) return;
+
 			ScrollDelta = 0.0f;
 		}
 		internal static void Exit()

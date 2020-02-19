@@ -1,47 +1,38 @@
 ﻿using GlmNet;
-using XEngine;
 using XEngine.Core;
 using XEngine.Scripting;
 using XEngine.Interaction;
+using XEngine.Extensions;
 
 namespace open_world.Scripts.Behaviours
 {
 	public class UserController : XBehaviour
 	{
 		public GameObject MaleHead = null;
+		public float MovementSpeed = 1.0f;
+		public float RotationSpeed = 0.2f;
 
 		protected override void Update()
 		{
-			if (!Host.CurrentApplicationIsActive) return;
+			if (!Input.IsCurrentApplicationActive) return;
+			if (!Input.IsCursorInsideRenderingArea) return;
 
-			if (Input.IsCursorInsideRenderingArea)
-			{
-				var delta = Input.MouseDelta;
+			var rotation = new vec3(Input.MouseDelta.y, Input.MouseDelta.x, 0.0f);
+			var forward = Input.ScrollDelta;
+			var right = 0.0f;
+			var up = 0.0f;
 
-				// Rotate camera
-				if (Input.MouseButtonsPressed(MouseButtons.Middle))
-				{
-					MainCamera.Rotate(delta);
-				}
+			if (Input.IsKeyDown(Key.W)) forward += 1.0f;
+			if (Input.IsKeyDown(Key.S)) forward -= 1.0f;
+			if (Input.IsKeyDown(Key.A)) right -= 1.0f;
+			if (Input.IsKeyDown(Key.D)) right += 1.0f;
+			if (Input.MouseButtonsPressed(MouseButtons.XButton1)) up -= 1.0f;
+			if (Input.MouseButtonsPressed(MouseButtons.XButton2)) up += 1.0f;
 
-				// Rotate shape
-				if (Input.MouseButtonsPressed(MouseButtons.Left))
-				{
-					MaleHead.transform.rotation += new vec3(delta.y, delta.x, 0.0f);
-				}
-			}
-
-			// Move camera
-			var moveDelta = new vec3(0.0f, 0.0f, -Input.ScrollDelta);
-
-			if (Input.IsKeyDown(Key.W)) moveDelta.z -= 1.0f;
-			if (Input.IsKeyDown(Key.S)) moveDelta.z += 1.0f;
-			if (Input.IsKeyDown(Key.A)) moveDelta.x -= 1.0f;
-			if (Input.IsKeyDown(Key.D)) moveDelta.x += 1.0f;
-			if (Input.MouseButtonsPressed(MouseButtons.XButton1)) moveDelta.y -= 1.0f;
-			if (Input.MouseButtonsPressed(MouseButtons.XButton2)) moveDelta.y += 1.0f;
-
-			MainCamera.Move(moveDelta);
+			if (Input.MouseButtonsPressed(MouseButtons.Middle)) gameObject.transform.rotation -= rotation * RotationSpeed;
+			var directions = gameObject.transform.WorldSpaceUnits;
+			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed;
+			if (Input.MouseButtonsPressed(MouseButtons.Left)) MaleHead.transform.rotation += rotation;
 		}
 	}
 }

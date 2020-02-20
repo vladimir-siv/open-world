@@ -34,6 +34,13 @@ namespace XEngine.Common
 
 		public static vec3 normalize(this vec3 v) => v != zero ? glm.normalize(v) : zero;
 		public static vec4 to_vec4(this vec3 v) => new vec4(v.x, v.y, v.z, 1.0f);
+		public static float distance(this vec3 v1, vec3 v2)
+		{
+			var xd = v2.x - v1.x;
+			var yd = v2.y - v1.y;
+			var zd = v2.z - v1.z;
+			return (float)Math.Sqrt(xd * xd + yd * yd + zd * zd);
+		}
 	}
 
 	public static class vector4
@@ -51,6 +58,14 @@ namespace XEngine.Common
 
 		public static vec4 normalize(this vec4 v) => v != zero ? glm.normalize(v) : zero;
 		public static vec3 to_vec3(this vec4 v, bool suppress = false) => suppress ? new vec3(v.x / v.w, v.y / v.w, v.z / v.w) : new vec3(v.x, v.y, v.z);
+		public static float distance(this vec4 v1, vec4 v2)
+		{
+			var xd = v2.x - v1.x;
+			var yd = v2.y - v1.y;
+			var zd = v2.z - v1.z;
+			var wd = v2.w - v1.w;
+			return (float)Math.Sqrt(xd * xd + yd * yd + zd * zd + wd * wd);
+		}
 	}
 
 	public static class quaternion

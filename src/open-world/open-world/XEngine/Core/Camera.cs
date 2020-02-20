@@ -9,10 +9,14 @@ namespace XEngine.Core
 	{
 		public GameObject Following { get; set; } = null;
 
-		public float FieldOfView { get; private set; } = 60.0f;
-		public float AspectRatio { get; private set; } = 1.0f;
-		public float NearClipPlane { get; private set; } = +0.1f;
-		public float FarClipPlane { get; private set; } = +100.0f;
+		private float _FieldOfView = 60.0f;
+		public float FieldOfView { get => _FieldOfView; set => SetProjection(value, AspectRatio, NearClipPlane, FarClipPlane); }
+		private float _AspectRatio = 1.0f;
+		public float AspectRatio { get => _AspectRatio; set => SetProjection(FieldOfView, value, NearClipPlane, FarClipPlane); }
+		private float _NearClipPlane = +0.1f;
+		public float NearClipPlane { get => _NearClipPlane; set => SetProjection(FieldOfView, AspectRatio, value, FarClipPlane); }
+		private float _FarClipPlane = +100.0f;
+		public float FarClipPlane { get => _FarClipPlane; set => SetProjection(FieldOfView, AspectRatio, NearClipPlane, value); }
 
 		public vec3 ViewDirection { get; private set; } = vector3.forward;
 		public vec3 StrafeDirection { get; private set; } = vector3.right;
@@ -34,11 +38,6 @@ namespace XEngine.Core
 			SetProjection(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
 		}
 
-		public void SetFieldOfView(float fov) => SetProjection(fov, AspectRatio, NearClipPlane, FarClipPlane);
-		public void SetAspectRatio(float aspect) => SetProjection(FieldOfView, aspect, NearClipPlane, FarClipPlane);
-		public void SetNearClipPlane(float near) => SetProjection(FieldOfView, AspectRatio, near, FarClipPlane);
-		public void SetFarClipPlane(float far) => SetProjection(FieldOfView, AspectRatio, NearClipPlane, far);
-		public void SetClipPlane(float near, float far) => SetProjection(FieldOfView, AspectRatio, near, far);
 		public void SetProjection(float fov, float aspect, float near, float far)
 		{
 			if (fov <= 0.0f) throw new ArgumentException("FieldOfView must be a positive float.");
@@ -50,25 +49,25 @@ namespace XEngine.Core
 
 			if (fov != FieldOfView)
 			{
-				FieldOfView = fov;
+				_FieldOfView = fov;
 				change = true;
 			}
 
 			if (aspect != AspectRatio)
 			{
-				AspectRatio = aspect;
+				_AspectRatio = aspect;
 				change = true;
 			}
 
 			if (near != NearClipPlane)
 			{
-				NearClipPlane = near;
+				_NearClipPlane = near;
 				change = true;
 			}
 
 			if (far != FarClipPlane)
 			{
-				FarClipPlane = far;
+				_FarClipPlane = far;
 				change = true;
 			}
 

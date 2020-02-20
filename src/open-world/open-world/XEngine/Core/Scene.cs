@@ -69,7 +69,7 @@ namespace XEngine.Core
 		internal void _Draw()
 		{
 			if (!Initialized) return;
-			MainCamera.SetAspectRatio((float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height);
+			MainCamera.AspectRatio = (float)XEngineContext.GLControl.Width / (float)XEngineContext.GLControl.Height;
 			foreach (var gameObject in GameObjects) gameObject.Update();
 			foreach (var gameObject in GameObjects) gameObject.Late();
 			var gl = XEngineContext.Graphics;

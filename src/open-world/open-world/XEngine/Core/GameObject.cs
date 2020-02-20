@@ -81,15 +81,15 @@ namespace XEngine.Core
 
 		public void Sync()
 		{
-			transform_scale_invariant = parent?.transform_scale_invariant.clone() ?? mat4.identity();
-			rotate_model = parent?.rotate_model.clone() ?? mat4.identity();
+			transform_scale_invariant = parent?.transform_scale_invariant.copy_to(transform_scale_invariant) ?? transform_scale_invariant.identify();
+			rotate_model = parent?.rotate_model.copy_to(rotate_model) ?? rotate_model.identify();
 
 			transform_scale_invariant = glm.translate(transform_scale_invariant, transform.position);
 			transform_scale_invariant = quaternion.euler(transform_scale_invariant, transform.rotation);
 			rotate_model = quaternion.euler(rotate_model, transform.rotation);
 
 			total_scale = (parent?.total_scale ?? vector3.one) * transform.scale;
-			transform_model = transform_scale_invariant.clone();
+			transform_model = transform_scale_invariant.copy_to(transform_model);
 			transform_model = glm.scale(transform_model, total_scale);
 
 			transform_model.serialize(model);

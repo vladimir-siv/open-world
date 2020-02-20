@@ -33,6 +33,9 @@ namespace XEngine.Core
 		public float[] WorldToViewData { get; private set; } = new float[16];
 		public float[] ViewToProjectData { get; private set; } = new float[16];
 
+		private mat4 transform = mat4.identity();
+		private mat4 rotate = mat4.identity();
+
 		public Camera()
 		{
 			SetProjection(FieldOfView, AspectRatio, NearClipPlane, FarClipPlane);
@@ -80,8 +83,8 @@ namespace XEngine.Core
 
 		public void Adjust()
 		{
-			var transform = Following?.transform_scale_invariant.clone() ?? mat4.identity();
-			var rotate = Following?.rotate_model.clone() ?? mat4.identity();
+			transform = Following?.transform_scale_invariant.copy_to(transform) ?? transform.identify();
+			rotate = Following?.rotate_model.copy_to(rotate) ?? rotate.identify();
 
 			transform = glm.translate(transform, LocalPosition);
 			transform = quaternion.euler(transform, LocalRotation);

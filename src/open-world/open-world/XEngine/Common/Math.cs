@@ -80,6 +80,14 @@ namespace XEngine.Common
 			return glm.rotate(glm.rotate(glm.rotate(mat, y.ToRad(), vector3.up), x.ToRad(), vector3.right), z.ToRad(), vector3.backward);
 		}
 
+		public static mat4 identify(this mat4 mat)
+		{
+			mat[0] = new vec4(1.0f, 0.0f, 0.0f, 0.0f);
+			mat[1] = new vec4(0.0f, 1.0f, 0.0f, 0.0f);
+			mat[2] = new vec4(0.0f, 0.0f, 1.0f, 0.0f);
+			mat[3] = new vec4(0.0f, 0.0f, 0.0f, 1.0f);
+			return mat;
+		}
 		public static mat4 clone(this mat4 mat)
 		{
 			var clone = mat4.identity();
@@ -88,6 +96,14 @@ namespace XEngine.Common
 			clone[2] = mat[2];
 			clone[3] = mat[3];
 			return clone;
+		}
+		public static mat4 copy_to(this mat4 src, mat4 dest)
+		{
+			dest[0] = src[0];
+			dest[1] = src[1];
+			dest[2] = src[2];
+			dest[3] = src[3];
+			return dest;
 		}
 	}
 }

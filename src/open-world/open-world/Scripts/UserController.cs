@@ -18,7 +18,8 @@ namespace open_world
 			if (!Input.IsCursorInsideRenderingArea) return;
 
 			var rotation = new vec3(Input.MouseDelta.y, Input.MouseDelta.x, 0.0f);
-			var forward = Input.ScrollDelta;
+			var scale = Input.ScrollDelta / 10.0f;
+			var forward = 0.0f;
 			var right = 0.0f;
 			var up = 0.0f;
 
@@ -32,7 +33,10 @@ namespace open_world
 			if (Input.MouseButtonsPressed(MouseButtons.Middle)) gameObject.transform.rotation -= rotation * RotationSpeed;
 			var directions = gameObject.transform.WorldSpaceUnits;
 			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed;
+			gameObject.transform.scale += scale;
 			if (Input.MouseButtonsPressed(MouseButtons.Left)) Model.transform.rotation += rotation;
+
+			if (Input.IsKeyDown(Key.R)) gameObject.transform = new Transform(new vec3(-30.0f, 20.0f, 30.0f), new vec3(-25.0f, -45.0f, 0.0f), vector3.one);
 		}
 	}
 }

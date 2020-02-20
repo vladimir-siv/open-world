@@ -70,6 +70,8 @@ namespace XEngine.Common
 
 	public static class quaternion
 	{
+		public static vec3 calculate_position(this mat4 mat) => (mat * vector4.neutral).to_vec3();
+
 		public static mat4 euler(vec3 xyz) => euler(mat4.identity(), xyz.x, xyz.y, xyz.z);
 		public static mat4 euler(float x, float y, float z) => euler(mat4.identity(), x, y, z);
 		public static mat4 euler(mat4 mat, vec3 xyz) => euler(mat, xyz.x, xyz.y, xyz.z);

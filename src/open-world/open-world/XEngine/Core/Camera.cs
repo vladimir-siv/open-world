@@ -80,7 +80,7 @@ namespace XEngine.Core
 
 		public void Adjust()
 		{
-			var transform = Following?.transform_model.clone() ?? mat4.identity();
+			var transform = Following?.transform_scale_invariant.clone() ?? mat4.identity();
 			var rotate = Following?.rotate_model.clone() ?? mat4.identity();
 
 			transform = glm.translate(transform, LocalPosition);

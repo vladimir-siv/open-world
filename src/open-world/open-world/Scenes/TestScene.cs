@@ -62,6 +62,7 @@ namespace open_world
 			//MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
 			//Model.parent = User;
 			//Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
+			//Model.transform.scale = new vec3(0.1f, 0.1f, 0.1f);
 		}
 	}
 }

@@ -47,6 +47,9 @@ namespace XEngine.Core
 		internal mat4 rotate_model = mat4.identity();
 		internal readonly float[] rotate = new float[16];
 
+		internal mat4 transform_scale_invariant = mat4.identity();
+		internal vec3 total_scale = vector3.one;
+
 		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
 
 		public GameObject(string name, params XBehaviour[] scripts)
@@ -78,13 +81,16 @@ namespace XEngine.Core
 
 		public void Sync()
 		{
-			transform_model = parent?.transform_model.clone() ?? mat4.identity();
+			transform_scale_invariant = parent?.transform_scale_invariant.clone() ?? mat4.identity();
 			rotate_model = parent?.rotate_model.clone() ?? mat4.identity();
 
-			transform_model = glm.translate(transform_model, transform.position);
-			transform_model = glm.scale(transform_model, transform.scale);
-			transform_model = quaternion.euler(transform_model, transform.rotation);
+			transform_scale_invariant = glm.translate(transform_scale_invariant, transform.position);
+			transform_scale_invariant = quaternion.euler(transform_scale_invariant, transform.rotation);
 			rotate_model = quaternion.euler(rotate_model, transform.rotation);
+
+			total_scale = (parent?.total_scale ?? vector3.one) * transform.scale;
+			transform_model = transform_scale_invariant.clone();
+			transform_model = glm.scale(transform_model, total_scale);
 
 			transform_model.serialize(model);
 			rotate_model.serialize(rotate);

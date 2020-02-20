@@ -38,6 +38,7 @@ namespace XEngine
 			XEngineContext.Graphics.UseProgram(0);
 			foreach (var shader in XEngineContext.Shaders) shader.Value.Clean();
 			XEngineContext.Shaders.Clear();
+			XEngineContext.CompiledShaders.Clear();
 			XEngineContext.GLControl = null;
 		}
 	}
@@ -47,6 +48,7 @@ namespace XEngine
 		internal static OpenGLControl GLControl { get; set; } = null;
 		internal static OpenGL Graphics => GLControl.OpenGL;
 		internal static Dictionary<string, Shader> Shaders { get; } = new Dictionary<string, Shader>();
+		internal static LinkedList<Shader> CompiledShaders = new LinkedList<Shader>();
 
 		public static void Draw()
 		{

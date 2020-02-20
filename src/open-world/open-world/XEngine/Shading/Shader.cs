@@ -8,7 +8,6 @@ namespace XEngine.Shading
 {
 	public sealed class Shader : IDisposable
 	{
-		internal static LinkedList<Shader> CompiledShaders = new LinkedList<Shader>();
 
 		private static (string, string) Preprocess(string code)
 		{
@@ -124,7 +123,7 @@ namespace XEngine.Shading
 			var id = Build(shaderName);
 			shader = new Shader(id, shaderName);
 			shaders.Add(shaderName, shader);
-			CompiledShaders.AddLast(shader);
+			XEngineContext.CompiledShaders.AddLast(shader);
 			return shader;
 		}
 
@@ -165,7 +164,7 @@ namespace XEngine.Shading
 		{
 			Clean();
 			XEngineContext.Shaders.Remove(Name);
-			CompiledShaders.Remove(this);
+			XEngineContext.CompiledShaders.Remove(this);
 		}
 
 		public void Use()

@@ -120,7 +120,7 @@ namespace XEngine.Core
 		}
 		protected void DrawScene()
 		{
-			foreach (var shader in Shader.CompiledShaders)
+			foreach (var shader in XEngineContext.CompiledShaders)
 			{
 				while (Algs.DrawableObjectPouch.Retrieve(shader, out var gameObject))
 				{

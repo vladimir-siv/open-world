@@ -187,28 +187,23 @@ namespace XEngine.Shading
 			return location;
 		}
 
-		internal void Set(string name, int value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
-		internal void Set(string name, uint value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
-		internal void Set(string name, float value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
-		internal void Set(string name, int[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
-		internal void Set(string name, uint[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
-		internal void Set(string name, float[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
-		internal void Set(string name, Color value) => XEngineContext.Graphics.Uniform4(GetLocation(name), value.r, value.g, value.b, value.a);
-		internal void Set(string name, vec2 value) => XEngineContext.Graphics.Uniform2(GetLocation(name), value.x, value.y);
-		internal void Set(string name, vec3 value) => XEngineContext.Graphics.Uniform3(GetLocation(name), value.x, value.y, value.z);
-		internal void Set(string name, vec4 value) => XEngineContext.Graphics.Uniform4(GetLocation(name), value.x, value.y, value.z, value.w);
-		internal void Set(string name, float x, float y, float z) => XEngineContext.Graphics.Uniform3(GetLocation(name), x, y, z);
-		internal void Set(string name, float x, float y, float z, float w) => XEngineContext.Graphics.Uniform4(GetLocation(name), x, y, z, w);
-		internal void SetRGBColors(string name, float[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length / 3, values);
-		internal void SetColors(string name, float[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length / 4, values);
-		internal void SetVec2s(string name, float[] values) => XEngineContext.Graphics.Uniform2(GetLocation(name), values.Length / 2, values);
-		internal void SetVec3s(string name, float[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length / 3, values);
-		internal void SetVec4s(string name, float[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length / 4, values);
+		internal void SetScalar(string name, int value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		internal void SetScalar(string name, uint value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		internal void SetScalar(string name, float value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
+		internal void SetScalarArray(string name, int[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		internal void SetScalarArray(string name, uint[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		internal void SetScalarArray(string name, float[] values) => XEngineContext.Graphics.Uniform1(GetLocation(name), values.Length, values);
+		internal void SetVec2(string name, float x, float y) => XEngineContext.Graphics.Uniform2(GetLocation(name), x, y);
+		internal void SetVec3(string name, float x, float y, float z) => XEngineContext.Graphics.Uniform3(GetLocation(name), x, y, z);
+		internal void SetVec4(string name, float x, float y, float z, float w) => XEngineContext.Graphics.Uniform4(GetLocation(name), x, y, z, w);
+		internal void SetVec2Array(string name, float[] values) => XEngineContext.Graphics.Uniform2(GetLocation(name), values.Length / 2, values);
+		internal void SetVec3Array(string name, float[] values) => XEngineContext.Graphics.Uniform3(GetLocation(name), values.Length / 3, values);
+		internal void SetVec4Array(string name, float[] values) => XEngineContext.Graphics.Uniform4(GetLocation(name), values.Length / 4, values);
 		internal void SetMat2(string name, float[] value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), 1, transpose, value);
 		internal void SetMat3(string name, float[] value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), 1, transpose, value);
 		internal void SetMat4(string name, float[] value, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), 1, transpose, value);
-		internal void SetMat2s(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), values.Length / 4, transpose, values);
-		internal void SetMat3s(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), values.Length / 9, transpose, values);
-		internal void SetMat4s(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), values.Length / 16, transpose, values);
+		internal void SetMat2Array(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix2(GetLocation(name), values.Length / 4, transpose, values);
+		internal void SetMat3Array(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix3(GetLocation(name), values.Length / 9, transpose, values);
+		internal void SetMat4Array(string name, float[] values, bool transpose = false) => XEngineContext.Graphics.UniformMatrix4(GetLocation(name), values.Length / 16, transpose, values);
 	}
 }

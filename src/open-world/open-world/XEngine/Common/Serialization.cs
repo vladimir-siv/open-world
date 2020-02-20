@@ -7,11 +7,25 @@ namespace XEngine.Common
 
 	public static class Serialization
 	{
-		public static float[] serialize(this Color[] colors, float[] array = null, bool includeAlpha = true)
+		public static float[] serialize(this Color[] colors, float[] array = null, bool rgb_only = false)
 		{
 			if (colors == null) throw new ArgumentNullException(nameof(colors));
 
-			if (includeAlpha)
+			if (rgb_only)
+			{
+				array = array ?? new float[colors.Length * 3];
+				if (array.Length != colors.Length * 3) throw new ArgumentException("Invalid array length.");
+
+				for (var i = 0; i < colors.Length; ++i)
+				{
+					array[i * 3 + 0] = colors[i].r;
+					array[i * 3 + 1] = colors[i].g;
+					array[i * 3 + 2] = colors[i].b;
+				}
+
+				return array;
+			}
+			else
 			{
 				array = array ?? new float[colors.Length * 4];
 				if (array.Length != colors.Length * 4) throw new ArgumentException("Invalid array length.");
@@ -22,20 +36,6 @@ namespace XEngine.Common
 					array[i * 4 + 1] = colors[i].g;
 					array[i * 4 + 2] = colors[i].b;
 					array[i * 4 + 3] = colors[i].a;
-				}
-
-				return array;
-			}
-			else
-			{
-				array = array ?? new float[colors.Length * 3];
-				if (array.Length != colors.Length * 3) throw new ArgumentException("Invalid array length.");
-
-				for (var i = 0; i < colors.Length; ++i)
-				{
-					array[i * 3 + 0] = colors[i].r;
-					array[i * 3 + 1] = colors[i].g;
-					array[i * 3 + 2] = colors[i].b;
 				}
 
 				return array;

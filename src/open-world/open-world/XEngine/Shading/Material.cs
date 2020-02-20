@@ -1,96 +1,311 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using GlmNet;
 
 namespace XEngine.Shading
 {
-	using XEngine.Common;
+    using XEngine.Common;
 
 	public sealed class Material
 	{
-		private readonly SortedDictionary<string, int>								ParamsInt		= new SortedDictionary<string, int>();
-		private readonly SortedDictionary<string, uint>								ParamsUInt		= new SortedDictionary<string, uint>();
-		private readonly SortedDictionary<string, float>							ParamsFloat		= new SortedDictionary<string, float>();
-		private readonly SortedDictionary<string, int[]>							ParamsInts		= new SortedDictionary<string, int[]>();
-		private readonly SortedDictionary<string, uint[]>							ParamsUInts		= new SortedDictionary<string, uint[]>();
-		private readonly SortedDictionary<string, float[]>							ParamsFloats	= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, Color>							ParamsColor		= new SortedDictionary<string, Color>();
-		private readonly SortedDictionary<string, vec2>								ParamsVec2		= new SortedDictionary<string, vec2>();
-		private readonly SortedDictionary<string, vec3>								ParamsVec3		= new SortedDictionary<string, vec3>();
-		private readonly SortedDictionary<string, vec4>								ParamsVec4		= new SortedDictionary<string, vec4>();
-		private readonly SortedDictionary<string, (float, float, float)>			Params3f		= new SortedDictionary<string, (float, float, float)>();
-		private readonly SortedDictionary<string, (float, float, float, float)>		Params4f		= new SortedDictionary<string, (float, float, float, float)>();
-		private readonly SortedDictionary<string, float[]>							ParamsRGBColors	= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, float[]>							ParamsColors	= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, float[]>							ParamsVec2s		= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, float[]>							ParamsVec3s		= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, float[]>							ParamsVec4s		= new SortedDictionary<string, float[]>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat2		= new SortedDictionary<string, (float[], bool)>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat3		= new SortedDictionary<string, (float[], bool)>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat4		= new SortedDictionary<string, (float[], bool)>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat2s		= new SortedDictionary<string, (float[], bool)>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat3s		= new SortedDictionary<string, (float[], bool)>();
-		private readonly SortedDictionary<string, (float[], bool)>					ParamsMat4s		= new SortedDictionary<string, (float[], bool)>();
+		private class ShaderDataCollection
+		{
+			private class Value
+			{
+				[StructLayout(LayoutKind.Explicit)]
+				public struct InnerValue
+				{
+					[FieldOffset(0)] public int intv;
+					[FieldOffset(0)] public uint uintv;
+					[FieldOffset(0)] public float floatv;
+					[FieldOffset(0)] public vec4 vecv;
+					[FieldOffset(16)] public Array arrayv; // can be optimized with unsafe & IntPtr
+
+					public InnerValue(int v)
+					{
+						uintv = 0u;
+						floatv = 0.0f;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						intv = v;
+					}
+					public InnerValue(uint v)
+					{
+						intv = 0;
+						floatv = 0.0f;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						uintv = v;
+					}
+					public InnerValue(float v)
+					{
+						intv = 0;
+						uintv = 0u;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						floatv = v;
+					}
+					public InnerValue(Array v)
+					{
+						intv = 0;
+						uintv = 0u;
+						floatv = 0.0f;
+						vecv = vector4.zero;
+
+						arrayv = v;
+					}
+					public InnerValue(vec4 v)
+					{
+						intv = 0;
+						uintv = 0u;
+						floatv = 0.0f;
+						arrayv = null;
+
+						vecv = v;
+					}
+
+					public void Set(int v)
+					{
+						uintv = 0u;
+						floatv = 0.0f;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						intv = v;
+					}
+					public void Set(uint v)
+					{
+						intv = 0;
+						floatv = 0.0f;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						uintv = v;
+					}
+					public void Set(float v)
+					{
+						intv = 0;
+						uintv = 0u;
+						arrayv = null;
+						vecv = vector4.zero;
+
+						floatv = v;
+					}
+					public void Set(Array v)
+					{
+						intv = 0;
+						uintv = 0u;
+						floatv = 0.0f;
+						vecv = vector4.zero;
+
+						arrayv = v;
+					}
+					public void Set(vec4 v)
+					{
+						intv = 0;
+						uintv = 0u;
+						floatv = 0.0f;
+						arrayv = null;
+
+						vecv = v;
+					}
+				}
+
+				public enum Type
+				{
+					NONE = 0,
+					INT = 1,
+					UINT = 2,
+					FLOAT = 3,
+					INT_ARRAY = 4,
+					UINT_ARRAY = 5,
+					FLOAT_ARRAY = 6,
+					RGB = 7,
+					RGBA = 8,
+					VEC2 = 9,
+					VEC3 = 10,
+					VEC4 = 11,
+					RGB_ARRAY = 12,
+					RGBA_ARRAY = 13,
+					VEC2_ARRAY = 14,
+					VEC3_ARRAY = 15,
+					VEC4_ARRAY = 16,
+					MAT2 = 17,
+					MAT2_T = 18,
+					MAT3 = 19,
+					MAT3_T = 20,
+					MAT4 = 21,
+					MAT4_T = 22,
+					MAT2_ARRAY = 23,
+					MAT2_T_ARRAY = 24,
+					MAT3_ARRAY = 25,
+					MAT3_T_ARRAY = 26,
+					MAT4_ARRAY = 27,
+					MAT4_T_ARRAY = 28
+				}
+
+				public InnerValue InnerVal;
+				public Type ValType;
+
+				#region Constructors
+
+				public Value(int val) { InnerVal = new InnerValue(val); ValType = Type.INT; }
+				public Value(uint val) { InnerVal = new InnerValue(val); ValType = Type.UINT; }
+				public Value(float val) { InnerVal = new InnerValue(val); ValType = Type.FLOAT; }
+				public Value(int[] val) { InnerVal = new InnerValue(val); ValType = Type.INT_ARRAY; }
+				public Value(uint[] val) { InnerVal = new InnerValue(val); ValType = Type.UINT_ARRAY; }
+				public Value(float[] val) { InnerVal = new InnerValue(val); ValType = Type.FLOAT_ARRAY; }
+				public Value(Color val, bool rgb_only = false) { InnerVal = new InnerValue(val.vectorized); ValType = rgb_only ? Type.RGB : Type.RGBA; }
+				public Value(vec2 val) { InnerVal = new InnerValue(new vec4(val.x, val.y, 0.0f, 1.0f)); ValType = Type.VEC2; }
+				public Value(vec3 val) { InnerVal = new InnerValue(new vec4(val, 1.0f)); ValType = Type.VEC3; }
+				public Value(vec4 val) { InnerVal = new InnerValue(val); ValType = Type.VEC4; }
+				public Value(Color[] val, bool rgb_only = false) { InnerVal = new InnerValue(val.serialize(null, rgb_only)); ValType = rgb_only ? Type.RGB_ARRAY : Type.RGBA_ARRAY; }
+				public Value(vec2[] val) { InnerVal = new InnerValue(val.serialize()); ValType = Type.VEC2_ARRAY; }
+				public Value(vec3[] val) { InnerVal = new InnerValue(val.serialize()); ValType = Type.VEC3_ARRAY; }
+				public Value(vec4[] val) { InnerVal = new InnerValue(val.serialize()); ValType = Type.VEC4_ARRAY; }
+				public Value(mat2 val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT2_T : Type.MAT2; }
+				public Value(mat3 val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT3_T : Type.MAT3; }
+				public Value(mat4 val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT4_T : Type.MAT4; }
+				public Value(mat2[] val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT2_T_ARRAY : Type.MAT2_ARRAY; }
+				public Value(mat3[] val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT3_T_ARRAY : Type.MAT3_ARRAY; }
+				public Value(mat4[] val, bool transpose = false) { InnerVal = new InnerValue(val.serialize()); ValType = transpose ? Type.MAT4_T_ARRAY : Type.MAT4_ARRAY; }
+
+				#endregion
+
+				#region Setters
+
+				public void Set(int val) { InnerVal.Set(val); ValType = Type.INT; }
+				public void Set(uint val) { InnerVal.Set(val); ValType = Type.UINT; }
+				public void Set(float val) { InnerVal.Set(val); ValType = Type.FLOAT; }
+				public void Set(int[] val) { InnerVal.Set(val); ValType = Type.INT_ARRAY; }
+				public void Set(uint[] val) { InnerVal.Set(val); ValType = Type.UINT_ARRAY; }
+				public void Set(float[] val) { InnerVal.Set(val); ValType = Type.FLOAT_ARRAY; }
+				public void Set(Color val, bool rgb_only = false) { InnerVal.Set(val.vectorized); ValType = rgb_only ? Type.RGB : Type.RGBA; }
+				public void Set(vec2 val) { InnerVal.Set(new vec4(val.x, val.y, 0.0f, 1.0f)); ValType = Type.VEC2; }
+				public void Set(vec3 val) { InnerVal.Set(new vec4(val, 1.0f)); ValType = Type.VEC3; }
+				public void Set(vec4 val) { InnerVal.Set(val); ValType = Type.VEC4; }
+				public void Set(Color[] val, bool rgb_only = false, bool keep_layout = true) { var t = rgb_only ? Type.RGB_ARRAY : Type.RGBA_ARRAY; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null, rgb_only)); ValType = t; }
+				public void Set(vec2[] val, bool keep_layout = true) { InnerVal.Set(val.serialize(ValType == Type.VEC2_ARRAY && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = Type.VEC2_ARRAY; }
+				public void Set(vec3[] val, bool keep_layout = true) { InnerVal.Set(val.serialize(ValType == Type.VEC3_ARRAY && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = Type.VEC3_ARRAY; }
+				public void Set(vec4[] val, bool keep_layout = true) { InnerVal.Set(val.serialize(ValType == Type.VEC4_ARRAY && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = Type.VEC4_ARRAY; }
+				public void Set(mat2 val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT2_T : Type.MAT2; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+				public void Set(mat3 val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT3_T : Type.MAT3; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+				public void Set(mat4 val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT4_T : Type.MAT4; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+				public void Set(mat2[] val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT2_T_ARRAY : Type.MAT2_ARRAY; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+				public void Set(mat3[] val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT3_T_ARRAY : Type.MAT3_ARRAY; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+				public void Set(mat4[] val, bool transpose = false, bool keep_layout = true) { var t = transpose ? Type.MAT4_T_ARRAY : Type.MAT4_ARRAY; InnerVal.Set(val.serialize(ValType == t && keep_layout ? (float[])InnerVal.arrayv : null)); ValType = t; }
+
+				#endregion
+			}
+
+			private readonly Dictionary<string, Value> Values = new Dictionary<string, Value>();
+			private readonly LinkedList<string> Keys = new LinkedList<string>();
+
+			#region Setters
+
+			public void Set(string name, int val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, uint val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, float val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, int[] val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, uint[] val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, float[] val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, Color val, bool rgb_only = false) { if (Values.TryGetValue(name, out var v)) { v.Set(val, rgb_only); } else { Values.Add(name, new Value(val, rgb_only)); Keys.AddLast(name); } }
+			public void Set(string name, vec2 val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, vec3 val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, vec4 val) { if (Values.TryGetValue(name, out var v)) { v.Set(val); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, Color[] val, bool rgb_only = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, rgb_only, keep_layout); } else { Values.Add(name, new Value(val, rgb_only)); Keys.AddLast(name); } }
+			public void Set(string name, vec2[] val, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, keep_layout); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, vec3[] val, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, keep_layout); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, vec4[] val, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, keep_layout); } else { Values.Add(name, new Value(val)); Keys.AddLast(name); } }
+			public void Set(string name, mat2 val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+			public void Set(string name, mat3 val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+			public void Set(string name, mat4 val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+			public void Set(string name, mat2[] val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+			public void Set(string name, mat3[] val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+			public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) { if (Values.TryGetValue(name, out var v)) { v.Set(val, transpose, keep_layout); } else { Values.Add(name, new Value(val, transpose)); Keys.AddLast(name); } }
+
+			#endregion
+
+			public void Prepare(Shader shader)
+			{
+				if (shader == null) return;
+				
+				foreach (var key in Keys)
+				{
+					var val = Values[key];
+
+					switch (val.ValType)
+					{
+						case Value.Type.INT:			shader.SetScalar(key, val.InnerVal.intv); break;
+						case Value.Type.UINT:			shader.SetScalar(key, val.InnerVal.uintv); break;
+						case Value.Type.FLOAT:			shader.SetScalar(key, val.InnerVal.floatv); break;
+						case Value.Type.INT_ARRAY:		shader.SetScalarArray(key, (int[])val.InnerVal.arrayv); break;
+						case Value.Type.UINT_ARRAY:		shader.SetScalarArray(key, (uint[])val.InnerVal.arrayv); break;
+						case Value.Type.FLOAT_ARRAY:	shader.SetScalarArray(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.RGB:			shader.SetVec3(key, val.InnerVal.vecv.x, val.InnerVal.vecv.y, val.InnerVal.vecv.z); break;
+						case Value.Type.RGBA:			shader.SetVec4(key, val.InnerVal.vecv.x, val.InnerVal.vecv.y, val.InnerVal.vecv.z, val.InnerVal.vecv.w); break;
+						case Value.Type.VEC2:			shader.SetVec2(key, val.InnerVal.vecv.x, val.InnerVal.vecv.y); break;
+						case Value.Type.VEC3:			shader.SetVec3(key, val.InnerVal.vecv.x, val.InnerVal.vecv.y, val.InnerVal.vecv.z); break;
+						case Value.Type.VEC4:			shader.SetVec4(key, val.InnerVal.vecv.x, val.InnerVal.vecv.y, val.InnerVal.vecv.z, val.InnerVal.vecv.w); break;
+						case Value.Type.RGB_ARRAY:		shader.SetVec3Array(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.RGBA_ARRAY:		shader.SetVec4Array(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.VEC2_ARRAY:		shader.SetVec2Array(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.VEC3_ARRAY:		shader.SetVec3Array(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.VEC4_ARRAY:		shader.SetVec4Array(key, (float[])val.InnerVal.arrayv); break;
+						case Value.Type.MAT2:			shader.SetMat2(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT2_T:			shader.SetMat2(key, (float[])val.InnerVal.arrayv, true); break;
+						case Value.Type.MAT3:			shader.SetMat3(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT3_T:			shader.SetMat3(key, (float[])val.InnerVal.arrayv, true); break;
+						case Value.Type.MAT4:			shader.SetMat4(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT4_T:			shader.SetMat4(key, (float[])val.InnerVal.arrayv, true); break;
+						case Value.Type.MAT2_ARRAY:		shader.SetMat2Array(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT2_T_ARRAY:	shader.SetMat2Array(key, (float[])val.InnerVal.arrayv, true); break;
+						case Value.Type.MAT3_ARRAY:		shader.SetMat3Array(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT3_T_ARRAY:	shader.SetMat3Array(key, (float[])val.InnerVal.arrayv, true); break;
+						case Value.Type.MAT4_ARRAY:		shader.SetMat4Array(key, (float[])val.InnerVal.arrayv, false); break;
+						case Value.Type.MAT4_T_ARRAY:	shader.SetMat4Array(key, (float[])val.InnerVal.arrayv, true); break;
+						default: break;
+					}
+				}
+			}
+		}
+
+		private readonly ShaderDataCollection DataCollection = new ShaderDataCollection();
 		
 		public Shader shader { get; set; }
 
 		public Material() { }
 		public Material(Shader shader) { this.shader = shader; }
 
-		private void SetColors(string name, Color[] values, bool includeAlpha = true)
-		{
-			var colors = includeAlpha ? ParamsColors : ParamsRGBColors;
-			colors[name] = values.serialize(colors.TryGetSafe(name), includeAlpha);
-		}
+		#region Setters
 
-		public void Set(string name, int value) => ParamsInt[name] = value;
-		public void Set(string name, uint value) => ParamsUInt[name] = value;
-		public void Set(string name, float value) => ParamsFloat[name] = value;
-		public void Set(string name, int[] values) => ParamsInts[name] = values;
-		public void Set(string name, uint[] values) => ParamsUInts[name] = values;
-		public void Set(string name, float[] values) => ParamsFloats[name] = values;
-		public void Set(string name, Color value) => ParamsColor[name] = value;
-		public void Set(string name, vec2 value) => ParamsVec2[name] = value;
-		public void Set(string name, vec3 value) => ParamsVec3[name] = value;
-		public void Set(string name, vec4 value) => ParamsVec4[name] = value;
-		public void Set(string name, float x, float y, float z) => Params3f[name] = (x, y, z);
-		public void Set(string name, float x, float y, float z, float w) => Params4f[name] = (x, y, z, w);
-		public void Set(string name, Color[] values, bool includeAlpha = true) => SetColors(name, values, includeAlpha);
-		public void Set(string name, vec2[] values) => ParamsVec2s[name] = values.serialize(ParamsVec2s.TryGetSafe(name));
-		public void Set(string name, vec3[] values) => ParamsVec3s[name] = values.serialize(ParamsVec3s.TryGetSafe(name));
-		public void Set(string name, vec4[] values) => ParamsVec4s[name] = values.serialize(ParamsVec4s.TryGetSafe(name));
-		public void Set(string name, mat2 value, bool transpose = false) => ParamsMat2[name] = (value.serialize(ParamsMat2.TryGetSafe(name).Item1), transpose);
-		public void Set(string name, mat3 value, bool transpose = false) => ParamsMat3[name] = (value.serialize(ParamsMat3.TryGetSafe(name).Item1), transpose);
-		public void Set(string name, mat4 value, bool transpose = false) => ParamsMat4[name] = (value.serialize(ParamsMat4.TryGetSafe(name).Item1), transpose);
-		public void Set(string name, mat2[] values, bool transpose = false) => ParamsMat2s[name] = (values.serialize(ParamsMat2s.TryGetSafe(name).Item1), transpose);
-		public void Set(string name, mat3[] values, bool transpose = false) => ParamsMat3s[name] = (values.serialize(ParamsMat3s.TryGetSafe(name).Item1), transpose);
-		public void Set(string name, mat4[] values, bool transpose = false) => ParamsMat4s[name] = (values.serialize(ParamsMat4s.TryGetSafe(name).Item1), transpose);
-		
-		internal void Prepare()
-		{
-			if (shader == null) return;
-			foreach (var v in ParamsInt) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsUInt) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsFloat) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsInts) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsUInts) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsFloats) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsColor) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsVec2) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsVec3) shader.Set(v.Key, v.Value);
-			foreach (var v in ParamsVec4) shader.Set(v.Key, v.Value);
-			foreach (var v in Params3f) shader.Set(v.Key, v.Value.Item1, v.Value.Item2, v.Value.Item2);
-			foreach (var v in Params4f) shader.Set(v.Key, v.Value.Item1, v.Value.Item2, v.Value.Item3);
-			foreach (var v in ParamsRGBColors) shader.SetRGBColors(v.Key, v.Value);
-			foreach (var v in ParamsColors) shader.SetColors(v.Key, v.Value);
-			foreach (var v in ParamsVec2s) shader.SetVec2s(v.Key, v.Value);
-			foreach (var v in ParamsVec3s) shader.SetVec3s(v.Key, v.Value);
-			foreach (var v in ParamsVec4s) shader.SetVec4s(v.Key, v.Value);
-			foreach (var v in ParamsMat2) shader.SetMat2(v.Key, v.Value.Item1, v.Value.Item2);
-			foreach (var v in ParamsMat3) shader.SetMat3(v.Key, v.Value.Item1, v.Value.Item2);
-			foreach (var v in ParamsMat4) shader.SetMat4(v.Key, v.Value.Item1, v.Value.Item2);
-			foreach (var v in ParamsMat2s) shader.SetMat2s(v.Key, v.Value.Item1, v.Value.Item2);
-			foreach (var v in ParamsMat3s) shader.SetMat3s(v.Key, v.Value.Item1, v.Value.Item2);
-			foreach (var v in ParamsMat4s) shader.SetMat4s(v.Key, v.Value.Item1, v.Value.Item2);
-		}
+		public void Set(string name, int val) => DataCollection.Set(name, val);
+		public void Set(string name, uint val) => DataCollection.Set(name, val);
+		public void Set(string name, float val) => DataCollection.Set(name, val);
+		public void Set(string name, int[] val) => DataCollection.Set(name, val);
+		public void Set(string name, uint[] val) => DataCollection.Set(name, val);
+		public void Set(string name, float[] val) => DataCollection.Set(name, val);
+		public void Set(string name, Color val, bool rgb_only = false) => DataCollection.Set(name, val, rgb_only);
+		public void Set(string name, vec2 val) => DataCollection.Set(name, val);
+		public void Set(string name, vec3 val) => DataCollection.Set(name, val);
+		public void Set(string name, vec4 val) => DataCollection.Set(name, val);
+		public void Set(string name, Color[] val, bool rgb_only = false, bool keep_layout = true) => DataCollection.Set(name, val, rgb_only, keep_layout);
+		public void Set(string name, vec2[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
+		public void Set(string name, vec3[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
+		public void Set(string name, vec4[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
+		public void Set(string name, mat2 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat3 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat4 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat2[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat3[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+
+		#endregion
+
+		internal void Prepare() => DataCollection.Prepare(shader);
 	}
 }

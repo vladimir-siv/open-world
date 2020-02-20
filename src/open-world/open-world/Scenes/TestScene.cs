@@ -31,11 +31,11 @@ namespace open_world
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
 			Model.mesh.material = new Material(Shader.Find("phong"));
-			Model.mesh.material.Set("material_color", ModelColor.rgb);
-			Model.mesh.material.Set("ambient_light_color", AmbientLight.color.rgb);
+			Model.mesh.material.Set("material_color", ModelColor, true);
+			Model.mesh.material.Set("ambient_light_color", AmbientLight.color, true);
 			Model.mesh.material.Set("ambient_light_power", AmbientLight.power);
 			Model.mesh.material.Set("light_source_position", PointLight.position);
-			Model.mesh.material.Set("light_source_color", PointLight.color.rgb);
+			Model.mesh.material.Set("light_source_color", PointLight.color, true);
 			Model.mesh.material.Set("light_source_power", PointLight.power);
 			
 			User = new GameObject("User");

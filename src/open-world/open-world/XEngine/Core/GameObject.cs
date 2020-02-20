@@ -23,7 +23,23 @@ namespace XEngine.Core
 
 		public GameObject parent = null;
 		public Transform transform = new Transform(vector3.zero, vector3.zero, vector3.one);
-		public Mesh mesh = null;
+
+		private Mesh _mesh = null;
+		public Mesh mesh
+		{
+			get
+			{
+				return _mesh;
+			}
+			set
+			{
+				if (value == _mesh) return;
+				_mesh?.Release();
+				_mesh = value;
+				_mesh?.Register();
+			}
+		}
+
 		public bool IsDrawable => mesh?.IsDrawable ?? false;
 
 		internal mat4 transform_model = mat4.identity();
@@ -78,7 +94,6 @@ namespace XEngine.Core
 		public void Dispose()
 		{
 			Destroy();
-			mesh?.Dispose();
 			parent = null;
 			mesh = null;
 		}

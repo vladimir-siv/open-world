@@ -21,7 +21,11 @@ namespace open_world
 
 		protected override void Init()
 		{
-			var basicMaterial = new Material(Shader.Find("basic"));
+			var cube = new Mesh
+			{
+				shape = new Cube(),
+				material = new Material(Shader.Find("basic"))
+			};
 
 			Model = new GameObject("Model");
 			Model.mesh = new Mesh();
@@ -35,17 +39,13 @@ namespace open_world
 			Model.mesh.material.Set("light_source_power", PointLight.power);
 			
 			User = new GameObject("User");
-			User.mesh = new Mesh();
-			User.mesh.shape = new Cube();
-			User.mesh.material = basicMaterial;
+			User.mesh = cube;
 			User.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
 			User.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
 			User.AttachBehavior(new UserController { Model = Model });
 
 			Light = new GameObject("Light");
-			Light.mesh = new Mesh();
-			Light.mesh.shape = new Cube();
-			Light.mesh.material = basicMaterial;
+			Light.mesh = cube;
 			Light.transform.position = PointLight.position;
 
 			Ground = new GameObject("Ground");

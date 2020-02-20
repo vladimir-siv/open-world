@@ -44,7 +44,10 @@ namespace XEngine.Core
 				_material = value;
 			}
 		}
+		
+		private uint shared = 0u;
 
+		public bool KeepAlive { get; set; } = false;
 		internal bool IsDrawable => shape != null && material?.shader != null && VertexArrayId != 0;
 
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
@@ -76,6 +79,16 @@ namespace XEngine.Core
 				gl.VertexAttribPointer(i, shape.GetAttribSize(i), shape.GetAttribType(i), shape.ShouldAttribNormalize(i), shape.GetAttribStride(i), shape.GetAttribOffset(i));
 				gl.EnableVertexAttribArray(i);
 			}
+		}
+
+		internal void Register()
+		{
+			++shared;
+		}
+		internal void Release()
+		{
+			if (shared == 0u) return;
+			if (--shared == 0u && !KeepAlive) Dispose();
 		}
 
 		public void Dispose()

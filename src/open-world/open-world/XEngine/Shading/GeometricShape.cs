@@ -25,6 +25,8 @@ namespace XEngine.Shading
 
 		public int IndexCount { get; }
 
+		public bool KeepAlive { get; set; } = false;
+
 		internal GeometricShape(ShapeData shapeData) { _ShapeData = shapeData; IndexCount = Indices.Length; }
 		public virtual uint OpenGLShapeType => OpenGL.GL_TRIANGLES;
 
@@ -36,6 +38,10 @@ namespace XEngine.Shading
 		public virtual int GetAttribStride(uint index) => (int)(vertex.AttribSize * GLAttribCount * sizeof(float));
 		public virtual IntPtr GetAttribOffset(uint index) => new IntPtr(index * vertex.AttribSize * sizeof(float));
 
-		public void Dispose() => _ShapeData.Release();
+		public void Dispose()
+		{
+			if (KeepAlive) return;
+			_ShapeData.Release();
+		}
 	}
 }

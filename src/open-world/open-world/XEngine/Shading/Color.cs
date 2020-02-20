@@ -29,7 +29,7 @@ namespace XEngine.Shading
 			set => vectorized.w = value;
 		}
 
-		public vec3 rgb => vectorized.to_vec3();
+		public vec3 rgb => vectorized.to_vec3(false);
 
 		public Color(vec3 rgb) : this(rgb.x, rgb.y, rgb.z) { }
 		public Color(float r, float g, float b) : this(r, g, b, 1.0f) { }

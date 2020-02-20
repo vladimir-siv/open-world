@@ -18,11 +18,8 @@ namespace XEngine
 			{
 				var activatedHandle = GetForegroundWindow();
 				if (activatedHandle == IntPtr.Zero) return false;
-
-				var procId = Process.GetCurrentProcess().Id;
 				GetWindowThreadProcessId(activatedHandle, out var activeProcId);
-
-				return activeProcId == procId;
+				return activeProcId == Process.GetCurrentProcess().Id;
 			}
 		}
 	}

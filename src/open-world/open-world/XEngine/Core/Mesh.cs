@@ -9,8 +9,8 @@ namespace XEngine.Core
 
 	public sealed class Mesh : IDisposable
 	{
-		private readonly uint[] ArrayIds = new uint[1];
-		private readonly uint[] BufferIds = new uint[2];
+		private uint[] ArrayIds = null;
+		private uint[] BufferIds = null;
 
 		public uint VertexArrayId => ArrayIds[0];
 		public uint VertexBufferId => BufferIds[0];
@@ -26,7 +26,6 @@ namespace XEngine.Core
 			set
 			{
 				if (_shape == value) return;
-				if (_shape != null) Dispose();
 				_shape = value;
 				Generate();
 				_shape.Dispose();
@@ -48,7 +47,7 @@ namespace XEngine.Core
 		private uint shared = 0u;
 
 		public bool KeepAlive { get; set; } = false;
-		internal bool IsDrawable => shape != null && material?.shader != null && VertexArrayId != 0;
+		internal bool IsDrawable => shape != null && material?.shader != null && ArrayIds != null;
 
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
 		{
@@ -59,14 +58,20 @@ namespace XEngine.Core
 
 		private void Generate()
 		{
-			if (ArrayIds[0] != 0u) throw new InvalidOperationException("Cannot reinitialize mesh while the last one was not disposed.");
 			if (shape == null) throw new InvalidOperationException("Shape not provided.");
 
 			var gl = XEngineContext.Graphics;
-			gl.GenVertexArrays(ArrayIds.Length, ArrayIds);
-			
-			gl.BindVertexArray(ArrayIds[0]);
-			gl.GenBuffers(BufferIds.Length, BufferIds);
+
+			if (ArrayIds == null)
+			{
+				ArrayIds = new uint[1];
+				BufferIds = new uint[2];
+
+				gl.GenVertexArrays(ArrayIds.Length, ArrayIds);
+				gl.BindVertexArray(ArrayIds[0]);
+				gl.GenBuffers(BufferIds.Length, BufferIds);
+			}
+			else gl.BindVertexArray(ArrayIds[0]);
 
 			gl.BindBuffer(OpenGL.GL_ARRAY_BUFFER, BufferIds[0]);
 			gl.BufferData(OpenGL.GL_ARRAY_BUFFER, shape.Data, OpenGL.GL_STATIC_DRAW);
@@ -93,16 +98,20 @@ namespace XEngine.Core
 
 		public void Dispose()
 		{
-			if (ArrayIds[0] == 0u) throw new InvalidOperationException("Already disposed.");
+			if (ArrayIds == null) throw new InvalidOperationException("Already disposed.");
 
 			var gl = XEngineContext.Graphics;
 			gl.DeleteBuffers(BufferIds.Length, BufferIds);
 			gl.DeleteVertexArrays(ArrayIds.Length, ArrayIds);
 
+			ArrayIds = null;
+			BufferIds = null;
+
 			_shape = null;
 			_material = null;
 
-			ArrayIds[0] = 0u;
+			shared = 0u;
+			KeepAlive = false;
 		}
 
 		internal void Draw(GameObject gameObject)

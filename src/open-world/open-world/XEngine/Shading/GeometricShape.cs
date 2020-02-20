@@ -23,11 +23,12 @@ namespace XEngine.Shading
 		public ushort[] Indices => ShapeData.Indices;
 		public float[] Data => ShapeData.SerializeData(Attributes);
 
+		public int VertexCount { get; }
 		public int IndexCount { get; }
 
 		public bool KeepAlive { get; set; } = false;
 
-		internal GeometricShape(ShapeData shapeData) { _ShapeData = shapeData; IndexCount = Indices.Length; }
+		internal GeometricShape(ShapeData shapeData) { _ShapeData = shapeData; VertexCount = Vertices.Length; IndexCount = Indices.Length; }
 		public virtual uint OpenGLShapeType => OpenGL.GL_TRIANGLES;
 
 		protected uint GLAttribCount => AttribCount == 1u ? 0u : AttribCount;

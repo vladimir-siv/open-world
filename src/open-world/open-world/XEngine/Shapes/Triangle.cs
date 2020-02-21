@@ -43,9 +43,9 @@ namespace XEngine.Shapes
 			(
 				new vertex[]
 				{
-					new vertex(p1, c1),
-					new vertex(p2, c2),
-					new vertex(p3, c3),
+					new vertex(p1, c1, new vec3(+0.0f, +0.0f, +1.0f)),
+					new vertex(p2, c2, new vec3(+0.0f, +0.0f, +1.0f)),
+					new vertex(p3, c3, new vec3(+0.0f, +0.0f, +1.0f)),
 				}
 			)
 		{
@@ -54,7 +54,7 @@ namespace XEngine.Shapes
 
 		private Triangle(vertex[] vertices) : base(new ShapeData(vertices))
 		{
-			Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
+
 		}
 	}
 }

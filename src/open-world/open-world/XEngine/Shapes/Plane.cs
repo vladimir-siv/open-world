@@ -47,10 +47,10 @@ namespace XEngine.Shapes
 			(
 				new vertex[]
 				{
-					new vertex(p1, c1),
-					new vertex(p2, c2),
-					new vertex(p3, c3),
-					new vertex(p4, c4),
+					new vertex(p1, c1, new vec3(+0.0f, +1.0f, +0.0f)),
+					new vertex(p2, c2, new vec3(+0.0f, +1.0f, +0.0f)),
+					new vertex(p3, c3, new vec3(+0.0f, +1.0f, +0.0f)),
+					new vertex(p4, c4, new vec3(+0.0f, +1.0f, +0.0f)),
 				},
 				new ushort[]
 				{
@@ -64,7 +64,7 @@ namespace XEngine.Shapes
 
 		private Plane(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
 		{
-			Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR;
+
 		}
 	}
 }

@@ -4,13 +4,28 @@ using XEngine.Scripting;
 using XEngine.Interaction;
 using XEngine.Common;
 
+using CheckBox = System.Windows.Forms.CheckBox;
+
 namespace open_world
 {
 	public class UserController : XBehaviour
 	{
+		public CheckBox CameraLocalTranslate = null;
+		public CheckBox ParentModelToUser = null;
+		public CheckBox ModelLocalTranslate = null;
+		public CheckBox ModelLocalScale = null;
+
 		public GameObject Model = null;
 		public float MovementSpeed = 1.0f;
 		public float RotationSpeed = 0.2f;
+
+		protected override void Start()
+		{
+			CameraLocalTranslate.CheckedChanged += (s, e) => MainCamera.LocalPosition = CameraLocalTranslate.Checked ? new vec3(-4.0f, +4.0f, +10.0f) : vector3.zero;
+			ParentModelToUser.CheckedChanged += (s, e) => Model.parent = ParentModelToUser.Checked ? gameObject : null;
+			ModelLocalTranslate.CheckedChanged += (s, e) => Model.transform.position = ModelLocalTranslate.Checked ? new vec3(+0.0f, -4.0f, -40.0f) : vector3.zero;
+			ModelLocalScale.CheckedChanged += (s, e) => Model.transform.scale = ModelLocalScale.Checked ? new vec3(0.1f, 0.1f, 0.1f) : vector3.one;
+		}
 
 		protected override void Update()
 		{

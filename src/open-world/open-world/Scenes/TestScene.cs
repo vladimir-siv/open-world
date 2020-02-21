@@ -1,5 +1,6 @@
 ﻿using GlmNet;
 
+using XEngine;
 using XEngine.Core;
 using XEngine.Lighting;
 using XEngine.Shading;
@@ -21,6 +22,8 @@ namespace open_world
 
 		protected override void Init()
 		{
+			var MainForm = (MainForm)XEngineContext.GLControl.ParentForm;
+
 			var cube = new Mesh
 			{
 				shape = new Cube(),
@@ -42,7 +45,7 @@ namespace open_world
 			User.mesh = cube;
 			User.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
 			User.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
-			User.AttachBehavior(new UserController { Model = Model });
+			User.AttachBehavior(new UserController { CameraLocalTranslate = MainForm.cbCameraLocalTranslate, ParentModelToUser = MainForm.cbParentModelToUser, ModelLocalTranslate = MainForm.cbModelLocalTranslate, ModelLocalScale = MainForm.cbModelLocalScale, Model = Model });
 
 			Light = new GameObject("Light");
 			Light.mesh = cube;
@@ -57,12 +60,6 @@ namespace open_world
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 
 			MainCamera.Following = User;
-
-			// [Uncomment for testing]
-			//MainCamera.LocalPosition = new vec3(-4.0f, +4.0f, +10.0f);
-			//Model.parent = User;
-			//Model.transform.position = new vec3(+0.0f, -4.0f, -40.0f);
-			//Model.transform.scale = new vec3(0.1f, 0.1f, 0.1f);
 		}
 	}
 }

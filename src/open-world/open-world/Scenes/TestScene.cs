@@ -20,38 +20,37 @@ namespace open_world
 
 		protected override void Init()
 		{
-			var cube = new Mesh
-			{
-				shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR },
-				material = new Material(Shader.Find("basic"))
-			};
+			var cube = new Mesh { shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR }, };
+			var basic = new Material(Shader.Find("basic"));
 
 			Model = new GameObject("Model");
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
-			Model.mesh.material = new Material(Shader.Find("phong"));
-			Model.mesh.material.Set("material_color", ModelColor, true);
-			Model.mesh.material.Set("ambient_light_color", AmbientLight.color, true);
-			Model.mesh.material.Set("ambient_light_power", AmbientLight.power);
-			Model.mesh.material.Set("light_source_position", PointLight.position);
-			Model.mesh.material.Set("light_source_color", PointLight.color, true);
-			Model.mesh.material.Set("light_source_power", PointLight.power);
+			Model.material = new Material(Shader.Find("phong"));
+			Model.material.Set("material_color", ModelColor, true);
+			Model.material.Set("ambient_light_color", AmbientLight.color, true);
+			Model.material.Set("ambient_light_power", AmbientLight.power);
+			Model.material.Set("light_source_position", PointLight.position);
+			Model.material.Set("light_source_color", PointLight.color, true);
+			Model.material.Set("light_source_power", PointLight.power);
 			
 			User = new GameObject("User");
 			User.mesh = cube;
+			User.material = basic;
 			User.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
 			User.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
 			User.AttachBehaviour(new UserController { Model = Model });
 
 			Light = new GameObject("Light");
 			Light.mesh = cube;
+			Light.material = basic;
 			Light.transform.position = PointLight.position;
 
 			Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION };
-			Ground.mesh.material = new Material(Shader.Find("unlit"));
-			Ground.mesh.material.Set("material_color", new Color(1.0f, 1.0f, 1.0f));
+			Ground.material = new Material(Shader.Find("unlit"));
+			Ground.material.Set("material_color", new Color(1.0f, 1.0f, 1.0f));
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 

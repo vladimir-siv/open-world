@@ -26,32 +26,32 @@ namespace open_world
 			Player = new GameObject("Player");
 			Player.mesh = new Mesh();
 			Player.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL);
-			Player.mesh.material = new Material(Shader.Find("phong"));
-			Player.mesh.material.Set("material_color", PlayerColor, true);
-			Player.mesh.material.Set("ambient_light_color", AmbientLight.color, true);
-			Player.mesh.material.Set("ambient_light_power", AmbientLight.power);
-			Player.mesh.material.Set("light_source_position", PointLight.position);
-			Player.mesh.material.Set("light_source_color", PointLight.color, true);
-			Player.mesh.material.Set("light_source_power", PointLight.power);
+			Player.material = new Material(Shader.Find("phong"));
+			Player.material.Set("material_color", PlayerColor, true);
+			Player.material.Set("ambient_light_color", AmbientLight.color, true);
+			Player.material.Set("ambient_light_power", AmbientLight.power);
+			Player.material.Set("light_source_position", PointLight.position);
+			Player.material.Set("light_source_color", PointLight.color, true);
+			Player.material.Set("light_source_power", PointLight.power);
 			Player.AttachBehaviour(new PlayerController {  });
 			Player.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
 
 			Light = new GameObject("Light");
 			Light.mesh = new Mesh();
 			Light.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.COLOR);
-			Light.mesh.material = new Material(Shader.Find("basic"));
+			Light.material = new Material(Shader.Find("basic"));
 			Light.transform.position = PointLight.position;
 
 			Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL };
-			Ground.mesh.material = new Material(Shader.Find("phong"));
-			Ground.mesh.material.Set("material_color", GroundColor, true);
-			Ground.mesh.material.Set("ambient_light_color", AmbientLight.color, true);
-			Ground.mesh.material.Set("ambient_light_power", AmbientLight.power);
-			Ground.mesh.material.Set("light_source_position", PointLight.position);
-			Ground.mesh.material.Set("light_source_color", PointLight.color, true);
-			Ground.mesh.material.Set("light_source_power", PointLight.power);
+			Ground.material = new Material(Shader.Find("phong"));
+			Ground.material.Set("material_color", GroundColor, true);
+			Ground.material.Set("ambient_light_color", AmbientLight.color, true);
+			Ground.material.Set("ambient_light_power", AmbientLight.power);
+			Ground.material.Set("light_source_position", PointLight.position);
+			Ground.material.Set("light_source_color", PointLight.color, true);
+			Ground.material.Set("light_source_power", PointLight.power);
 			Ground.transform.scale = new vec3(5.0f, 5.0f, 5.0f);
 
 			cube.KeepAlive = false;

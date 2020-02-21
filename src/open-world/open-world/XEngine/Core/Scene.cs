@@ -98,7 +98,7 @@ namespace XEngine.Core
 			foreach (var gameObject in GameObjects)
 			{
 				if (gameObject.parent != null) Algs.SyncObjectPouch.Add(gameObject.parent, gameObject);
-				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.mesh.material.shader, gameObject);
+				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.material.shader, gameObject);
 			}
 		}
 		protected void SyncScene()

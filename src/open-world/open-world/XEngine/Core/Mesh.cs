@@ -31,24 +31,11 @@ namespace XEngine.Core
 				_shape.Dispose();
 			}
 		}
-		private Material _material = null;
-		public Material material
-		{
-			get
-			{
-				return _material;
-			}
-			set
-			{
-				_material = value;
-			}
-		}
 		
 		private uint shared = 0u;
 
 		public bool KeepAlive { get; set; } = false;
-		internal bool IsDrawable => shape != null && material?.shader != null && ArrayIds != null;
-
+		
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
 		{
 			var model = await Model.Load(name);
@@ -84,8 +71,6 @@ namespace XEngine.Core
 				gl.VertexAttribPointer(i, shape.GetAttribSize(i), shape.GetAttribType(i), shape.ShouldAttribNormalize(i), shape.GetAttribStride(i), shape.GetAttribOffset(i));
 				gl.EnableVertexAttribArray(i);
 			}
-
-			gl.BindVertexArray(0);
 		}
 
 		internal void Register()
@@ -110,26 +95,9 @@ namespace XEngine.Core
 			BufferIds = null;
 
 			_shape = null;
-			_material = null;
 
 			shared = 0u;
 			KeepAlive = false;
-		}
-
-		internal void Draw(GameObject gameObject)
-		{
-			if (!IsDrawable) return;
-			var camera = SceneManager.CurrentScene.MainCamera;
-			material.shader.Use();
-			var gl = XEngineContext.Graphics;
-			gl.BindVertexArray(VertexArrayId);
-			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProjectData);
-			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToViewData);
-			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, gameObject.model);
-			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, gameObject.rotate);
-			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
-			material.Prepare();
-			gl.DrawElements(shape.OpenGLShapeType, shape.IndexCount, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);
 		}
 	}
 }

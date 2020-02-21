@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharpGL;
 using GlmNet;
 
 namespace XEngine.Core
 {
+	using XEngine.Shading;
 	using XEngine.Scripting;
 	using XEngine.Common;
 
@@ -39,8 +41,15 @@ namespace XEngine.Core
 				_mesh?.Register();
 			}
 		}
+		private Material _material = null;
+		public Material material
+		{
+			get => _material;
+			set => _material = value;
+		}
 
-		public bool IsDrawable => mesh?.IsDrawable ?? false;
+		public bool IsDrawable => mesh?.shape != null && material?.shader != null;
+		public bool DisableRendering { get; set; } = false;
 
 		internal mat4 transform_model = mat4.identity();
 		internal readonly float[] model = new float[16];
@@ -95,7 +104,22 @@ namespace XEngine.Core
 			transform_model.serialize(model);
 			rotate_model.serialize(rotate);
 		}
-		public void Draw() => mesh?.Draw(this);
+		public void Draw()
+		{
+			if (!IsDrawable) return;
+			if (DisableRendering) return;
+			var camera = SceneManager.CurrentScene.MainCamera;
+			material.shader.Use();
+			var gl = XEngineContext.Graphics;
+			gl.BindVertexArray(mesh.VertexArrayId);
+			if (material.shader.Project != -1) gl.UniformMatrix4(material.shader.Project, 1, false, camera.ViewToProjectData);
+			if (material.shader.View != -1) gl.UniformMatrix4(material.shader.View, 1, false, camera.WorldToViewData);
+			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, model);
+			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
+			if (material.shader.Eye != -1) gl.Uniform3(material.shader.Eye, camera.Position.x, camera.Position.y, camera.Position.z);
+			material.Prepare();
+			gl.DrawElements(mesh.shape.OpenGLShapeType, mesh.shape.IndexCount, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);
+		}
 
 		public void Dispose()
 		{

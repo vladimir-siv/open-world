@@ -56,17 +56,17 @@ namespace XEngine.Core
 		{
 			if (string.IsNullOrEmpty(name)) throw new ArgumentException("GameObject name cannot be null or empty.");
 			this.name = name;
-			foreach (var script in scripts) AttachBehavior(script);
+			foreach (var script in scripts) AttachBehaviour(script);
 			SceneManager.CurrentScene.Add(this);
 		}
 
-		public void AttachBehavior(XBehaviour script)
+		public void AttachBehaviour(XBehaviour script)
 		{
 			if (script.gameObject != null) throw new InvalidOperationException("Script instance is already attached.");
 			script.gameObject = this;
 			Scripts.AddLast(script);
 		}
-		public void DetachBehavior(XBehaviour script)
+		public void DetachBehaviour(XBehaviour script)
 		{
 			if (script.gameObject != this) throw new InvalidOperationException("Script instance not attached to this game object.");
 			Scripts.Remove(script);

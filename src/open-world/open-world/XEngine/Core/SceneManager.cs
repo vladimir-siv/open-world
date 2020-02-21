@@ -9,6 +9,8 @@ namespace XEngine.Core
 		public static string MainSceneId { get; private set; } = null;
 		public static Scene CurrentScene { get; private set; } = null;
 
+		public static event Action<Scene, Scene> SceneChanged;
+
 		static SceneManager()
 		{
 			foreach (var type in Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && !t.IsAbstract && typeof(Scene).IsAssignableFrom(t)))
@@ -23,12 +25,14 @@ namespace XEngine.Core
 			}
 		}
 
-		public static void LoadScene(string sceneId, bool endLast = true) => LoadScene(Scene.Resolve(sceneId), endLast);
-		public static void LoadScene(Scene scene, bool endLast = true)
+		public static void LoadScene(string sceneId) => LoadScene(Scene.Resolve(sceneId));
+		public static void LoadScene(Scene scene)
 		{
-			if (endLast) CurrentScene?._Exit();
+			var LastScene = CurrentScene;
+			LastScene?._Exit();
 			CurrentScene = scene;
 			CurrentScene._Init();
+			SceneChanged?.Invoke(LastScene, CurrentScene);
 		}
 	}
 

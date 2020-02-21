@@ -30,10 +30,12 @@
 		{
 			this.OpenGLControl = new SharpGL.OpenGLControl();
 			this.pnlUI = new System.Windows.Forms.Panel();
-			this.cbModelLocalScale = new System.Windows.Forms.CheckBox();
-			this.cbModelLocalTranslate = new System.Windows.Forms.CheckBox();
-			this.cbParentModelToUser = new System.Windows.Forms.CheckBox();
-			this.cbCameraLocalTranslate = new System.Windows.Forms.CheckBox();
+			this.btnPrevScene = new System.Windows.Forms.Button();
+			this.btnNextScene = new System.Windows.Forms.Button();
+			this.cbMode4 = new System.Windows.Forms.CheckBox();
+			this.cbMode3 = new System.Windows.Forms.CheckBox();
+			this.cbMode2 = new System.Windows.Forms.CheckBox();
+			this.cbMode1 = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.OpenGLControl)).BeginInit();
 			this.pnlUI.SuspendLayout();
 			this.SuspendLayout();
@@ -55,55 +57,81 @@
 			// 
 			// pnlUI
 			// 
-			this.pnlUI.Controls.Add(this.cbModelLocalScale);
-			this.pnlUI.Controls.Add(this.cbModelLocalTranslate);
-			this.pnlUI.Controls.Add(this.cbParentModelToUser);
-			this.pnlUI.Controls.Add(this.cbCameraLocalTranslate);
+			this.pnlUI.Controls.Add(this.btnPrevScene);
+			this.pnlUI.Controls.Add(this.btnNextScene);
+			this.pnlUI.Controls.Add(this.cbMode4);
+			this.pnlUI.Controls.Add(this.cbMode3);
+			this.pnlUI.Controls.Add(this.cbMode2);
+			this.pnlUI.Controls.Add(this.cbMode1);
 			this.pnlUI.Dock = System.Windows.Forms.DockStyle.Top;
 			this.pnlUI.Location = new System.Drawing.Point(0, 0);
 			this.pnlUI.Name = "pnlUI";
 			this.pnlUI.Size = new System.Drawing.Size(800, 25);
 			this.pnlUI.TabIndex = 1;
 			// 
-			// cbModelLocalScale
+			// btnPrevScene
 			// 
-			this.cbModelLocalScale.AutoSize = true;
-			this.cbModelLocalScale.Location = new System.Drawing.Point(549, 4);
-			this.cbModelLocalScale.Name = "cbModelLocalScale";
-			this.cbModelLocalScale.Size = new System.Drawing.Size(122, 17);
-			this.cbModelLocalScale.TabIndex = 3;
-			this.cbModelLocalScale.Text = "Model Local Scaling";
-			this.cbModelLocalScale.UseVisualStyleBackColor = true;
+			this.btnPrevScene.Dock = System.Windows.Forms.DockStyle.Left;
+			this.btnPrevScene.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.btnPrevScene.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnPrevScene.Location = new System.Drawing.Point(0, 0);
+			this.btnPrevScene.Name = "btnPrevScene";
+			this.btnPrevScene.Size = new System.Drawing.Size(75, 25);
+			this.btnPrevScene.TabIndex = 0;
+			this.btnPrevScene.Text = "< Scene";
+			this.btnPrevScene.UseVisualStyleBackColor = true;
 			// 
-			// cbModelLocalTranslate
+			// btnNextScene
 			// 
-			this.cbModelLocalTranslate.AutoSize = true;
-			this.cbModelLocalTranslate.Location = new System.Drawing.Point(400, 4);
-			this.cbModelLocalTranslate.Name = "cbModelLocalTranslate";
-			this.cbModelLocalTranslate.Size = new System.Drawing.Size(139, 17);
-			this.cbModelLocalTranslate.TabIndex = 2;
-			this.cbModelLocalTranslate.Text = "Model Local Translation";
-			this.cbModelLocalTranslate.UseVisualStyleBackColor = true;
+			this.btnNextScene.Dock = System.Windows.Forms.DockStyle.Right;
+			this.btnNextScene.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+			this.btnNextScene.Font = new System.Drawing.Font("Microsoft Sans Serif", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.btnNextScene.Location = new System.Drawing.Point(725, 0);
+			this.btnNextScene.Name = "btnNextScene";
+			this.btnNextScene.Size = new System.Drawing.Size(75, 25);
+			this.btnNextScene.TabIndex = 4;
+			this.btnNextScene.Text = "Scene >";
+			this.btnNextScene.UseVisualStyleBackColor = true;
 			// 
-			// cbParentModelToUser
+			// cbMode4
 			// 
-			this.cbParentModelToUser.AutoSize = true;
-			this.cbParentModelToUser.Location = new System.Drawing.Point(264, 4);
-			this.cbParentModelToUser.Name = "cbParentModelToUser";
-			this.cbParentModelToUser.Size = new System.Drawing.Size(126, 17);
-			this.cbParentModelToUser.TabIndex = 1;
-			this.cbParentModelToUser.Text = "Parent Model to User";
-			this.cbParentModelToUser.UseVisualStyleBackColor = true;
+			this.cbMode4.AutoSize = true;
+			this.cbMode4.Location = new System.Drawing.Point(483, 4);
+			this.cbMode4.Name = "cbMode4";
+			this.cbMode4.Size = new System.Drawing.Size(59, 17);
+			this.cbMode4.TabIndex = 4;
+			this.cbMode4.Text = "Mode4";
+			this.cbMode4.UseVisualStyleBackColor = true;
 			// 
-			// cbCameraLocalTranslate
+			// cbMode3
 			// 
-			this.cbCameraLocalTranslate.AutoSize = true;
-			this.cbCameraLocalTranslate.Location = new System.Drawing.Point(108, 5);
-			this.cbCameraLocalTranslate.Name = "cbCameraLocalTranslate";
-			this.cbCameraLocalTranslate.Size = new System.Drawing.Size(146, 17);
-			this.cbCameraLocalTranslate.TabIndex = 0;
-			this.cbCameraLocalTranslate.Text = "Camera Local Translation";
-			this.cbCameraLocalTranslate.UseVisualStyleBackColor = true;
+			this.cbMode3.AutoSize = true;
+			this.cbMode3.Location = new System.Drawing.Point(403, 4);
+			this.cbMode3.Name = "cbMode3";
+			this.cbMode3.Size = new System.Drawing.Size(59, 17);
+			this.cbMode3.TabIndex = 3;
+			this.cbMode3.Text = "Mode3";
+			this.cbMode3.UseVisualStyleBackColor = true;
+			// 
+			// cbMode2
+			// 
+			this.cbMode2.AutoSize = true;
+			this.cbMode2.Location = new System.Drawing.Point(323, 4);
+			this.cbMode2.Name = "cbMode2";
+			this.cbMode2.Size = new System.Drawing.Size(59, 17);
+			this.cbMode2.TabIndex = 2;
+			this.cbMode2.Text = "Mode2";
+			this.cbMode2.UseVisualStyleBackColor = true;
+			// 
+			// cbMode1
+			// 
+			this.cbMode1.AutoSize = true;
+			this.cbMode1.Location = new System.Drawing.Point(243, 4);
+			this.cbMode1.Name = "cbMode1";
+			this.cbMode1.Size = new System.Drawing.Size(59, 17);
+			this.cbMode1.TabIndex = 1;
+			this.cbMode1.Text = "Mode1";
+			this.cbMode1.UseVisualStyleBackColor = true;
 			// 
 			// MainForm
 			// 
@@ -128,10 +156,12 @@
 
 		private SharpGL.OpenGLControl OpenGLControl;
 		private System.Windows.Forms.Panel pnlUI;
-		internal System.Windows.Forms.CheckBox cbParentModelToUser;
-		internal System.Windows.Forms.CheckBox cbCameraLocalTranslate;
-		internal System.Windows.Forms.CheckBox cbModelLocalTranslate;
-		internal System.Windows.Forms.CheckBox cbModelLocalScale;
+		internal System.Windows.Forms.CheckBox cbMode2;
+		internal System.Windows.Forms.CheckBox cbMode1;
+		internal System.Windows.Forms.CheckBox cbMode3;
+		internal System.Windows.Forms.CheckBox cbMode4;
+		internal System.Windows.Forms.Button btnPrevScene;
+		internal System.Windows.Forms.Button btnNextScene;
 	}
 }
 

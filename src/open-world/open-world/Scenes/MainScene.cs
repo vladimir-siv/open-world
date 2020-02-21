@@ -25,7 +25,7 @@ namespace open_world
 
 			Player = new GameObject("Player");
 			Player.mesh = new Mesh();
-			Player.mesh.shape = cube;
+			Player.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL);
 			Player.mesh.material = new Material(Shader.Find("phong"));
 			Player.mesh.material.Set("material_color", PlayerColor, true);
 			Player.mesh.material.Set("ambient_light_color", AmbientLight.color, true);
@@ -38,13 +38,13 @@ namespace open_world
 
 			Light = new GameObject("Light");
 			Light.mesh = new Mesh();
-			Light.mesh.shape = cube;
+			Light.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.COLOR);
 			Light.mesh.material = new Material(Shader.Find("basic"));
 			Light.transform.position = PointLight.position;
 
 			Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
-			Ground.mesh.shape = new Plane();
+			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL };
 			Ground.mesh.material = new Material(Shader.Find("phong"));
 			Ground.mesh.material.Set("material_color", GroundColor, true);
 			Ground.mesh.material.Set("ambient_light_color", AmbientLight.color, true);

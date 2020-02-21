@@ -33,6 +33,12 @@ namespace XEngine.Shading
 
 		protected uint GLAttribCount => AttribCount == 1u ? 0u : AttribCount;
 
+		public GeometricShape Use(VertexAttribute attributes)
+		{
+			Attributes = attributes;
+			return this;
+		}
+
 		public virtual int GetAttribSize(uint index) => (int)vertex.AttribSize;
 		public virtual uint GetAttribType(uint index) => OpenGL.GL_FLOAT;
 		public virtual bool ShouldAttribNormalize(uint index) => false;

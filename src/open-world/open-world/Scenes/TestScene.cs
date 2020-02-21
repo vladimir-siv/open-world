@@ -22,7 +22,7 @@ namespace open_world
 		{
 			var cube = new Mesh
 			{
-				shape = new Cube(),
+				shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR },
 				material = new Material(Shader.Find("basic"))
 			};
 
@@ -49,7 +49,7 @@ namespace open_world
 
 			Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
-			Ground.mesh.shape = new Plane();
+			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION };
 			Ground.mesh.material = new Material(Shader.Find("unlit"));
 			Ground.mesh.material.Set("material_color", new Color(1.0f, 1.0f, 1.0f));
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);

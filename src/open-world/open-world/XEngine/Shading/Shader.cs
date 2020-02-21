@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 using SharpGL;
-using GlmNet;
 
 namespace XEngine.Shading
 {
 	public sealed class Shader : IDisposable
 	{
-
 		private static (string, string) Preprocess(string code)
 		{
 			int LineCount(string str) { return str.Length - str.Replace("\n", string.Empty).Length; }
@@ -106,6 +104,7 @@ namespace XEngine.Shading
 			gl.AttachShader(shaderProgramId, fragmentShaderId);
 
 			gl.LinkProgram(shaderProgramId);
+			gl.ValidateProgram(shaderProgramId);
 			var linkError = GetLinkError(shaderProgramId);
 			if (linkError != null) throw new ApplicationException($"[LINK ERROR]\r\n{linkError}");
 

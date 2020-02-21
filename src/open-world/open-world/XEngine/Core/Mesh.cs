@@ -84,6 +84,8 @@ namespace XEngine.Core
 				gl.VertexAttribPointer(i, shape.GetAttribSize(i), shape.GetAttribType(i), shape.ShouldAttribNormalize(i), shape.GetAttribStride(i), shape.GetAttribOffset(i));
 				gl.EnableVertexAttribArray(i);
 			}
+
+			gl.BindVertexArray(0);
 		}
 
 		internal void Register()

@@ -131,12 +131,12 @@ namespace XEngine.Shading
 		public uint Id { get; private set; }
 		public string Name { get; private set; }
 
+		public int Eye { get; private set; }
 		public int Project { get; private set; }
 		public int View { get; private set; }
 		public int Model { get; private set; }
 		public int Rotate { get; private set; }
-		public int Eye { get; private set; }
-
+		
 		private readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
 
 		private Shader(uint id, string name)
@@ -145,11 +145,11 @@ namespace XEngine.Shading
 			Name = name;
 
 			var gl = XEngineContext.Graphics;
+			Eye = gl.GetUniformLocation(id, "eye");
 			Project = gl.GetUniformLocation(id, "project");
 			View = gl.GetUniformLocation(id, "view");
 			Model = gl.GetUniformLocation(id, "model");
 			Rotate = gl.GetUniformLocation(id, "rotate");
-			Eye = gl.GetUniformLocation(id, "eye_position");
 		}
 
 		internal void Clean()

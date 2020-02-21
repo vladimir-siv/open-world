@@ -30,16 +30,16 @@
 
 	#version 430 core
 	
-	uniform vec3 material_color;
-	
+	uniform vec3 eye;
+
 	uniform vec3 ambient_light_color;
 	uniform float ambient_light_power;
 	
 	uniform vec3 light_source_position;
 	uniform vec3 light_source_color;
 	uniform float light_source_power;
-	
-	uniform vec3 eye_position;
+
+	uniform vec3 material_color;
 	
 	in vec3 position;	// fragment position
 	in vec3 normal;		// fragment normal
@@ -50,7 +50,7 @@
 	{
 		vec3 normal_vector = normalize(normal);
 		vec3 light_vector = normalize(light_source_position - position);
-		vec3 eye_vector = normalize(eye_position - position);
+		vec3 eye_vector = normalize(eye - position);
 		float light_distance = distance(light_source_position, position);
 		float attenuation = 1.05f + 0.05f * light_distance * light_distance;
 		

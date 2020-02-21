@@ -14,9 +14,9 @@ namespace open_world
 		private GameObject Light;
 		private GameObject Ground;
 
-		private Color ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
 		private AmbientLight AmbientLight = AmbientLight.Bright;
 		private PointLight PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
+		private Color ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
 
 		protected override void Init()
 		{
@@ -27,13 +27,13 @@ namespace open_world
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
 			Model.material = new Material(Shader.Find("phong"));
-			Model.material.Set("material_color", ModelColor, true);
 			Model.material.Set("ambient_light_color", AmbientLight.color, true);
 			Model.material.Set("ambient_light_power", AmbientLight.power);
 			Model.material.Set("light_source_position", PointLight.position);
 			Model.material.Set("light_source_color", PointLight.color, true);
 			Model.material.Set("light_source_power", PointLight.power);
-			
+			Model.material.Set("material_color", ModelColor, true);
+
 			User = new GameObject("User");
 			User.mesh = cube;
 			User.material = basic;

@@ -22,7 +22,7 @@ namespace open_world
 		{
 			if (!Input.IsCurrentApplicationActive) return;
 			
-			MainCamera.LocalPosition = UI.Mode1.Checked ? new vec3(-4.0f, +4.0f, +10.0f) : vector3.zero;
+			if (MainCamera.Following != null) MainCamera.LocalPosition = UI.Mode1.Checked ? new vec3(-4.0f, +4.0f, +10.0f) : vector3.zero;
 			Model.parent = UI.Mode2.Checked ? gameObject : null;
 			Model.transform.position = UI.Mode3.Checked ? new vec3(+0.0f, -4.0f, -40.0f) : vector3.zero;
 			Model.transform.scale = UI.Mode4.Checked ? new vec3(0.1f, 0.1f, 0.1f) : vector3.one;

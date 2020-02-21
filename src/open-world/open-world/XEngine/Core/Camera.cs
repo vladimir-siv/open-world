@@ -91,7 +91,7 @@ namespace XEngine.Core
 			rotate = quaternion.euler(rotate, LocalRotation);
 
 			Position = (transform * vector4.neutral).to_vec3();
-			Rotation = (rotate * vector4.neutral).to_vec3();
+			Rotation = LocalRotation + (Following?.transform.rotation ?? vector3.zero); // Needs full sum parent rotations, not just from first parent
 
 			ViewDirection = (rotate * vector4.forward).to_vec3();
 			StrafeDirection = (rotate * vector4.right).to_vec3();

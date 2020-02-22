@@ -136,7 +136,8 @@ namespace XEngine.Shading
 		public int View { get; private set; }
 		public int Model { get; private set; }
 		public int Rotate { get; private set; }
-		
+
+		private Material Prepared = null;
 		private readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
 
 		private Shader(uint id, string name)
@@ -186,6 +187,12 @@ namespace XEngine.Shading
 			return location;
 		}
 
+		internal bool PrepareNeeded(Material material, bool markPrepared = false)
+		{
+			if (material == Prepared || material == null) return false;
+			if (markPrepared) Prepared = material;
+			return true;
+		}
 		internal void SetScalar(string name, int value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
 		internal void SetScalar(string name, uint value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);
 		internal void SetScalar(string name, float value) => XEngineContext.Graphics.Uniform1(GetLocation(name), value);

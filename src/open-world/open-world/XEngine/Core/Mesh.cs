@@ -9,6 +9,8 @@ namespace XEngine.Core
 
 	public sealed class Mesh : IDisposable
 	{
+		private static Mesh CurrentBound = null;
+
 		private uint[] ArrayIds = null;
 		private uint[] BufferIds = null;
 
@@ -35,12 +37,23 @@ namespace XEngine.Core
 		private uint shared = 0u;
 
 		public bool KeepAlive { get; set; } = false;
+		public bool Disposed { get; private set; } = true;
+		public bool Active => this == CurrentBound;
 		
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
 		{
 			var model = await Model.Load(name);
 			model.Attributes = attributes;
 			shape = model;
+		}
+
+		public void Activate()
+		{
+			if (ArrayIds == null) throw new InvalidOperationException("Mesh disposed.");
+			if (this == CurrentBound) return;
+			var gl = XEngineContext.Graphics;
+			gl.BindVertexArray(VertexArrayId);
+			CurrentBound = this;
 		}
 
 		private void Generate()
@@ -71,6 +84,13 @@ namespace XEngine.Core
 				gl.VertexAttribPointer(i, shape.GetAttribSize(i), shape.GetAttribType(i), shape.ShouldAttribNormalize(i), shape.GetAttribStride(i), shape.GetAttribOffset(i));
 				gl.EnableVertexAttribArray(i);
 			}
+
+			Disposed = false;
+
+			if (CurrentBound != null && CurrentBound != this && !CurrentBound.Disposed)
+			{
+				gl.BindVertexArray(CurrentBound.VertexArrayId);
+			}
 		}
 
 		internal void Register()
@@ -98,6 +118,7 @@ namespace XEngine.Core
 
 			shared = 0u;
 			KeepAlive = false;
+			Disposed = true;
 		}
 	}
 }

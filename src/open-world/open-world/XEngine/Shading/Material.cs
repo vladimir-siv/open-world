@@ -306,6 +306,12 @@ namespace XEngine.Shading
 
 		#endregion
 
-		internal void Prepare() => DataCollection.Prepare(shader);
+		internal void Prepare()
+		{
+			if (shader != null && shader.PrepareNeeded(this, markPrepared: true))
+			{
+				DataCollection.Prepare(shader);
+			}
+		}
 	}
 }

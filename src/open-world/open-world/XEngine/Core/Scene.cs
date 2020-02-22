@@ -120,8 +120,16 @@ namespace XEngine.Core
 		}
 		protected void DrawScene()
 		{
+			var gl = XEngineContext.Graphics;
+
 			foreach (var shader in XEngineContext.CompiledShaders)
 			{
+				shader.Use();
+
+				if (shader.Eye != -1) gl.Uniform3(shader.Eye, MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
+				if (shader.Project != -1) gl.UniformMatrix4(shader.Project, 1, false, MainCamera.ViewToProjectData);
+				if (shader.View != -1) gl.UniformMatrix4(shader.View, 1, false, MainCamera.WorldToViewData);
+
 				while (Algs.DrawableObjectPouch.Retrieve(shader, out var gameObject))
 				{
 					gameObject.Draw();

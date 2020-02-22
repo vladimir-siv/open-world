@@ -5,6 +5,8 @@ using SharpGL;
 
 namespace XEngine.Shading
 {
+	using XEngine.Core;
+
 	public sealed class Shader : IDisposable
 	{
 		private static (string, string) Preprocess(string code)
@@ -122,7 +124,6 @@ namespace XEngine.Shading
 			var id = Build(shaderName);
 			shader = new Shader(id, shaderName);
 			shaders.Add(shaderName, shader);
-			XEngineContext.CompiledShaders.AddLast(shader);
 			return shader;
 		}
 
@@ -164,16 +165,20 @@ namespace XEngine.Shading
 		{
 			Clean();
 			XEngineContext.Shaders.Remove(Name);
-			XEngineContext.CompiledShaders.Remove(this);
 		}
 
-		public void Use()
+		public void Use(bool dontSendEyeProjectView = false)
 		{
 			if (Id == 0) throw new InvalidOperationException("Shader object was disposed.");
 			if (Id == CurrentShaderId) return;
 			var gl = XEngineContext.Graphics;
 			gl.UseProgram(Id);
 			CurrentShaderId = Id;
+			if (dontSendEyeProjectView) return;
+			var camera = SceneManager.CurrentScene.MainCamera;
+			if (Eye != -1) gl.Uniform3(Eye, camera.Position.x, camera.Position.y, camera.Position.z);
+			if (Project != -1) gl.UniformMatrix4(Project, 1, false, camera.ViewToProjectData);
+			if (View != -1) gl.UniformMatrix4(View, 1, false, camera.WorldToViewData);
 		}
 		public int GetLocation(string name)
 		{

@@ -115,6 +115,7 @@
     <Compile Include="XEngine\Shapes\Triangle.cs" />
     <Compile Include="XEngine\Structures\Node.cs" />
     <Compile Include="XEngine\Structures\Pouch.cs" />
+    <Compile Include="XEngine\Structures\Pouch3L.cs" />
     <Compile Include="XEngine\Structures\Queue.cs" />
     <Compile Include="XEngine\XEngine.cs" />
     <EmbeddedResource Include="MainForm.resx">

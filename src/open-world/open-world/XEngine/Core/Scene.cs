@@ -12,7 +12,7 @@ namespace XEngine.Core
 		{
 			public readonly Pouch<GameObject, GameObject> SyncObjectPouch = new Pouch<GameObject, GameObject>();
 			public readonly Queue<GameObject> ObjectQueue = new Queue<GameObject>();
-			public readonly Pouch<Shader, GameObject> DrawableObjectPouch = new Pouch<Shader, GameObject>();
+			public readonly Pouch3L<Shader, Mesh, Material, GameObject> DrawableObjectPouch = new Pouch3L<Shader, Mesh, Material, GameObject>();
 			
 			public IEnumerable<GameObject> SyncLevelOrder(GameObject gameObject)
 			{
@@ -91,14 +91,10 @@ namespace XEngine.Core
 
 		protected void Prepare()
 		{
-			// [Assert: Algs.SyncObjectPouch.Count == 0]
-			// [Assert: Algs.ObjectQueue.Count == 0]
-			// [Assert: Algs.DrawableObjectPouch.Count == 0]
-
 			foreach (var gameObject in GameObjects)
 			{
 				if (gameObject.parent != null) Algs.SyncObjectPouch.Add(gameObject.parent, gameObject);
-				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.material.shader, gameObject);
+				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.material.shader, gameObject.mesh, gameObject.material, gameObject);
 			}
 		}
 		protected void SyncScene()
@@ -114,29 +110,13 @@ namespace XEngine.Core
 			}
 
 			MainCamera.Adjust();
-
-			// [Assert: Algs.SyncObjectPouch.Count == 0]
-			// [Assert: Algs.ObjectQueue.Count == 0]
 		}
 		protected void DrawScene()
 		{
-			var gl = XEngineContext.Graphics;
-
-			foreach (var shader in XEngineContext.CompiledShaders)
+			foreach (var gameObject in Algs.DrawableObjectPouch.Retrieve())
 			{
-				shader.Use();
-
-				if (shader.Eye != -1) gl.Uniform3(shader.Eye, MainCamera.Position.x, MainCamera.Position.y, MainCamera.Position.z);
-				if (shader.Project != -1) gl.UniformMatrix4(shader.Project, 1, false, MainCamera.ViewToProjectData);
-				if (shader.View != -1) gl.UniformMatrix4(shader.View, 1, false, MainCamera.WorldToViewData);
-
-				while (Algs.DrawableObjectPouch.Retrieve(shader, out var gameObject))
-				{
-					gameObject.Draw();
-				}
+				gameObject.Draw();
 			}
-
-			// [Assert: Algs.DrawableObjectPouch.Count == 0]
 		}
 	}
 }

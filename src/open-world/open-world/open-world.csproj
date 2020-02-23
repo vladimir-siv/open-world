@@ -106,7 +106,6 @@
     <Compile Include="XEngine\Models\Model.cs" />
     <Compile Include="XEngine\Shading\Material.cs" />
     <Compile Include="XEngine\Shading\Shader.cs" />
-    <Compile Include="XEngine\Shading\VertexAttribute.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
     <Compile Include="XEngine\Shading\GeometricShape.cs" />
     <Compile Include="XEngine\Shapes\Plane.cs" />

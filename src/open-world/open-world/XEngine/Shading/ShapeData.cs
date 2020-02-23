@@ -2,8 +2,6 @@
 
 namespace XEngine.Shading
 {
-	using XEngine.Common;
-
 	public struct ShapeData
 	{
 		public vertex[] Vertices { get; private set; }
@@ -13,10 +11,8 @@ namespace XEngine.Shading
 		{
 			if (attributes == VertexAttribute.NONE) throw new ArgumentException("Cannot serialize shape data with no selected attributes.");
 
-			var attribcount = Math.Min(((uint)attributes).BitCount(), vertex.AttribCount);
-			var vertexsize = vertex.AttribSize * attribcount;
-			var dataLength = Vertices.Length * vertexsize;
-			var data = new float[dataLength];
+			var vertexsize = vertex.SizeOf(attributes);
+			var data = new float[Vertices.Length * vertexsize];
 
 			for (int i = 0; i < Vertices.Length; ++i)
 			{
@@ -42,6 +38,12 @@ namespace XEngine.Shading
 					data[i * vertexsize + c++] = vertex.normal.x;
 					data[i * vertexsize + c++] = vertex.normal.y;
 					data[i * vertexsize + c++] = vertex.normal.z;
+				}
+
+				if (attributes.HasFlag(VertexAttribute.UV))
+				{
+					data[i * vertexsize + c++] = vertex.uv.x;
+					data[i * vertexsize + c++] = vertex.uv.y;
 				}
 			}
 

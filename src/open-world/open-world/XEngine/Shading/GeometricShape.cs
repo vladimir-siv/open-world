@@ -31,19 +31,29 @@ namespace XEngine.Shading
 		internal GeometricShape(ShapeData shapeData) { _ShapeData = shapeData; VertexCount = Vertices.Length; IndexCount = Indices.Length; }
 		public virtual uint OpenGLShapeType => OpenGL.GL_TRIANGLES;
 
-		protected uint GLAttribCount => AttribCount == 1u ? 0u : AttribCount;
-
 		public GeometricShape Use(VertexAttribute attributes)
 		{
 			Attributes = attributes;
 			return this;
 		}
 
-		public virtual int GetAttribSize(uint index) => (int)vertex.AttribSize;
-		public virtual uint GetAttribType(uint index) => OpenGL.GL_FLOAT;
-		public virtual bool ShouldAttribNormalize(uint index) => false;
-		public virtual int GetAttribStride(uint index) => (int)(vertex.AttribSize * GLAttribCount * sizeof(float));
-		public virtual IntPtr GetAttribOffset(uint index) => new IntPtr(index * vertex.AttribSize * sizeof(float));
+		public virtual VertexAttribute GetAttribute(uint index)
+		{
+			for (var i = 0u; i < vertex.AttribCount; ++i)
+			{
+				var e = (VertexAttribute)(1 << (int)i);
+
+				if (Attributes.HasFlag(e))
+				{
+					if (index-- == 0u) return e;
+				}
+			}
+
+			return VertexAttribute.NONE;
+		}
+
+		public virtual uint GetAttribType(VertexAttribute attribute) => OpenGL.GL_FLOAT;
+		public virtual bool ShouldAttribNormalize(VertexAttribute attribute) => false;
 
 		public void Dispose()
 		{

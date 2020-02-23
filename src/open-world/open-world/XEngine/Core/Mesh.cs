@@ -78,11 +78,16 @@ namespace XEngine.Core
 
 			gl.BindBuffer(OpenGL.GL_ELEMENT_ARRAY_BUFFER, BufferIds[1]);
 			gl.BufferData(OpenGL.GL_ELEMENT_ARRAY_BUFFER, shape.Indices, OpenGL.GL_STATIC_DRAW);
-
+			
+			var stride = (shape.AttribCount <= 1u ? 0 : 1) * vertex.SizeOf(shape.Attributes) * sizeof(float);
+			var offset = 0;
 			for (var i = 0u; i < shape.AttribCount; ++i)
 			{
-				gl.VertexAttribPointer(i, shape.GetAttribSize(i), shape.GetAttribType(i), shape.ShouldAttribNormalize(i), shape.GetAttribStride(i), shape.GetAttribOffset(i));
+				var attrib = shape.GetAttribute(i);
+				var attribSize = vertex.AttribSize(attrib);
+				gl.VertexAttribPointer(i, attribSize, shape.GetAttribType(attrib), shape.ShouldAttribNormalize(attrib), stride, new IntPtr(offset * sizeof(float)));
 				gl.EnableVertexAttribArray(i);
+				offset += attribSize;
 			}
 
 			Disposed = false;

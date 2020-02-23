@@ -39,10 +39,12 @@ namespace XEngine.Core
 		public bool KeepAlive { get; set; } = false;
 		public bool Disposed { get; private set; } = true;
 		public bool Active => this == CurrentBound;
-		
-		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
+
+		public Task LoadUntexturedModel(string name, VertexAttribute attributes = VertexAttribute.ALL) => LoadModel(name, attributes, false);
+		public Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL) => LoadModel(name, attributes, true);
+		private async Task LoadModel(string name, VertexAttribute attributes, bool textured)
 		{
-			var model = await Resource.LoadModel(name);
+			var model = await Resource.LoadModel(name, textured);
 			model.Attributes = attributes;
 			shape = model;
 		}

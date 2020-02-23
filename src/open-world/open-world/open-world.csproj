@@ -146,11 +146,17 @@
     <EmbeddedResource Include="Shaders\phong.glsl" />
     <EmbeddedResource Include="Shaders\basic.glsl" />
     <EmbeddedResource Include="Shaders\unlit.glsl" />
+    <EmbeddedResource Include="Resources\stall.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\bunny.obj" />
+    <EmbeddedResource Include="Resources\dragon.obj" />
+    <EmbeddedResource Include="Resources\drone.obj" />
+    <EmbeddedResource Include="Resources\fern.obj" />
+    <EmbeddedResource Include="Resources\grass.obj" />
     <None Include="Resources\NT.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +164,20 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shaders\unlit_texture.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\fern.png" />
+    <EmbeddedResource Include="Resources\flower.png" />
+    <EmbeddedResource Include="Resources\grassy.png" />
+    <EmbeddedResource Include="Resources\image.png" />
+    <EmbeddedResource Include="Resources\white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\stall.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\grass.png" />
+    <EmbeddedResource Include="Resources\grass_ground.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

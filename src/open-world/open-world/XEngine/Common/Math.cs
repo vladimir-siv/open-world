@@ -21,6 +21,12 @@ namespace XEngine.Common
 		}
 	}
 
+	public static class vector2
+	{
+		public static readonly vec2 zero		= new vec2(+0.0f, +0.0f);
+		public static readonly vec2 one			= new vec2(+1.0f, +1.0f);
+	}
+
 	public static class vector3
 	{
 		public static readonly vec3 zero		= new vec3(+0.0f, +0.0f, +0.0f);
@@ -33,6 +39,7 @@ namespace XEngine.Common
 		public static readonly vec3 down		= new vec3(+0.0f, -1.0f, +0.0f);
 
 		public static vec3 normalize(this vec3 v) => v != zero ? glm.normalize(v) : zero;
+		public static vec2 to_vec2(this vec3 v) => new vec2(v.x, v.y);
 		public static vec4 to_vec4(this vec3 v) => new vec4(v.x, v.y, v.z, 1.0f);
 		public static float distance(this vec3 v1, vec3 v2)
 		{

@@ -14,7 +14,7 @@ namespace open_world
 		private GameObject Crate;
 		private GameObject Light;
 		private GameObject Ground;
-		
+
 		private AmbientLight AmbientLight = AmbientLight.Bright;
 		private PointLight PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 

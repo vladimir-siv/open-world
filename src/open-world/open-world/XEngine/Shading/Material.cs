@@ -280,11 +280,14 @@ namespace XEngine.Shading
 		public Shader shader { get; set; }
 		public Texture texture { get; set; }
 
+		public bool CullFace { get; set; } = true;
+
 		public Material() { }
 		public Material(Shader shader) { this.shader = shader; }
 
 		#region Setters
 
+		public void Set(string name, bool val) => Set(name, val ? 1.0f : 0.0f);
 		public void Set(string name, int val) => DataCollection.Set(name, val);
 		public void Set(string name, uint val) => DataCollection.Set(name, val);
 		public void Set(string name, float val) => DataCollection.Set(name, val);
@@ -313,8 +316,9 @@ namespace XEngine.Shading
 			if (shader != null && shader.PrepareNeeded(this, markPrepared: true))
 			{
 				DataCollection.Prepare(shader);
-				texture?.Bind(XEngineContext.Graphics);
 			}
+
+			texture?.Bind(XEngineContext.Graphics);
 		}
 	}
 }

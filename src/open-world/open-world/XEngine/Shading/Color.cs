@@ -6,6 +6,8 @@ namespace XEngine.Shading
 
 	public struct Color
 	{
+		public static readonly Color White = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+
 		public vec4 vectorized;
 
 		public float r
@@ -35,5 +37,7 @@ namespace XEngine.Shading
 		public Color(float r, float g, float b) : this(r, g, b, 1.0f) { }
 		public Color(float r, float g, float b, float a) : this(new vec4(r, g, b, a)) { }
 		public Color(vec4 rgba) { vectorized = rgba; }
+
+		public static bool AreEqual(Color c1, Color c2) => c1.vectorized == c2.vectorized;
 	}
 }

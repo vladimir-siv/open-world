@@ -141,6 +141,8 @@
 			this.Controls.Add(this.pnlUI);
 			this.Controls.Add(this.OpenGLControl);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "MainForm";
 			this.ShowIcon = false;
 			this.Text = "Open World";

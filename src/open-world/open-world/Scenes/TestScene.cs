@@ -10,21 +10,16 @@ namespace open_world
 	[GenerateScene("OpenWorld.TestScene")]
 	public class TestScene : Scene
 	{
-		private GameObject Model;
-		private GameObject User;
-		private GameObject Light;
-		private GameObject Ground;
-
-		private AmbientLight AmbientLight = AmbientLight.Bright;
-		private PointLight PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
-		private Color ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
-
 		protected override void Init()
 		{
+			var AmbientLight = new AmbientLight(Color.White, 0.25f);
+			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
+			var ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
+
 			var cube = new Mesh { shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR }, };
 			var basic = new Material(Shader.Find("basic"));
 
-			Model = new GameObject("Model");
+			var Model = new GameObject("Model");
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
 			Model.material = new Material(Shader.Find("phong"));
@@ -37,19 +32,19 @@ namespace open_world
 			Model.material.Set("reflectivity", 1.0f);
 			Model.material.Set("material_color", ModelColor, true);
 
-			User = new GameObject("User");
+			var User = new GameObject("User");
 			User.mesh = cube;
 			User.material = basic;
 			User.transform.position = new vec3(-30.0f, 20.0f, 30.0f);
 			User.transform.rotation = new vec3(-25.0f, -45.0f, 0.0f);
 			User.AttachBehaviour(new UserController { Model = Model });
 
-			Light = new GameObject("Light");
+			var Light = new GameObject("Light");
 			Light.mesh = cube;
 			Light.material = basic;
 			Light.transform.position = PointLight.position;
 
-			Ground = new GameObject("Ground");
+			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
 			Ground.material = new Material(Shader.Find("unlit_texture"));

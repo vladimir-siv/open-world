@@ -60,6 +60,84 @@ namespace XEngine
 		}
 	}
 
+	public static class XEngineState
+	{
+		private static bool _DepthTest = false;
+		public static bool DepthTest
+		{
+			get
+			{
+				return _DepthTest;
+			}
+			set
+			{
+				if (value == _DepthTest) return;
+				_DepthTest = value;
+				var gl = XEngineContext.Graphics;
+				if (_DepthTest) gl.Enable(OpenGL.GL_DEPTH_TEST);
+				else gl.Disable(OpenGL.GL_DEPTH_TEST);
+			}
+		}
+
+		private static bool _CullFace = false;
+		public static bool CullFace
+		{
+			get
+			{
+				return _CullFace;
+			}
+			set
+			{
+				if (value == _CullFace) return;
+				_CullFace = value;
+				var gl = XEngineContext.Graphics;
+				if (_CullFace) gl.Enable(OpenGL.GL_CULL_FACE);
+				else gl.Disable(OpenGL.GL_CULL_FACE);
+			}
+		}
+
+		private static bool _Texture2D = false;
+		public static bool Texture2D
+		{
+			get
+			{
+				return _Texture2D;
+			}
+			set
+			{
+				if (value == _Texture2D) return;
+				_Texture2D = value;
+				var gl = XEngineContext.Graphics;
+				if (_Texture2D) gl.Enable(OpenGL.GL_TEXTURE_2D);
+				else gl.Disable(OpenGL.GL_TEXTURE_2D);
+			}
+		}
+
+		private static Color _ClearColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+		public static Color ClearColor
+		{
+			get
+			{
+				return _ClearColor;
+			}
+			set
+			{
+				if (Color.AreEqual(value, _ClearColor)) return;
+				_ClearColor = value;
+				var gl = XEngineContext.Graphics;
+				gl.ClearColor(value.r, value.g, value.b, value.a);
+			}
+		}
+
+		public static void Reset()
+		{
+			DepthTest = true;
+			CullFace = true;
+			Texture2D = true;
+			ClearColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		}
+	}
+
 	[AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
 	public class XEngineActivationAttribute : Attribute
 	{

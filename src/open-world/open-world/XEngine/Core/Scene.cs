@@ -57,11 +57,7 @@ namespace XEngine.Core
 		internal void _Init()
 		{
 			if (Initialized) return;
-			var gl = XEngineContext.Graphics;
-			gl.Enable(OpenGL.GL_DEPTH_TEST);
-			gl.Enable(OpenGL.GL_CULL_FACE);
-			gl.Enable(OpenGL.GL_TEXTURE_2D);
-			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			XEngineState.Reset();
 			Init();
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
@@ -95,7 +91,7 @@ namespace XEngine.Core
 			foreach (var gameObject in GameObjects)
 			{
 				if (gameObject.parent != null) Algs.SyncObjectPouch.Add(gameObject.parent, gameObject);
-				if (gameObject.IsDrawable) Algs.DrawableObjectPouch.Add(gameObject.material.shader, gameObject.mesh, gameObject.material, gameObject);
+				if (gameObject.IsDrawable && !gameObject.DisableRendering) Algs.DrawableObjectPouch.Add(gameObject.material.shader, gameObject.mesh, gameObject.material, gameObject);
 			}
 		}
 		protected void SyncScene()

@@ -148,6 +148,7 @@
     <EmbeddedResource Include="Shaders\basic.glsl" />
     <EmbeddedResource Include="Shaders\unlit.glsl" />
     <EmbeddedResource Include="Resources\stall.obj" />
+    <EmbeddedResource Include="Shaders\phong_texture.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

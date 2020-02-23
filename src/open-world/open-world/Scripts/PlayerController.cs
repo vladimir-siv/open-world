@@ -9,7 +9,7 @@ namespace open_world
 {
 	public class PlayerController : XBehaviour
 	{
-		public float MovementSpeed = 1.0f;
+		public float MovementSpeed = 0.2f;
 		public float RotationSpeed = 0.2f;
 		
 		private void PrevScene(object sender, EventArgs e) => SceneManager.LoadScene("OpenWorld.MainScene");

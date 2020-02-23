@@ -1,6 +1,7 @@
 ﻿using GlmNet;
 using XEngine.Core;
 using XEngine.Lighting;
+using XEngine.Resources;
 using XEngine.Shading;
 using XEngine.Shapes;
 
@@ -10,6 +11,7 @@ namespace open_world
 	public class MainScene : Scene
 	{
 		private GameObject Player;
+		private GameObject Crate;
 		private GameObject Light;
 		private GameObject Ground;
 		
@@ -36,6 +38,13 @@ namespace open_world
 			Player.AttachBehaviour(new PlayerController {  });
 			Player.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
 
+			Crate = new GameObject("Crate");
+			Crate.mesh = new Mesh();
+			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.UV);
+			Crate.material = new Material(Shader.Find("unlit_texture"));
+			Crate.material.texture = Resource.LoadTexture("crate");
+			Crate.transform.position = new vec3(+0.0f, +0.5f, +0.0f);
+
 			Light = new GameObject("Light");
 			Light.mesh = new Mesh();
 			Light.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.COLOR);
@@ -54,8 +63,7 @@ namespace open_world
 			Ground.material.Set("material_color", GroundColor, true);
 			Ground.transform.scale = new vec3(5.0f, 5.0f, 5.0f);
 
-			cube.KeepAlive = false;
-			cube.Dispose();
+			cube.Dispose(force: true);
 
 			MainCamera.Following = Player;
 			MainCamera.LocalPosition = new vec3(+0.0f, +2.5f, +5.0f);

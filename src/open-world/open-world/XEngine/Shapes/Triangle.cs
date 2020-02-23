@@ -43,9 +43,9 @@ namespace XEngine.Shapes
 			(
 				new vertex[]
 				{
-					new vertex(p1, c1, new vec3(+0.0f, +0.0f, +1.0f)),
-					new vertex(p2, c2, new vec3(+0.0f, +0.0f, +1.0f)),
-					new vertex(p3, c3, new vec3(+0.0f, +0.0f, +1.0f)),
+					new vertex(p1, c1, new vec3(+0.0f, +0.0f, +1.0f), new vec2(0.5f, 0.0f)),
+					new vertex(p2, c2, new vec3(+0.0f, +0.0f, +1.0f), new vec2(0.0f, 1.0f)),
+					new vertex(p3, c3, new vec3(+0.0f, +0.0f, +1.0f), new vec2(1.0f, 1.0f)),
 				}
 			)
 		{

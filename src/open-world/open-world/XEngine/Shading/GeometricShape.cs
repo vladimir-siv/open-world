@@ -55,9 +55,10 @@ namespace XEngine.Shading
 		public virtual uint GetAttribType(VertexAttribute attribute) => OpenGL.GL_FLOAT;
 		public virtual bool ShouldAttribNormalize(VertexAttribute attribute) => false;
 
-		public void Dispose()
+		public void Dispose() => Dispose(false);
+		public void Dispose(bool force)
 		{
-			if (KeepAlive) return;
+			if (KeepAlive && !force) return;
 			_ShapeData.Release();
 		}
 	}

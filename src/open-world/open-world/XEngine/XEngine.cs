@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reflection;
 
 using SharpGL;
+using SharpGL.SceneGraph.Assets;
 
 namespace XEngine
 {
 	using XEngine.Core;
 	using XEngine.Shading;
 	using XEngine.Interaction;
-    using XEngine.Resources;
 
     public static class XEngineActivator
 	{
@@ -39,7 +39,8 @@ namespace XEngine
 			XEngineContext.Graphics.UseProgram(0);
 			foreach (var shader in XEngineContext.Shaders) shader.Value.Clean();
 			XEngineContext.Shaders.Clear();
-			Resource.ReleaseAllTextures();
+			foreach (var texture in XEngineContext.Textures) texture.Value.Destroy(XEngineContext.Graphics);
+			XEngineContext.Textures.Clear();
 			XEngineContext.GLControl = null;
 		}
 	}
@@ -49,7 +50,8 @@ namespace XEngine
 		internal static OpenGLControl GLControl { get; set; } = null;
 		internal static OpenGL Graphics => GLControl.OpenGL;
 		internal static Dictionary<string, Shader> Shaders { get; } = new Dictionary<string, Shader>();
-		
+		internal static Dictionary<string, Texture> Textures { get; } = new Dictionary<string, Texture>();
+
 		public static void Draw()
 		{
 			Input.Update();

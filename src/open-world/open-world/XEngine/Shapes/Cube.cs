@@ -9,14 +9,14 @@ namespace XEngine.Shapes
 		public Cube() :
 			this
 			(
-				-1, +1, +1,
-				+1, +1, +1,
-				+1, +1, -1,
-				-1, +1, -1,
-				-1, -1, +1,
-				+1, -1, +1,
-				+1, -1, -1,
-				-1, -1, -1,
+				-0.5f, +0.5f, +0.5f,
+				+0.5f, +0.5f, +0.5f,
+				+0.5f, +0.5f, -0.5f,
+				-0.5f, +0.5f, -0.5f,
+				-0.5f, -0.5f, +0.5f,
+				+0.5f, -0.5f, +0.5f,
+				+0.5f, -0.5f, -0.5f,
+				-0.5f, -0.5f, -0.5f,
 
 				1, 0, 0,
 				0, 1, 0,
@@ -193,58 +193,58 @@ namespace XEngine.Shapes
 				new vertex[]
 				{
 					// Top side
-					new vertex(p1, c1d, new vec3(+0.0f, +1.0f, +0.0f)),		// [0]
-					new vertex(p2, c2d, new vec3(+0.0f, +1.0f, +0.0f)),		// [1]
-					new vertex(p4, c4d, new vec3(+0.0f, +1.0f, +0.0f)),		// [2]
+					new vertex(p1, c1d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(0.0f, 1.0f)),		// [0]
+					new vertex(p2, c2d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(1.0f, 1.0f)),		// [1]
+					new vertex(p4, c4d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(0.0f, 0.0f)),		// [2]
 
-					new vertex(p3, c3d, new vec3(+0.0f, +1.0f, +0.0f)),		// [3]
-					//new vertex(p4, c4d, new vec3(+0.0f, +1.0f, +0.0f)),	// <2>
-					//new vertex(p2, c2d, new vec3(+0.0f, +1.0f, +0.0f)),	// <1>
+					new vertex(p3, c3d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(1.0f, 0.0f)),		// [3]
+					//new vertex(p4, c4d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(0.0f, 0.0f)),		// <2>
+					//new vertex(p2, c2d, new vec3(+0.0f, +1.0f, +0.0f), new vec2(1.0f, 1.0f)),		// <1>
 					
 					// Bottom side
-					new vertex(p5, c5d, new vec3(+0.0f, -1.0f, +0.0f)),		// [4]
-					new vertex(p8, c8d, new vec3(+0.0f, -1.0f, +0.0f)),		// [5]
-					new vertex(p6, c6d, new vec3(+0.0f, -1.0f, +0.0f)),		// [6]
+					new vertex(p5, c5d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(0.0f, 0.0f)),		// [4]
+					new vertex(p8, c8d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(0.0f, 1.0f)),		// [5]
+					new vertex(p6, c6d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(1.0f, 0.0f)),		// [6]
 
-					new vertex(p7, c7d, new vec3(+0.0f, -1.0f, +0.0f)),		// [7]
-					//new vertex(p6, c6d, new vec3(+0.0f, -1.0f, +0.0f)),	// <6>
-					//new vertex(p8, c8d, new vec3(+0.0f, -1.0f, +0.0f)),	// <5>
+					new vertex(p7, c7d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(1.0f, 1.0f)),		// [7]
+					//new vertex(p6, c6d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(1.0f, 0.0f)),		// <6>
+					//new vertex(p8, c8d, new vec3(+0.0f, -1.0f, +0.0f), new vec2(0.0f, 1.0f)),		// <5>
 
 					// Front side
-					new vertex(p5, c5r, new vec3(+0.0f, +0.0f, +1.0f)),		// [8]
-					new vertex(p6, c6l, new vec3(+0.0f, +0.0f, +1.0f)),		// [9]
-					new vertex(p1, c1r, new vec3(+0.0f, +0.0f, +1.0f)),		// [10]
+					new vertex(p5, c5r, new vec3(+0.0f, +0.0f, +1.0f), new vec2(0.0f, 1.0f)),		// [8]
+					new vertex(p6, c6l, new vec3(+0.0f, +0.0f, +1.0f), new vec2(1.0f, 1.0f)),		// [9]
+					new vertex(p1, c1r, new vec3(+0.0f, +0.0f, +1.0f), new vec2(0.0f, 0.0f)),		// [10]
 
-					new vertex(p2, c2l, new vec3(+0.0f, +0.0f, +1.0f)),		// [11]
-					//new vertex(p1, c1r, new vec3(+0.0f, +0.0f, +1.0f)),	// <10>
-					//new vertex(p6, c6l, new vec3(+0.0f, +0.0f, +1.0f)),	// <9>
+					new vertex(p2, c2l, new vec3(+0.0f, +0.0f, +1.0f), new vec2(1.0f, 0.0f)),		// [11]
+					//new vertex(p1, c1r, new vec3(+0.0f, +0.0f, +1.0f), new vec2(0.0f, 0.0f)),		// <10>
+					//new vertex(p6, c6l, new vec3(+0.0f, +0.0f, +1.0f), new vec2(1.0f, 1.0f)),		// <9>
 
 					// Right side
-					new vertex(p6, c6r, new vec3(+1.0f, +0.0f, +0.0f)),		// [12]
-					new vertex(p7, c7l, new vec3(+1.0f, +0.0f, +0.0f)),		// [13]
-					new vertex(p2, c2r, new vec3(+1.0f, +0.0f, +0.0f)),		// [14]
+					new vertex(p6, c6r, new vec3(+1.0f, +0.0f, +0.0f), new vec2(0.0f, 1.0f)),		// [12]
+					new vertex(p7, c7l, new vec3(+1.0f, +0.0f, +0.0f), new vec2(1.0f, 1.0f)),		// [13]
+					new vertex(p2, c2r, new vec3(+1.0f, +0.0f, +0.0f), new vec2(0.0f, 0.0f)),		// [14]
 
-					new vertex(p3, c3l, new vec3(+1.0f, +0.0f, +0.0f)),		// [15]
-					//new vertex(p2, c2r, new vec3(+1.0f, +0.0f, +0.0f)),	// <14>
-					//new vertex(p7, c7l, new vec3(+1.0f, +0.0f, +0.0f)),	// <13>
+					new vertex(p3, c3l, new vec3(+1.0f, +0.0f, +0.0f), new vec2(1.0f, 0.0f)),		// [15]
+					//new vertex(p2, c2r, new vec3(+1.0f, +0.0f, +0.0f), new vec2(0.0f, 0.0f)),		// <14>
+					//new vertex(p7, c7l, new vec3(+1.0f, +0.0f, +0.0f), new vec2(1.0f, 1.0f)),		// <13>
 
 					// Back side
-					new vertex(p7, c7r, new vec3(+0.0f, +0.0f, -1.0f)),		// [16]
-					new vertex(p8, c8l, new vec3(+0.0f, +0.0f, -1.0f)),		// [17]
-					new vertex(p3, c3r, new vec3(+0.0f, +0.0f, -1.0f)),		// [18]
+					new vertex(p7, c7r, new vec3(+0.0f, +0.0f, -1.0f), new vec2(0.0f, 1.0f)),		// [16]
+					new vertex(p8, c8l, new vec3(+0.0f, +0.0f, -1.0f), new vec2(1.0f, 1.0f)),		// [17]
+					new vertex(p3, c3r, new vec3(+0.0f, +0.0f, -1.0f), new vec2(0.0f, 0.0f)),		// [18]
 
-					new vertex(p4, c4l, new vec3(+0.0f, +0.0f, -1.0f)),		// [19]
-					//new vertex(p3, c3r, new vec3(+0.0f, +0.0f, -1.0f)),	// <18>
-					//new vertex(p8, c8l, new vec3(+0.0f, +0.0f, -1.0f)),	// <17>
+					new vertex(p4, c4l, new vec3(+0.0f, +0.0f, -1.0f), new vec2(1.0f, 0.0f)),		// [19]
+					//new vertex(p3, c3r, new vec3(+0.0f, +0.0f, -1.0f), new vec2(0.0f, 0.0f)),		// <18>
+					//new vertex(p8, c8l, new vec3(+0.0f, +0.0f, -1.0f), new vec2(1.0f, 1.0f)),		// <17>
 
 					// Left side
-					new vertex(p8, c8r, new vec3(-1.0f, +0.0f, +0.0f)),		// [20]
-					new vertex(p5, c5l, new vec3(-1.0f, +0.0f, +0.0f)),		// [21]
-					new vertex(p4, c4r, new vec3(-1.0f, +0.0f, +0.0f)),		// [22]
+					new vertex(p8, c8r, new vec3(-1.0f, +0.0f, +0.0f), new vec2(0.0f, 1.0f)),		// [20]
+					new vertex(p5, c5l, new vec3(-1.0f, +0.0f, +0.0f), new vec2(1.0f, 1.0f)),		// [21]
+					new vertex(p4, c4r, new vec3(-1.0f, +0.0f, +0.0f), new vec2(0.0f, 0.0f)),		// [22]
 
-					new vertex(p1, c1l, new vec3(-1.0f, +0.0f, +0.0f)),		// [23]
-					//new vertex(p4, c4r, new vec3(-1.0f, +0.0f, +0.0f)),	// <22>
-					//new vertex(p5, c5l, new vec3(-1.0f, +0.0f, +0.0f)),	// <21>
+					new vertex(p1, c1l, new vec3(-1.0f, +0.0f, +0.0f), new vec2(1.0f, 0.0f)),		// [23]
+					//new vertex(p4, c4r, new vec3(-1.0f, +0.0f, +0.0f), new vec2(0.0f, 0.0f)),		// <22>
+					//new vertex(p5, c5l, new vec3(-1.0f, +0.0f, +0.0f), new vec2(1.0f, 1.0f)),		// <21>
 				},
 				new ushort[]
 				{

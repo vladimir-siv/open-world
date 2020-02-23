@@ -6,14 +6,14 @@ using System.Globalization;
 
 using GlmNet;
 
-namespace XEngine.Models
+namespace XEngine.Resources
 {
 	using XEngine;
 	using XEngine.Shading;
 
-    public static class Model
+    public static partial class Resource
 	{
-		public static async Task<GeometricShape> Load(string model)
+		public static async Task<GeometricShape> LoadModel(string model)
 		{
 			var positions = new List<vec3>(1024);
 			var color = new vec3(0.0f, 0.0f, 0.0f);

@@ -92,6 +92,7 @@
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
     <Compile Include="XEngine\Lighting\AmbientLight.cs" />
     <Compile Include="XEngine\Lighting\PointLight.cs" />
+    <Compile Include="XEngine\Resources\Textures.cs" />
     <Compile Include="XEngine\Scripting\XBehaviour.cs" />
     <Compile Include="XEngine\Shading\Color.cs" />
     <Compile Include="XEngine\Core\GameObject.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="XEngine\Common\Math.cs" />
     <Compile Include="XEngine\Host.cs" />
     <Compile Include="XEngine\ManifestResourceManager.cs" />
-    <Compile Include="XEngine\Models\Model.cs" />
+    <Compile Include="XEngine\Resources\Models.cs" />
     <Compile Include="XEngine\Shading\Material.cs" />
     <Compile Include="XEngine\Shading\Shader.cs" />
     <Compile Include="XEngine\Shapes\Cube.cs" />
@@ -151,6 +152,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\NT.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\crate.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders\unlit_texture.glsl" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

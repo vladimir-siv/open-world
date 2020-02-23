@@ -60,6 +60,7 @@ namespace XEngine.Core
 			var gl = XEngineContext.Graphics;
 			gl.Enable(OpenGL.GL_DEPTH_TEST);
 			gl.Enable(OpenGL.GL_CULL_FACE);
+			gl.Enable(OpenGL.GL_TEXTURE_2D);
 			gl.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			Init();
 			foreach (var gameObject in GameObjects) gameObject.Awake();

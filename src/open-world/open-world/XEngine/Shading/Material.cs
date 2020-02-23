@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using SharpGL.SceneGraph.Assets;
 using GlmNet;
 
 namespace XEngine.Shading
@@ -277,6 +278,7 @@ namespace XEngine.Shading
 		private readonly ShaderDataCollection DataCollection = new ShaderDataCollection();
 		
 		public Shader shader { get; set; }
+		public Texture texture { get; set; }
 
 		public Material() { }
 		public Material(Shader shader) { this.shader = shader; }
@@ -311,6 +313,7 @@ namespace XEngine.Shading
 			if (shader != null && shader.PrepareNeeded(this, markPrepared: true))
 			{
 				DataCollection.Prepare(shader);
+				texture?.Bind(XEngineContext.Graphics);
 			}
 		}
 	}

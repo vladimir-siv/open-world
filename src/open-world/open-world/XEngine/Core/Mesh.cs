@@ -4,7 +4,7 @@ using SharpGL;
 
 namespace XEngine.Core
 {
-	using XEngine.Models;
+	using XEngine.Resources;
 	using XEngine.Shading;
 
 	public sealed class Mesh : IDisposable
@@ -42,7 +42,7 @@ namespace XEngine.Core
 		
 		public async Task LoadModel(string name, VertexAttribute attributes = VertexAttribute.ALL)
 		{
-			var model = await Model.Load(name);
+			var model = await Resource.LoadModel(name);
 			model.Attributes = attributes;
 			shape = model;
 		}

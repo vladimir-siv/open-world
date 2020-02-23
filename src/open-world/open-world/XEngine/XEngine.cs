@@ -10,8 +10,9 @@ namespace XEngine
 	using XEngine.Core;
 	using XEngine.Shading;
 	using XEngine.Interaction;
+    using XEngine.Resources;
 
-	public static class XEngineActivator
+    public static class XEngineActivator
 	{
 		public static void InitEngine(OpenGLControl control)
 		{
@@ -38,6 +39,7 @@ namespace XEngine
 			XEngineContext.Graphics.UseProgram(0);
 			foreach (var shader in XEngineContext.Shaders) shader.Value.Clean();
 			XEngineContext.Shaders.Clear();
+			Resource.ReleaseAllTextures();
 			XEngineContext.GLControl = null;
 		}
 	}

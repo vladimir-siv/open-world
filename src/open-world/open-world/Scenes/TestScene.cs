@@ -1,6 +1,7 @@
 ﻿using GlmNet;
 using XEngine.Core;
 using XEngine.Lighting;
+using XEngine.Resources;
 using XEngine.Shading;
 using XEngine.Shapes;
 
@@ -48,9 +49,9 @@ namespace open_world
 
 			Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
-			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION };
-			Ground.material = new Material(Shader.Find("unlit"));
-			Ground.material.Set("material_color", new Color(1.0f, 1.0f, 1.0f));
+			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
+			Ground.material = new Material(Shader.Find("unlit_texture"));
+			Ground.material.texture = Resource.LoadTexture("crate");
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 

@@ -77,6 +77,23 @@ namespace open_world
 			Grass.material.Set("use_simulated_light", true);
 			Grass.material.texture = Resource.LoadPNGTexture("grass");
 			Grass.material.CullFace = false;
+			Grass.transform.position = new vec3(-1.0f, +0.0f, +0.0f);
+
+			var Fern = new GameObject("Fern");
+			Fern.mesh = new Mesh();
+			Fern.mesh.LoadModel("fern", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
+			Fern.material = new Material(Shader.Find("phong_texture"));
+			Fern.material.Set("ambient_light_color", AmbientLight.color, true);
+			Fern.material.Set("ambient_light_power", AmbientLight.power);
+			Fern.material.Set("light_source_position", PointLight.position);
+			Fern.material.Set("light_source_color", PointLight.color, true);
+			Fern.material.Set("light_source_power", PointLight.power);
+			Fern.material.Set("dampening", 10.0f);
+			Fern.material.Set("reflectivity", 1.0f);
+			Fern.material.Set("use_simulated_light", true);
+			Fern.material.texture = Resource.LoadPNGTexture("fern");
+			Fern.material.CullFace = false;
+			Fern.transform.position = new vec3(+5.0f, +0.0f, +2.5f);
 
 			cube.Dispose(force: true);
 

@@ -34,6 +34,8 @@ namespace open_world
 			Player.material.Set("light_source_position", PointLight.position);
 			Player.material.Set("light_source_color", PointLight.color, true);
 			Player.material.Set("light_source_power", PointLight.power);
+			Player.material.Set("dampening", 10.0f);
+			Player.material.Set("reflectivity", 1.0f);
 			Player.material.Set("material_color", PlayerColor, true);
 			Player.AttachBehaviour(new PlayerController {  });
 			Player.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
@@ -60,6 +62,8 @@ namespace open_world
 			Ground.material.Set("light_source_position", PointLight.position);
 			Ground.material.Set("light_source_color", PointLight.color, true);
 			Ground.material.Set("light_source_power", PointLight.power);
+			Ground.material.Set("dampening", 10.0f);
+			Ground.material.Set("reflectivity", 1.0f);
 			Ground.material.Set("material_color", GroundColor, true);
 			Ground.transform.scale = new vec3(5.0f, 5.0f, 5.0f);
 

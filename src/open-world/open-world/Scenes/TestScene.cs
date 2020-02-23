@@ -33,6 +33,8 @@ namespace open_world
 			Model.material.Set("light_source_position", PointLight.position);
 			Model.material.Set("light_source_color", PointLight.color, true);
 			Model.material.Set("light_source_power", PointLight.power);
+			Model.material.Set("dampening", 10.0f);
+			Model.material.Set("reflectivity", 1.0f);
 			Model.material.Set("material_color", ModelColor, true);
 
 			User = new GameObject("User");

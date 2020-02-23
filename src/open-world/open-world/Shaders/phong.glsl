@@ -31,14 +31,16 @@
 	#version 430 core
 	
 	uniform vec3 eye;
-
+	
 	uniform vec3 ambient_light_color;
 	uniform float ambient_light_power;
 	
 	uniform vec3 light_source_position;
 	uniform vec3 light_source_color;
 	uniform float light_source_power;
-
+	
+	uniform float dampening;
+	uniform float reflectivity;
 	uniform vec3 material_color;
 	
 	in vec3 position;	// fragment position
@@ -58,7 +60,7 @@
 		vec3 light_source = light_source_color * light_source_power;
 		
 		float diffuse = clamp(dot(light_vector, normal_vector), 0.0f, 1.0f); // cos(angle)
-		float specular = pow(clamp(dot(reflect(-light_vector, normal_vector), eye_vector), 0.0f, 1.0f), 21.0f); // cos(angle)^21
+		float specular = pow(clamp(dot(reflect(-light_vector, normal_vector), eye_vector), 0.0f, 1.0f), dampening * 2.0f + 1.0f) * clamp(reflectivity, 0.0f, 1.0f); // cos(angle)^21
 		
 		out_color = vec4(material_color * (ambient + light_source * (diffuse + specular) / attenuation), 1.0f);
 	}

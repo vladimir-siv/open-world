@@ -77,7 +77,6 @@ namespace open_world
 			Grass.material.Set("use_simulated_light", true);
 			Grass.material.texture = Resource.LoadPNGTexture("grass");
 			Grass.material.CullFace = false;
-			Grass.material.Opaque = false;
 
 			cube.Dispose(force: true);
 

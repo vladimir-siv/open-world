@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using SharpGL;
 
@@ -78,9 +79,12 @@ namespace XEngine.Core
 			gl.BindBuffer(OpenGL.GL_ARRAY_BUFFER, BufferIds[0]);
 			gl.BufferData(OpenGL.GL_ARRAY_BUFFER, shape.Data, OpenGL.GL_STATIC_DRAW);
 
+			var array = Marshal.AllocHGlobal(shape.IndexCount * sizeof(int));
+			Marshal.Copy(shape.Indices, 0, array, shape.IndexCount);
 			gl.BindBuffer(OpenGL.GL_ELEMENT_ARRAY_BUFFER, BufferIds[1]);
-			gl.BufferData(OpenGL.GL_ELEMENT_ARRAY_BUFFER, shape.Indices, OpenGL.GL_STATIC_DRAW);
-			
+			gl.BufferData(OpenGL.GL_ELEMENT_ARRAY_BUFFER, shape.IndexCount * sizeof(int), array, OpenGL.GL_STATIC_DRAW);
+			Marshal.FreeHGlobal(array);
+
 			var stride = (shape.AttribCount <= 1u ? 0 : 1) * vertex.SizeOf(shape.Attributes) * sizeof(float);
 			var offset = 0;
 			for (var i = 0u; i < shape.AttribCount; ++i)

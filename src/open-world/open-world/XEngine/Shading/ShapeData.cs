@@ -5,7 +5,7 @@ namespace XEngine.Shading
 	public struct ShapeData
 	{
 		public vertex[] Vertices { get; private set; }
-		public ushort[] Indices { get; private set; }
+		public int[] Indices { get; private set; }
 
 		public float[] SerializeData(VertexAttribute attributes)
 		{
@@ -50,15 +50,15 @@ namespace XEngine.Shading
 			return data;
 		}
 
-		public ShapeData(vertex[] vertices, ushort[] indices = null)
+		public ShapeData(vertex[] vertices, int[] indices = null)
 		{
 			Vertices = vertices ?? throw new ArgumentNullException(nameof(vertices));
 
 			if (indices == null)
 			{
-				indices = new ushort[Vertices.Length];
+				indices = new int[Vertices.Length];
 
-				for (ushort i = 0; i < indices.Length; ++i)
+				for (var i = 0; i < indices.Length; ++i)
 				{
 					indices[i] = i;
 				}

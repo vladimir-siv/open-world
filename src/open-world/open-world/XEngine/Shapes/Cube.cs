@@ -246,7 +246,7 @@ namespace XEngine.Shapes
 					//new vertex(p4, c4r, new vec3(-1.0f, +0.0f, +0.0f), new vec2(0.0f, 0.0f)),		// <22>
 					//new vertex(p5, c5l, new vec3(-1.0f, +0.0f, +0.0f), new vec2(1.0f, 1.0f)),		// <21>
 				},
-				new ushort[]
+				new int[]
 				{
 					 0,  1,  2,  3,    2,  1,
 					 4,  5,  6,  7,    6,  5,
@@ -260,7 +260,7 @@ namespace XEngine.Shapes
 
 		}
 
-		private Cube(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
+		private Cube(vertex[] vertices, int[] indices = null) : base(new ShapeData(vertices, indices))
 		{
 
 		}

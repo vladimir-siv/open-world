@@ -114,7 +114,7 @@ namespace XEngine.Core
 			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, model);
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
 			material.Prepare();
-			gl.DrawElements(mesh.shape.OpenGLShapeType, mesh.shape.IndexCount, OpenGL.GL_UNSIGNED_SHORT, IntPtr.Zero);
+			gl.DrawElements(mesh.shape.OpenGLShapeType, mesh.shape.IndexCount, OpenGL.GL_UNSIGNED_INT, IntPtr.Zero);
 		}
 
 		public void Dispose()

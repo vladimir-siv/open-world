@@ -20,7 +20,7 @@ namespace XEngine.Shading
 		}
 
 		public vertex[] Vertices => ShapeData.Vertices;
-		public ushort[] Indices => ShapeData.Indices;
+		public int[] Indices => ShapeData.Indices;
 		public float[] Data => ShapeData.SerializeData(Attributes);
 
 		public int VertexCount { get; }

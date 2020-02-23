@@ -52,7 +52,7 @@ namespace XEngine.Shapes
 					new vertex(p3, c3, new vec3(+0.0f, +1.0f, +0.0f), new vec2(1.0f, 1.0f)),
 					new vertex(p4, c4, new vec3(+0.0f, +1.0f, +0.0f), new vec2(1.0f, 0.0f)),
 				},
-				new ushort[]
+				new int[]
 				{
 					0, 1, 2,
 					3, 0, 2
@@ -62,7 +62,7 @@ namespace XEngine.Shapes
 
 		}
 
-		private Plane(vertex[] vertices, ushort[] indices = null) : base(new ShapeData(vertices, indices))
+		private Plane(vertex[] vertices, int[] indices = null) : base(new ShapeData(vertices, indices))
 		{
 
 		}

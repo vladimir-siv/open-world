@@ -20,7 +20,7 @@ namespace XEngine.Terrains
 		public uint Tiles { get; }
 
 		private vertex[] Vertices = null;
-		private ushort[] Indices = null;
+		private int[] Indices = null;
 
 		public GeometricShape Shape { get; private set; }
 
@@ -41,14 +41,14 @@ namespace XEngine.Terrains
 			var vert_count = Granularity + 1;
 
 			Vertices = new vertex[vert_count * vert_count];
-			Indices = new ushort[Granularity * Granularity * 6];
+			Indices = new int[Granularity * Granularity * 6];
 
 			var color = new vec3(+0.0f, +0.0f, +0.0f);
 			var normal = new vec3(+0.0f, +1.0f, +0.0f);
 			var delta_xz = Size.x / Granularity;
 			var delta_uv = (float)Tiles / Granularity;
 
-			uint index(uint x, uint z) => x + z * vert_count;
+			int index(uint x, uint z) => (int)(x + z * vert_count);
 
 			for (var z = 0u; z < vert_count; ++z)
 			{
@@ -68,12 +68,12 @@ namespace XEngine.Terrains
 			{
 				for (var x = 0u; x < Granularity; ++x)
 				{
-					Indices[z * Granularity + x + 0u] = (ushort)index(x, z);
-					Indices[z * Granularity + x + 1u] = (ushort)index(x, z + 1u);
-					Indices[z * Granularity + x + 2u] = (ushort)index(x + 1u, z);
-					Indices[z * Granularity + x + 3u] = (ushort)index(x + 1u, z);
-					Indices[z * Granularity + x + 4u] = (ushort)index(x, z + 1u);
-					Indices[z * Granularity + x + 5u] = (ushort)index(x + 1u, z + 1u);
+					Indices[z * Granularity + x + 0u] = index(x, z);
+					Indices[z * Granularity + x + 1u] = index(x, z + 1u);
+					Indices[z * Granularity + x + 2u] = index(x + 1u, z);
+					Indices[z * Granularity + x + 3u] = index(x + 1u, z);
+					Indices[z * Granularity + x + 4u] = index(x, z + 1u);
+					Indices[z * Granularity + x + 5u] = index(x + 1u, z + 1u);
 				}
 			}
 		}

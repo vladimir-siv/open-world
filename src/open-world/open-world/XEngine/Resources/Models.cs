@@ -22,8 +22,8 @@ namespace XEngine.Resources
 			var uvs = textured ? new List<vec2>(1024) : null;
 
 			var vertices = new List<vertex>(1024);
-			var indices = new List<ushort>(1024);
-			var cache = new Dictionary<string, ushort>();
+			var indices = new List<int>(1024);
+			var cache = new Dictionary<string, int>();
 
 			using (var stream = ManifestResourceManager.LoadFromResources($"{model}.obj"))
 			{
@@ -91,7 +91,7 @@ namespace XEngine.Resources
 										}
 										else
 										{
-											index = (ushort)vertices.Count;
+											index = vertices.Count;
 											vertices.Add(vert);
 											indices.Add(index);
 											cache.Add(desc, index);

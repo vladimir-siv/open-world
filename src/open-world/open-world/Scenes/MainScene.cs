@@ -1,4 +1,5 @@
-﻿using GlmNet;
+﻿using System;
+using GlmNet;
 using XEngine;
 using XEngine.Core;
 using XEngine.Lighting;
@@ -15,7 +16,7 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			const bool GEN_NEW_TERRAIN = false;
+			const bool GENERATE_NEW_TERRAIN = false;
 
 			Skybox = new Skybox();
 
@@ -44,7 +45,7 @@ namespace open_world
 			Grass.material.Set("dampening", 10.0f);
 			Grass.material.Set("reflectivity", 1.0f);
 			Grass.material.Set("use_simulated_light", true);
-			Grass.material.Set("material_texture", Resource.LoadPNGTexture("grass"));
+			Grass.material.Set("material_texture", Resource.LoadPNGTexture("atlas_grass"), 0u, 9u);
 			Grass.material.CullFace = false;
 
 			var Fern = new Prefab("Fern");
@@ -59,7 +60,7 @@ namespace open_world
 			Fern.material.Set("dampening", 10.0f);
 			Fern.material.Set("reflectivity", 1.0f);
 			Fern.material.Set("use_simulated_light", true);
-			Fern.material.Set("material_texture", Resource.LoadPNGTexture("fern"));
+			Fern.material.Set("material_texture", Resource.LoadPNGTexture("atlas_fern"), 0u, 4u);
 			Fern.material.CullFace = false;
 
 			var Player = new GameObject("Player");
@@ -90,7 +91,7 @@ namespace open_world
 			Ground.material.Set("b_texture", Resource.LoadPNGTexture("ground_path"));
 			Ground.material.Set("terrain_map", Resource.LoadPNGTexture("terrain"));
 
-			if (GEN_NEW_TERRAIN)
+			if (GENERATE_NEW_TERRAIN)
 			{
 				Map.Generate
 				(
@@ -104,7 +105,9 @@ namespace open_world
 					vector3.one,
 					vector3.one,
 					250,
-					"crate", "grass", "fern"
+					"crate0",
+					"grass0", "grass1", "grass2", "grass3", "grass4", "grass5", "grass6", "grass7", "grass8",
+					"fern0", "fern1", "fern2", "fern3"
 				);
 			}
 
@@ -112,13 +115,19 @@ namespace open_world
 			{
 				while (map.Read(out var descriptor))
 				{
-					switch (descriptor.name)
+					var atlas_index = Convert.ToUInt32(descriptor.name[descriptor.name.Length - 1] - '0');
+					var obj = (GameObject)null;
+
+					switch (descriptor.name.Remove(descriptor.name.Length - 1))
 					{
-						case "crate": Crate.Instantiate(descriptor.transform); break;
-						case "grass": Grass.Instantiate(descriptor.transform); break;
-						case "fern": Fern.Instantiate(descriptor.transform); break;
+						case "crate": obj = Crate.Instantiate(descriptor.transform); break;
+						case "grass": obj = Grass.Instantiate(descriptor.transform); break;
+						case "fern": obj = Fern.Instantiate(descriptor.transform); break;
 						default: break;
 					}
+
+					obj.properties = new ShaderProperties();
+					obj.properties.SetAtlasIndex("material_texture", atlas_index);
 				}
 			}
 

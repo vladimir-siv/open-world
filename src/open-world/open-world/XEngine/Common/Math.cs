@@ -19,6 +19,10 @@ namespace XEngine.Common
 		{
 			return v * 180.0f / (float)Math.PI;
 		}
+		public static vec2 ToOffsets(this uint v, uint rank)
+		{
+			return new vec2((v % rank) / (float)rank, (v / rank) / (float)rank);
+		}
 	}
 
 	public static class vector2

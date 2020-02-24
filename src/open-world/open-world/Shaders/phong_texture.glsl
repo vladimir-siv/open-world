@@ -10,6 +10,9 @@
 	uniform mat4 rotate;
 	uniform float fog_density;
 	uniform float fog_gradient;
+
+	uniform vec2 material_texture_offset;
+	uniform uint material_texture_rank;
 	
 	in layout(location = 0) vec4 in_position;
 	in layout(location = 1) vec4 in_normal;
@@ -28,7 +31,7 @@
 		
 		position = world_position.xyz;
 		normal = world_normal.xyz;
-		uv = in_uv;
+		uv = (in_uv / material_texture_rank) + material_texture_offset;
 		visibility = min(exp(-pow(length(view_position.xyz) * fog_density, fog_gradient)), 1.0f);
 
 		gl_Position = project * view_position;

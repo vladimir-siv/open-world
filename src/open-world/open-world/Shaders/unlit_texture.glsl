@@ -7,6 +7,9 @@
 	uniform mat4 project;
 	uniform mat4 view;
 	uniform mat4 model;
+
+	uniform vec2 material_texture_offset;
+	uniform uint material_texture_rank;
 	
 	in layout(location = 0) vec4 in_position;
 	in layout(location = 1) vec2 in_uv;
@@ -15,7 +18,7 @@
 	
 	void main(void)
 	{
-		uv = in_uv;
+		uv = (in_uv / material_texture_rank) + material_texture_offset;
 		gl_Position = project * view * model * in_position;
 	}
 

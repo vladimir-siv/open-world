@@ -191,6 +191,15 @@ namespace XEngine.Shading
 			if (FogDensity != -1) gl.Uniform1(FogDensity, scene.FogDensity);
 			if (FogGradient != -1) gl.Uniform1(FogGradient, scene.FogGradient);
 		}
+		public bool IsUsing(string uniform)
+		{
+			if (Uniforms.ContainsKey(uniform)) return true;
+			var gl = XEngineContext.Graphics;
+			var location = gl.GetUniformLocation(Id, uniform);
+			bool uses = location != -1;
+			if (uses) Uniforms.Add(uniform, location);
+			return uses;
+		}
 		public int GetLocation(string name)
 		{
 			if (Id == 0) throw new InvalidOperationException("Shader object was disposed.");

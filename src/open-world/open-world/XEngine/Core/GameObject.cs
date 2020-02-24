@@ -47,6 +47,12 @@ namespace XEngine.Core
 			get => _material;
 			set => _material = value;
 		}
+		private ShaderProperties _properties = null;
+		public ShaderProperties properties
+		{
+			get => _properties;
+			set => _properties = value;
+		}
 
 		public bool IsDrawable => mesh?.shape != null && material?.shader != null;
 		public bool DisableRendering { get; set; } = false;
@@ -113,7 +119,7 @@ namespace XEngine.Core
 			mesh.Activate();
 			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, model);
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
-			material.Prepare();
+			material.Prepare(properties);
 			XEngineState.CullFace = material.CullFace;
 			gl.DrawElements(mesh.shape.OpenGLShapeType, mesh.shape.IndexCount, OpenGL.GL_UNSIGNED_INT, IntPtr.Zero);
 		}

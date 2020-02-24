@@ -103,6 +103,7 @@
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
     <Compile Include="XEngine\Core\Transform.cs" />
+    <Compile Include="XEngine\Shading\ShaderProperties.cs" />
     <Compile Include="XEngine\Shading\Vertex.cs" />
     <Compile Include="XEngine\Common\Math.cs" />
     <Compile Include="XEngine\Host.cs" />
@@ -201,6 +202,10 @@
     <EmbeddedResource Include="Resources\box.png" />
     <EmbeddedResource Include="Resources\heightmap.png" />
     <EmbeddedResource Include="Resources\person.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\atlas_fern.png" />
+    <EmbeddedResource Include="Resources\atlas_grass.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

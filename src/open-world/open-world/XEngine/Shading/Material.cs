@@ -279,33 +279,64 @@ namespace XEngine.Shading
 
 		private class TexturePack
 		{
-			private readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
+			private static Dictionary<uint, Texture> BoundTextures = new Dictionary<uint, Texture>();
+			private static void Bind(Texture texture, uint index)
+			{
+				if (BoundTextures.TryGetValue(index, out var bound) && texture == bound) return;
+				BoundTextures[index] = texture;
+				var gl = XEngineContext.Graphics;
+				gl.ActiveTexture(OpenGL.GL_TEXTURE0 + index);
+				texture.Bind(gl);
+			}
+
+			private readonly Dictionary<string, (Texture, uint, uint)> Textures = new Dictionary<string, (Texture, uint, uint)>();
 			private readonly LinkedList<string> Keys = new LinkedList<string>();
 
 			#region Setters
 
-			public void Set(string name, Texture texture)
+			public void Set(string name, Texture texture) => Set(name, texture, 0u, 1u);
+			public void Set(string name, Texture texture, uint index, uint count)
 			{
-				Textures[name] = texture;
+				if (index >= count) throw new ArgumentException("Index must be less than count.");
+				Textures[name] = (texture, index, count);
 				Keys.AddLast(name);
+			}
+			public void Set(string name, uint index)
+			{
+				if (!Textures.TryGetValue(name, out var texture)) throw new ArgumentException("Such texture does not exist.");
+				Textures[name] = (texture.Item1, index, texture.Item3);
 			}
 
 			#endregion
 
-			public void Prepare(Shader shader)
+			public void Prepare(Shader shader, ShaderProperties properties, bool prepareNeeded = true)
 			{
 				if (shader == null) return;
 
-				var gl = XEngineContext.Graphics;
 				var index = 0;
 
 				foreach (var key in Keys)
 				{
 					var texture = Textures[key];
+					Bind(texture.Item1, (uint)index);
 
-					gl.ActiveTexture(OpenGL.GL_TEXTURE0 + (uint)index);
-					texture.Bind(gl);
-					shader.SetScalar(key, index);
+					if (prepareNeeded) shader.SetScalar(key, index);
+
+					var overrideAtlasIndex = 0u;
+					var overridden = properties?.TryGetAtlasIndex(key, out overrideAtlasIndex) ?? false;
+
+					if (overridden && overrideAtlasIndex >= texture.Item3) throw new InvalidOperationException("Invalid atlas index.");
+
+					if (prepareNeeded || overridden)
+					{
+						var rank = (uint)Math.Ceiling(Math.Sqrt(texture.Item3));
+						var offset = (overridden ? overrideAtlasIndex : texture.Item2).ToOffsets(rank);
+
+						var texture_offset = $"{key}_offset";
+						if (shader.IsUsing(texture_offset)) shader.SetVec2(texture_offset, offset.x, offset.y);
+						var texture_rank = $"{key}_rank";
+						if (shader.IsUsing(texture_rank)) shader.SetScalar(texture_rank, rank);
+					}
 
 					++index;
 				}
@@ -347,17 +378,17 @@ namespace XEngine.Shading
 		public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
 
 		public void Set(string name, Texture texture) => Textures.Set(name, texture);
+		public void Set(string name, Texture texture, uint index, uint count) => Textures.Set(name, texture, index, count);
+		public void SetTextureIndex(string name, uint index) => Textures.Set(name, index);
 
 		#endregion
 
-		internal void Prepare()
+		internal void Prepare(ShaderProperties properties = null)
 		{
-			if (shader != null && shader.PrepareNeeded(this, markPrepared: true))
-			{
-				DataCollection.Prepare(shader);
-			}
-
-			Textures.Prepare(shader);
+			if (shader == null) return;
+			bool prepareNeeded = shader.PrepareNeeded(this, markPrepared: true);
+			if (prepareNeeded) DataCollection.Prepare(shader);
+			Textures.Prepare(shader, properties, prepareNeeded);
 		}
 	}
 }

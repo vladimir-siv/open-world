@@ -19,7 +19,7 @@ namespace open_world
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 			
 			var cube = new Cube { KeepAlive = true };
-			var terrain = Terrain.GenerateFlat(250.0f, 250u, 250u);
+			var terrain = Terrain.GenerateFlat(250.0f, 250u, 25u);
 
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -70,7 +70,7 @@ namespace open_world
 			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = terrain.Shape.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
-			Ground.material = new Material(Shader.Find("phong_texture"));
+			Ground.material = new Material(Shader.Find("phong_terrain"));
 			Ground.material.Set("ambient_light_color", AmbientLight.color, true);
 			Ground.material.Set("ambient_light_power", AmbientLight.power);
 			Ground.material.Set("light_source_position", PointLight.position);
@@ -78,8 +78,12 @@ namespace open_world
 			Ground.material.Set("light_source_power", PointLight.power);
 			Ground.material.Set("dampening", 10.0f);
 			Ground.material.Set("reflectivity", 0.1f);
-			Ground.material.Set("use_simulated_light", false);
-			Ground.material.Set("material_texture", Resource.LoadPNGTexture("grass_ground"));
+			Ground.material.Set("tiles", terrain.Tiles);
+			Ground.material.Set("main_texture", Resource.LoadPNGTexture("ground_mud"));
+			Ground.material.Set("r_texture", Resource.LoadPNGTexture("ground_flowery"));
+			Ground.material.Set("g_texture", Resource.LoadPNGTexture("ground_grass"));
+			Ground.material.Set("b_texture", Resource.LoadPNGTexture("ground_path"));
+			Ground.material.Set("terrain_map", Resource.LoadPNGTexture("terrain"));
 
 			using (var map = new Map("field"))
 			{

@@ -297,13 +297,13 @@ namespace XEngine.Shading
 				if (shader == null) return;
 
 				var gl = XEngineContext.Graphics;
-				var index = 0u;
+				var index = 0;
 
 				foreach (var key in Keys)
 				{
 					var texture = Textures[key];
 
-					gl.ActiveTexture(OpenGL.GL_TEXTURE0 + index);
+					gl.ActiveTexture(OpenGL.GL_TEXTURE0 + (uint)index);
 					texture.Bind(gl);
 					shader.SetScalar(key, index);
 

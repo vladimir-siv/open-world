@@ -98,8 +98,8 @@ namespace XEngine.Core
 		{
 			if (!Initialized) return;
 			Initialized = false;
-			Exit();
 			Clear();
+			Exit();
 		}
 
 		protected virtual void Init() { }

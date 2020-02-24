@@ -7,7 +7,6 @@ using XEngine.Resources;
 using XEngine.Terrains;
 using XEngine.Shading;
 using XEngine.Shapes;
-using XEngine.Common;
 
 namespace open_world
 {
@@ -16,37 +15,42 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			const bool GENERATE_NEW_TERRAIN = false;
-
 			Skybox = new Skybox();
 
 			var AmbientLight = new AmbientLight(Color.White, 0.25f);
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 
-			var cube = new Cube { KeepAlive = true };
 			var terrain = (Terrain)null;
-			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(250.0f, 25u, heightmap, 10.0f);
+			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
 			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
-			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
+			Crate.mesh.shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV };
 			Crate.material = new Material(Shader.Find("phong_texture"));
+			Crate.material.Set("ambient_light_color", AmbientLight.color, true);
+			Crate.material.Set("ambient_light_power", AmbientLight.power);
+			Crate.material.Set("light_source_position", PointLight.position);
+			Crate.material.Set("light_source_color", PointLight.color, true);
+			Crate.material.Set("light_source_power", PointLight.power);
+			Crate.material.Set("dampening", 10.0f);
+			Crate.material.Set("reflectivity", 0.1f);
+			Crate.material.Set("use_simulated_light", false);
 			Crate.material.Set("material_texture", Resource.LoadTexture("crate"));
 
-			var Grass = new Prefab("Grass");
-			Grass.mesh = new Mesh();
-			Grass.mesh.LoadModel("grass", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
-			Grass.material = new Material(Shader.Find("phong_texture"));
-			Grass.material.Set("ambient_light_color", AmbientLight.color, true);
-			Grass.material.Set("ambient_light_power", AmbientLight.power);
-			Grass.material.Set("light_source_position", PointLight.position);
-			Grass.material.Set("light_source_color", PointLight.color, true);
-			Grass.material.Set("light_source_power", PointLight.power);
-			Grass.material.Set("dampening", 10.0f);
-			Grass.material.Set("reflectivity", 1.0f);
-			Grass.material.Set("use_simulated_light", true);
-			Grass.material.Set("material_texture", Resource.LoadPNGTexture("atlas_grass"), 0u, 9u);
-			Grass.material.CullFace = false;
+			var Pine = new Prefab("Pine");
+			Pine.mesh = new Mesh();
+			Pine.mesh.LoadModel("pine", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
+			Pine.material = new Material(Shader.Find("phong_texture"));
+			Pine.material.Set("ambient_light_color", AmbientLight.color, true);
+			Pine.material.Set("ambient_light_power", AmbientLight.power);
+			Pine.material.Set("light_source_position", PointLight.position);
+			Pine.material.Set("light_source_color", PointLight.color, true);
+			Pine.material.Set("light_source_power", PointLight.power);
+			Pine.material.Set("dampening", 10.0f);
+			Pine.material.Set("reflectivity", 0.1f);
+			Pine.material.Set("use_simulated_light", false);
+			Pine.material.Set("material_texture", Resource.LoadPNGTexture("pine"), 0u, 9u);
+			Pine.material.CullFace = false;
 
 			var Fern = new Prefab("Fern");
 			Fern.mesh = new Mesh();
@@ -58,8 +62,8 @@ namespace open_world
 			Fern.material.Set("light_source_color", PointLight.color, true);
 			Fern.material.Set("light_source_power", PointLight.power);
 			Fern.material.Set("dampening", 10.0f);
-			Fern.material.Set("reflectivity", 1.0f);
-			Fern.material.Set("use_simulated_light", true);
+			Fern.material.Set("reflectivity", 0.1f);
+			Fern.material.Set("use_simulated_light", false);
 			Fern.material.Set("material_texture", Resource.LoadPNGTexture("atlas_fern"), 0u, 4u);
 			Fern.material.CullFace = false;
 
@@ -69,8 +73,9 @@ namespace open_world
 
 			var Light = new GameObject("Light");
 			Light.mesh = new Mesh();
-			Light.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.COLOR);
-			Light.material = new Material(Shader.Find("basic"));
+			Light.mesh.LoadUntexturedModel("lightbulb", VertexAttribute.POSITION).Wait();
+			Light.material = new Material(Shader.Find("unlit"));
+			Light.material.Set("material_color", new Color(0.92f, 0.89f, 0.23f, 1.0f), false);
 			Light.transform.position = PointLight.position;
 
 			var Ground = new GameObject("Ground");
@@ -101,7 +106,7 @@ namespace open_world
 					switch (descriptor.name.Remove(descriptor.name.Length - 1))
 					{
 						case "crate": obj = Crate.Instantiate(descriptor.transform); break;
-						case "grass": obj = Grass.Instantiate(descriptor.transform); break;
+						case "pine": obj = Pine.Instantiate(descriptor.transform); break;
 						case "fern": obj = Fern.Instantiate(descriptor.transform); break;
 						default: break;
 					}
@@ -111,29 +116,26 @@ namespace open_world
 				}
 			}
 
-			cube.Dispose(force: true);
-
 			MainCamera.Following = Player;
 
-			if (GENERATE_NEW_TERRAIN)
-			{
-				Map.Generate
-				(
-					"field",
-					terrain,
-					Ground.transform.position,
-					new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
-					new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
-					new vec3(0.0f, 0.0f, 0.0f),
-					new vec3(0.0f, 360.0f, 0.0f),
-					vector3.one,
-					vector3.one,
-					250,
-					"crate0",
-					"grass0", "grass1", "grass2", "grass3", "grass4", "grass5", "grass6", "grass7", "grass8",
-					"fern0", "fern1", "fern2", "fern3"
-				);
-			}
+			/*
+			Map.Generate
+			(
+				"field",
+				terrain,
+				Ground.transform.position,
+				new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
+				new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
+				new vec3(0.0f, 0.0f, 0.0f),
+				new vec3(0.0f, 360.0f, 0.0f),
+				vector3.one,
+				vector3.one,
+				500,
+				"crate0",
+				"pine0",
+				"fern0", "fern1", "fern2", "fern3"
+			);
+			//*/
 		}
 	}
 }

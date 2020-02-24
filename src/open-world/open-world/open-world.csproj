@@ -155,6 +155,7 @@
     <EmbeddedResource Include="Shaders\phong_texture.glsl" />
     <EmbeddedResource Include="Shaders\phong_terrain.glsl" />
     <EmbeddedResource Include="Resources\person.obj" />
+    <EmbeddedResource Include="Resources\pine.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -167,6 +168,8 @@
     <EmbeddedResource Include="Resources\grass.obj" />
     <EmbeddedResource Include="Resources\field.map" />
     <EmbeddedResource Include="Resources\box.obj" />
+    <EmbeddedResource Include="Resources\lamp.obj" />
+    <EmbeddedResource Include="Resources\lightbulb.obj" />
     <None Include="Resources\NT.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -206,6 +209,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\atlas_fern.png" />
     <EmbeddedResource Include="Resources\atlas_grass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\lamp.png" />
+    <EmbeddedResource Include="Resources\pine.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

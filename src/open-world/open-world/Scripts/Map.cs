@@ -29,7 +29,7 @@ namespace open_world
 			if (object_names == null) throw new ArgumentNullException(nameof(object_names));
 			if (object_names.Length == 0) throw new ArgumentException("There must be at least one object name.");
 
-			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\{mapName}.map");
+			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\{mapName}.generated.map");
 
 			var rnd = new Random();
 
@@ -62,7 +62,7 @@ namespace open_world
 							RndFloat(scl_from.z, scl_to.z)
 						);
 
-						pos.y += (name == "crate" ? 0.5f : 0.0f) + terrain.CalculateLocalHeight(pos.x - terrain_position.x, pos.z - terrain_position.z);
+						pos.y += (name.StartsWith("crate") ? 0.5f : 0.0f) + terrain.CalculateLocalHeight(pos.x - terrain_position.x, pos.z - terrain_position.z);
 						writer.WriteLine($"{name}:{pos.x},{pos.y},{pos.z}:{rot.x},{rot.y},{rot.z}:{scl.x},{scl.y},{scl.z}");
 					}
 				}

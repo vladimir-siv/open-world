@@ -25,7 +25,7 @@ namespace open_world
 
 			var cube = new Cube { KeepAlive = true };
 			var terrain = (Terrain)null;
-			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(250.0f, 25u, heightmap);
+			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(250.0f, 25u, heightmap, 10.0f);
 			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -91,26 +91,6 @@ namespace open_world
 			Ground.material.Set("b_texture", Resource.LoadPNGTexture("ground_path"));
 			Ground.material.Set("terrain_map", Resource.LoadPNGTexture("terrain"));
 
-			if (GENERATE_NEW_TERRAIN)
-			{
-				Map.Generate
-				(
-					"field",
-					terrain,
-					Ground.transform.position,
-					new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
-					new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
-					new vec3(0.0f, 0.0f, 0.0f),
-					new vec3(0.0f, 360.0f, 0.0f),
-					vector3.one,
-					vector3.one,
-					250,
-					"crate0",
-					"grass0", "grass1", "grass2", "grass3", "grass4", "grass5", "grass6", "grass7", "grass8",
-					"fern0", "fern1", "fern2", "fern3"
-				);
-			}
-
 			using (var map = new Map("field"))
 			{
 				while (map.Read(out var descriptor))
@@ -134,6 +114,26 @@ namespace open_world
 			cube.Dispose(force: true);
 
 			MainCamera.Following = Player;
+
+			if (GENERATE_NEW_TERRAIN)
+			{
+				Map.Generate
+				(
+					"field",
+					terrain,
+					Ground.transform.position,
+					new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
+					new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
+					new vec3(0.0f, 0.0f, 0.0f),
+					new vec3(0.0f, 360.0f, 0.0f),
+					vector3.one,
+					vector3.one,
+					250,
+					"crate0",
+					"grass0", "grass1", "grass2", "grass3", "grass4", "grass5", "grass6", "grass7", "grass8",
+					"fern0", "fern1", "fern2", "fern3"
+				);
+			}
 		}
 	}
 }

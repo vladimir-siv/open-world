@@ -134,7 +134,6 @@ namespace XEngine
 			DepthTest = true;
 			CullFace = true;
 			Texture2D = true;
-			ClearColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 	}
 

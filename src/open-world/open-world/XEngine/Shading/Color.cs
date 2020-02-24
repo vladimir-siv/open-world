@@ -7,6 +7,7 @@ namespace XEngine.Shading
 	public struct Color
 	{
 		public static readonly Color White = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+		public static readonly Color Black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 
 		public vec4 vectorized;
 

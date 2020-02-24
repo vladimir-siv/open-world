@@ -30,7 +30,27 @@ namespace XEngine.Core
 		public static Scene Resolve(string sceneId) => SceneCache[sceneId];
 
 		public string SceneId { get; internal set; } = string.Empty;
-		public Camera MainCamera { get; protected set; } = new Camera();
+		public Camera MainCamera { get; private set; } = new Camera();
+
+		private Skybox _Skybox = null;
+		public Skybox Skybox
+		{
+			get
+			{
+				return _Skybox;
+			}
+			set
+			{
+				if (_Skybox == value) return;
+				_Skybox = value;
+				var color = value.SkyColor;
+				var gl = XEngineContext.Graphics;
+				gl.ClearColor(color.r, color.g, color.b, color.a);
+			}
+		}
+
+		public float FogDensity { get; set; } = 0.05f;
+		public float FogGradient { get; set; } = 0.8f;
 
 		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT;
 

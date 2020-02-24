@@ -137,6 +137,9 @@ namespace XEngine.Shading
 		public int View { get; private set; }
 		public int Model { get; private set; }
 		public int Rotate { get; private set; }
+		public int Skybox { get; private set; }
+		public int FogDensity { get; private set; }
+		public int FogGradient { get; private set; }
 
 		private Material Prepared = null;
 		private readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
@@ -152,6 +155,9 @@ namespace XEngine.Shading
 			View = gl.GetUniformLocation(id, "view");
 			Model = gl.GetUniformLocation(id, "model");
 			Rotate = gl.GetUniformLocation(id, "rotate");
+			Skybox = gl.GetUniformLocation(id, "skybox");
+			FogDensity = gl.GetUniformLocation(id, "fog_density");
+			FogGradient = gl.GetUniformLocation(id, "fog_gradient");
 		}
 
 		internal void Clean()
@@ -175,10 +181,15 @@ namespace XEngine.Shading
 			gl.UseProgram(Id);
 			CurrentShaderId = Id;
 			if (dontSendEyeProjectView) return;
-			var camera = SceneManager.CurrentScene.MainCamera;
+			var scene = SceneManager.CurrentScene;
+			var camera = scene.MainCamera;
+			var skybox = scene.Skybox.SkyColor;
 			if (Eye != -1) gl.Uniform3(Eye, camera.Position.x, camera.Position.y, camera.Position.z);
 			if (Project != -1) gl.UniformMatrix4(Project, 1, false, camera.ViewToProjectData);
 			if (View != -1) gl.UniformMatrix4(View, 1, false, camera.WorldToViewData);
+			if (Skybox != -1) gl.Uniform4(Skybox, skybox.r, skybox.g, skybox.b, skybox.a);
+			if (FogDensity != -1) gl.Uniform1(FogDensity, scene.FogDensity);
+			if (FogGradient != -1) gl.Uniform1(FogGradient, scene.FogGradient);
 		}
 		public int GetLocation(string name)
 		{

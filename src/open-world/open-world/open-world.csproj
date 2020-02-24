@@ -89,6 +89,7 @@
     <Compile Include="XEngine\Core\Camera.cs" />
     <Compile Include="XEngine\Common\Serialization.cs" />
     <Compile Include="XEngine\Core\Prefab.cs" />
+    <Compile Include="XEngine\Core\Skybox.cs" />
     <Compile Include="XEngine\Interaction\Input.cs" />
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />

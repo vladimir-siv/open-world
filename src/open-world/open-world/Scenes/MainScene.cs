@@ -5,7 +5,6 @@ using XEngine.Resources;
 using XEngine.Terrains;
 using XEngine.Shading;
 using XEngine.Shapes;
-using XEngine.Common;
 
 namespace open_world
 {
@@ -14,6 +13,8 @@ namespace open_world
 	{
 		protected override void Init()
 		{
+			Skybox = new Skybox(new Color(0.5f, 0.5f, 0.5f, 1.0f));
+
 			var AmbientLight = new AmbientLight(Color.White, 0.25f);
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 			
@@ -22,8 +23,8 @@ namespace open_world
 
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
-			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.UV);
-			Crate.material = new Material(Shader.Find("unlit_texture"));
+			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
+			Crate.material = new Material(Shader.Find("phong_texture"));
 			Crate.material.texture = Resource.LoadTexture("crate");
 
 			var Grass = new Prefab("Grass");

@@ -49,33 +49,7 @@ namespace XEngine.Shading
 			this.uv = uv;
 		}
 
-		public override string ToString()
-		{
-			return
-				"[" +
-					position.x +
-					"," +
-					position.y +
-					"," +
-					position.z +
-					":" +
-					color.x +
-					"," +
-					color.y +
-					"," +
-					color.z +
-					":" +
-					normal.x +
-					"," +
-					normal.y +
-					"," +
-					normal.z +
-					"," +
-					uv.x +
-					"," +
-					uv.y +
-				"]";
-		}
+		public override string ToString() => $"[{position.x},{position.y},{position.z}:{color.x},{color.y},{color.z}:{normal.x},{normal.y},{normal.z}:{uv.x},{uv.y}]";
 	}
 
 	[Flags] public enum VertexAttribute

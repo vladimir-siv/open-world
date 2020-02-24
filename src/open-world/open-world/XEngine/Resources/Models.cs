@@ -65,7 +65,7 @@ namespace XEngine.Resources
 									{
 										case ' ': positions.Add(vector); break;
 										case 'n': normals.Add(vector); break;
-										case 't': if (textured) uvs.Add(new vec2(vector.x, 1.0f - vector.y)); break;
+										case 't': uvs?.Add(new vec2(vector.x, 1.0f - vector.y)); break;
 										default: break;
 									}
 								}

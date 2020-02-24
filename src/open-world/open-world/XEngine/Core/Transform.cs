@@ -6,6 +6,8 @@ namespace XEngine.Core
 
 	public struct Transform
 	{
+		public static Transform Origin = new Transform(vector3.zero, vector3.zero, vector3.one);
+
 		public vec3 position;
 		public vec3 rotation;
 		public vec3 scale;

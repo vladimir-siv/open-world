@@ -108,5 +108,39 @@ namespace XEngine.Terrains
 				}
 			}
 		}
+
+		public float CalculateLocalHeight(vec2 point) => CalculateLocalHeight(point.x, point.y);
+		public float CalculateLocalHeight(float x, float z)
+		{
+			var vert_count = (int)Granularity + 1;
+			var unit_width = Length / Granularity;
+			int index(int x_i, int z_i) => x_i + z_i * vert_count;
+
+			var l2 = +Length / 2.0f;
+
+			if (x < -l2 || +l2 < x) throw new ArgumentException("Invalid x position.");
+			if (z < -l2 || +l2 < z) throw new ArgumentException("Invalid z position.");
+
+			var xn = x + l2;
+			var zn = z + l2;
+
+			var xi = (int)(xn / unit_width);
+			var zi = (int)(zn / unit_width);
+
+			if (xi == Granularity) --xi;
+			if (zi == Granularity) --zi;
+
+			var xo = xn % unit_width;
+			var zo = zn % unit_width;
+
+			var p0 = Vertices[index(xi + 0, zi + 0)].position;
+			var p1 = Vertices[index(xi + 1, zi + 0)].position;
+			var p2 = Vertices[index(xi + 0, zi + 1)].position;
+			var p3 = Vertices[index(xi + 1, zi + 1)].position;
+
+			var point = new vec2(x, z);
+
+			return xo + zo >= 1.0f ? point.bcerp(p1, p2, p3) : point.bcerp(p0, p2, p1);
+		}
 	}
 }

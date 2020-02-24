@@ -6,6 +6,7 @@ using GlmNet;
 
 using XEngine;
 using XEngine.Core;
+using XEngine.Terrains;
 
 namespace open_world
 {
@@ -14,6 +15,8 @@ namespace open_world
 		public static void Generate
 		(
 			string mapName,
+			Terrain terrain,
+			vec3 terrain_position,
 			vec3 pos_from, vec3 pos_to,
 			vec3 rot_from, vec3 rot_to,
 			vec3 scl_from, vec3 scl_to,
@@ -22,9 +25,11 @@ namespace open_world
 		)
 		{
 			if (mapName.Contains("/") || mapName.Contains("\\")) throw new FormatException("File name cannot have subdirectories.");
+			if (terrain == null) throw new ArgumentNullException(nameof(terrain));
+			if (object_names == null) throw new ArgumentNullException(nameof(object_names));
+			if (object_names.Length == 0) throw new ArgumentException("There must be at least one object name.");
 
-			var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			var path = Path.Combine(desktop, mapName + ".map");
+			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\{mapName}.map");
 
 			var rnd = new Random();
 
@@ -38,13 +43,10 @@ namespace open_world
 					{
 						var name = object_names[rnd.Next(object_names.Length)];
 
-						var yd = 0.0f;
-						if (name == "crate") yd += 0.5f;
-
 						var pos = new vec3
 						(
 							RndFloat(pos_from.x, pos_to.x),
-							RndFloat(pos_from.y + yd, pos_to.y + yd),
+							RndFloat(pos_from.y, pos_to.y),
 							RndFloat(pos_from.z, pos_to.z)
 						);
 						var rot = new vec3
@@ -60,6 +62,7 @@ namespace open_world
 							RndFloat(scl_from.z, scl_to.z)
 						);
 
+						pos.y += (name == "crate" ? 0.5f : 0.0f) + terrain.CalculateLocalHeight(pos.x - terrain_position.x, pos.z - terrain_position.z);
 						writer.WriteLine($"{name}:{pos.x},{pos.y},{pos.z}:{rot.x},{rot.y},{rot.z}:{scl.x},{scl.y},{scl.z}");
 					}
 				}

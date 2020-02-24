@@ -6,6 +6,7 @@ using XEngine.Resources;
 using XEngine.Terrains;
 using XEngine.Shading;
 using XEngine.Shapes;
+using XEngine.Common;
 
 namespace open_world
 {
@@ -14,11 +15,13 @@ namespace open_world
 	{
 		protected override void Init()
 		{
+			const bool GEN_NEW_TERRAIN = false;
+
 			Skybox = new Skybox();
 
 			var AmbientLight = new AmbientLight(Color.White, 0.25f);
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
-			
+
 			var cube = new Cube { KeepAlive = true };
 			var terrain = (Terrain)null;
 			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(250.0f, 25u, heightmap);
@@ -86,6 +89,24 @@ namespace open_world
 			Ground.material.Set("g_texture", Resource.LoadPNGTexture("ground_grass"));
 			Ground.material.Set("b_texture", Resource.LoadPNGTexture("ground_path"));
 			Ground.material.Set("terrain_map", Resource.LoadPNGTexture("terrain"));
+
+			if (GEN_NEW_TERRAIN)
+			{
+				Map.Generate
+				(
+					"field",
+					terrain,
+					Ground.transform.position,
+					new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
+					new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
+					new vec3(0.0f, 0.0f, 0.0f),
+					new vec3(0.0f, 360.0f, 0.0f),
+					vector3.one,
+					vector3.one,
+					250,
+					"crate", "grass", "fern"
+				);
+			}
 
 			using (var map = new Map("field"))
 			{

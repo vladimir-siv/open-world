@@ -1,8 +1,11 @@
 ﻿using System;
 
+using GlmNet;
+
 namespace XEngine.Core
 {
 	using XEngine.Shading;
+	using XEngine.Common;
 
 	public class Prefab
 	{
@@ -18,6 +21,7 @@ namespace XEngine.Core
 		}
 
 		public GameObject Instantiate() => Instantiate(Transform.Origin);
+		public GameObject Instantiate(vec3 position) => Instantiate(new Transform(position, vector3.zero, vector3.one));
 		public GameObject Instantiate(Transform transform)
 		{
 			var instance = new GameObject(name);

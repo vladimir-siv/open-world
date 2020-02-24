@@ -49,8 +49,8 @@ namespace XEngine.Core
 			}
 		}
 
-		public float FogDensity { get; set; } = 0.05f;
-		public float FogGradient { get; set; } = 0.8f;
+		public float FogDensity { get; set; } = 0.0125f;
+		public float FogGradient { get; set; } = 7.5f;
 
 		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT;
 

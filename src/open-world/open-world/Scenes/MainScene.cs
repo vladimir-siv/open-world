@@ -13,7 +13,7 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			Skybox = new Skybox(new Color(0.5f, 0.5f, 0.5f, 1.0f));
+			Skybox = new Skybox();
 
 			var AmbientLight = new AmbientLight(Color.White, 0.25f);
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);

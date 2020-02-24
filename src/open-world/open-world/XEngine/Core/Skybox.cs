@@ -6,7 +6,7 @@
 	{
 		public Color SkyColor { get; }
 
-		public Skybox() : this(Color.Black) { }
+		public Skybox() : this(Color.DeepSky) { }
 		public Skybox(Color skycolor) { SkyColor = skycolor; }
 	}
 }

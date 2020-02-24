@@ -8,6 +8,7 @@ namespace XEngine.Shading
 	{
 		public static readonly Color White = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 		public static readonly Color Black = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		public static readonly Color DeepSky = new Color(0.529f, 0.808f, 0.922f, 1.0f);
 
 		public vec4 vectorized;
 

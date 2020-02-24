@@ -25,7 +25,7 @@ namespace open_world
 			Crate.mesh = new Mesh();
 			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
 			Crate.material = new Material(Shader.Find("phong_texture"));
-			Crate.material.texture = Resource.LoadTexture("crate");
+			Crate.material.Set("material_texture", Resource.LoadTexture("crate"));
 
 			var Grass = new Prefab("Grass");
 			Grass.mesh = new Mesh();
@@ -39,7 +39,7 @@ namespace open_world
 			Grass.material.Set("dampening", 10.0f);
 			Grass.material.Set("reflectivity", 1.0f);
 			Grass.material.Set("use_simulated_light", true);
-			Grass.material.texture = Resource.LoadPNGTexture("grass");
+			Grass.material.Set("material_texture", Resource.LoadPNGTexture("grass"));
 			Grass.material.CullFace = false;
 
 			var Fern = new Prefab("Fern");
@@ -54,7 +54,7 @@ namespace open_world
 			Fern.material.Set("dampening", 10.0f);
 			Fern.material.Set("reflectivity", 1.0f);
 			Fern.material.Set("use_simulated_light", true);
-			Fern.material.texture = Resource.LoadPNGTexture("fern");
+			Fern.material.Set("material_texture", Resource.LoadPNGTexture("fern"));
 			Fern.material.CullFace = false;
 
 			var Player = new GameObject("Player");
@@ -79,7 +79,7 @@ namespace open_world
 			Ground.material.Set("dampening", 10.0f);
 			Ground.material.Set("reflectivity", 0.1f);
 			Ground.material.Set("use_simulated_light", false);
-			Ground.material.texture = Resource.LoadPNGTexture("grass_ground");
+			Ground.material.Set("material_texture", Resource.LoadPNGTexture("grass_ground"));
 
 			using (var map = new Map("field"))
 			{

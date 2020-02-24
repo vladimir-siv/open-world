@@ -52,7 +52,7 @@
 	uniform float reflectivity;
 	uniform float use_simulated_light;
 
-	uniform sampler2D texture_sampler;
+	uniform sampler2D material_texture;
 	
 	in vec3 position;		// fragment position
 	in vec3 normal;			// fragment normal
@@ -63,7 +63,7 @@
 	
 	void main(void)
 	{
-		vec4 material_color = texture(texture_sampler, uv);
+		vec4 material_color = texture(material_texture, uv);
 		if (material_color.a < 0.1f) discard;
 
 		vec3 normal_vector = normalize(normal) * (1.0f - use_simulated_light) + vec3(0.0f, 1.0f, 0.0f) * use_simulated_light;

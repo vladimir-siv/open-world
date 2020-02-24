@@ -185,5 +185,14 @@
     <EmbeddedResource Include="Resources\grass.png" />
     <EmbeddedResource Include="Resources\grass_ground.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ground_flowery.png" />
+    <EmbeddedResource Include="Resources\ground_grass.png" />
+    <EmbeddedResource Include="Resources\ground_mud.png" />
+    <EmbeddedResource Include="Resources\ground_path.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\terrain.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

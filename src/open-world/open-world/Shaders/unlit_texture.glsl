@@ -23,7 +23,7 @@
 
 	#version 430 core
 	
-	uniform sampler2D texture_sampler;
+	uniform sampler2D material_texture;
 	
 	in vec2 uv;
 	
@@ -31,5 +31,5 @@
 	
 	void main(void)
 	{
-		out_color = texture(texture_sampler, uv);
+		out_color = texture(material_texture, uv);
 	}

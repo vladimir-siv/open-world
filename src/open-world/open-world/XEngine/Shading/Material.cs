@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+
+using SharpGL;
 using SharpGL.SceneGraph.Assets;
 using GlmNet;
 
@@ -275,10 +277,45 @@ namespace XEngine.Shading
 			}
 		}
 
+		private class TexturePack
+		{
+			private readonly Dictionary<string, Texture> Textures = new Dictionary<string, Texture>();
+			private readonly LinkedList<string> Keys = new LinkedList<string>();
+
+			#region Setters
+
+			public void Set(string name, Texture texture)
+			{
+				Textures[name] = texture;
+				Keys.AddLast(name);
+			}
+
+			#endregion
+
+			public void Prepare(Shader shader)
+			{
+				if (shader == null) return;
+
+				var gl = XEngineContext.Graphics;
+				var index = 0u;
+
+				foreach (var key in Keys)
+				{
+					var texture = Textures[key];
+
+					gl.ActiveTexture(OpenGL.GL_TEXTURE0 + index);
+					texture.Bind(gl);
+					shader.SetScalar(key, index);
+
+					++index;
+				}
+			}
+		}
+
 		private readonly ShaderDataCollection DataCollection = new ShaderDataCollection();
+		private readonly TexturePack Textures = new TexturePack();
 		
 		public Shader shader { get; set; }
-		public Texture texture { get; set; }
 
 		public bool CullFace { get; set; } = true;
 
@@ -309,6 +346,8 @@ namespace XEngine.Shading
 		public void Set(string name, mat3[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
 		public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
 
+		public void Set(string name, Texture texture) => Textures.Set(name, texture);
+
 		#endregion
 
 		internal void Prepare()
@@ -318,7 +357,7 @@ namespace XEngine.Shading
 				DataCollection.Prepare(shader);
 			}
 
-			texture?.Bind(XEngineContext.Graphics);
+			Textures.Prepare(shader);
 		}
 	}
 }

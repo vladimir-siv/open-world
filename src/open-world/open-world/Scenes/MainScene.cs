@@ -1,4 +1,5 @@
 ﻿using GlmNet;
+using XEngine;
 using XEngine.Core;
 using XEngine.Lighting;
 using XEngine.Resources;
@@ -19,8 +20,9 @@ namespace open_world
 			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
 			
 			var cube = new Cube { KeepAlive = true };
-			var terrain = Terrain.GenerateFlat(250.0f, 250u, 25u);
-
+			var terrain = (Terrain)null;
+			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(250.0f, 25u, heightmap);
+			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
 			Crate.mesh.shape = cube.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);

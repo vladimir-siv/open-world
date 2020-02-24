@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Drawing;
 using System.IO;
 
 namespace XEngine
@@ -24,6 +25,23 @@ namespace XEngine
 			var pathToDots = resourceName.Replace("\\", ".").Replace("/", ".");
 			var location = string.Format("{0}.{1}", executingAssembly.GetName().Name.Replace('-', '_'), pathToDots);
 			return executingAssembly.GetManifestResourceStream(location);
+		}
+		public static Bitmap LoadBitmap(string name)
+		{
+			using (var stream = LoadFromResources($"{name}.bmp"))
+			{
+				return new Bitmap(stream);
+			}
+		}
+		public static Bitmap LoadAsBitmap(string name)
+		{
+			using (var stream = LoadFromResources(name))
+			{
+				using (var image = Image.FromStream(stream))
+				{
+					return new Bitmap(image);
+				}
+			}
 		}
 	}
 }

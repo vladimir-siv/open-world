@@ -25,7 +25,7 @@ namespace XEngine.Resources
 			var indices = new List<int>(1024);
 			var cache = new Dictionary<string, int>();
 
-			using (var stream = ManifestResourceManager.LoadFromResources($"{model}.obj"))
+			using (var stream = ManifestResourceManager.LoadFromResources($"Models/{model}.obj"))
 			{
 				using (var reader = new StreamReader(stream))
 				{

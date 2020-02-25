@@ -10,7 +10,7 @@ namespace XEngine.Resources
 			var keyTextureName = textureName.ToLower();
 			if (XEngineContext.Textures.TryGetValue(keyTextureName, out var found)) return found;
 
-			using (var stream = ManifestResourceManager.LoadFromResources($"{textureName}.bmp"))
+			using (var stream = ManifestResourceManager.LoadFromResources($"Textures/{textureName}.bmp"))
 			{
 				using (var bmp = new Bitmap(stream))
 				{
@@ -27,7 +27,7 @@ namespace XEngine.Resources
 			var keyTextureName = textureName.ToLower();
 			if (XEngineContext.Textures.TryGetValue(keyTextureName, out var found)) return found;
 
-			using (var stream = ManifestResourceManager.LoadFromResources($"{textureName}.png"))
+			using (var stream = ManifestResourceManager.LoadFromResources($"Textures/{textureName}.png"))
 			{
 				using (var img = Image.FromStream(stream))
 				{

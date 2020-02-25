@@ -29,7 +29,7 @@ namespace open_world
 			if (object_names == null) throw new ArgumentNullException(nameof(object_names));
 			if (object_names.Length == 0) throw new ArgumentException("There must be at least one object name.");
 
-			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\{mapName}.generated.map");
+			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\Maps\\{mapName}.generated.map");
 
 			var rnd = new Random();
 

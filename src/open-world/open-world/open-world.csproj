@@ -149,72 +149,75 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Resources\male_head.obj" />
+    <EmbeddedResource Include="Resources\Models\male_head.obj" />
     <EmbeddedResource Include="Shaders\phong.glsl" />
     <EmbeddedResource Include="Shaders\basic.glsl" />
     <EmbeddedResource Include="Shaders\unlit.glsl" />
-    <EmbeddedResource Include="Resources\stall.obj" />
+    <EmbeddedResource Include="Resources\Models\stall.obj" />
     <EmbeddedResource Include="Shaders\phong_texture.glsl" />
     <EmbeddedResource Include="Shaders\phong_terrain.glsl" />
-    <EmbeddedResource Include="Resources\person.obj" />
-    <EmbeddedResource Include="Resources\pine.obj" />
+    <EmbeddedResource Include="Resources\Models\person.obj" />
+    <EmbeddedResource Include="Resources\Models\pine.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\bunny.obj" />
-    <EmbeddedResource Include="Resources\dragon.obj" />
-    <EmbeddedResource Include="Resources\drone.obj" />
-    <EmbeddedResource Include="Resources\fern.obj" />
-    <EmbeddedResource Include="Resources\grass.obj" />
-    <EmbeddedResource Include="Resources\field.map" />
-    <EmbeddedResource Include="Resources\box.obj" />
-    <EmbeddedResource Include="Resources\lamp.obj" />
-    <EmbeddedResource Include="Resources\lightbulb.obj" />
+    <EmbeddedResource Include="Resources\Models\bunny.obj" />
+    <EmbeddedResource Include="Resources\Models\dragon.obj" />
+    <EmbeddedResource Include="Resources\Models\drone.obj" />
+    <EmbeddedResource Include="Resources\Models\fern.obj" />
+    <EmbeddedResource Include="Resources\Models\grass.obj" />
+    <EmbeddedResource Include="Resources\Maps\field.map" />
+    <EmbeddedResource Include="Resources\Models\box.obj" />
+    <EmbeddedResource Include="Resources\Models\lamp.obj" />
+    <EmbeddedResource Include="Resources\Models\lightbulb.obj" />
     <None Include="Resources\NT.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\crate.bmp" />
+    <EmbeddedResource Include="Resources\Textures\Objects\crate.bmp" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shaders\unlit_texture.glsl" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\fern.png" />
-    <EmbeddedResource Include="Resources\flower.png" />
-    <EmbeddedResource Include="Resources\grassy.png" />
-    <EmbeddedResource Include="Resources\image.png" />
-    <EmbeddedResource Include="Resources\white.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\fern.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\flower.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\grassy.png" />
+    <EmbeddedResource Include="Resources\Textures\Unclassified\image.png" />
+    <EmbeddedResource Include="Resources\Textures\Unclassified\white.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\stall.png" />
+    <EmbeddedResource Include="Resources\Textures\Objects\stall.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\grass.png" />
-    <EmbeddedResource Include="Resources\grass_ground.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\grass.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\grass_ground.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\ground_flowery.png" />
-    <EmbeddedResource Include="Resources\ground_grass.png" />
-    <EmbeddedResource Include="Resources\ground_mud.png" />
-    <EmbeddedResource Include="Resources\ground_path.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\ground_flowery.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\ground_grass.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\ground_mud.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\ground_path.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\terrain.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\terrain.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\box.png" />
-    <EmbeddedResource Include="Resources\heightmap.png" />
-    <EmbeddedResource Include="Resources\person.png" />
+    <EmbeddedResource Include="Resources\Textures\Objects\box.png" />
+    <EmbeddedResource Include="Resources\Textures\Ground\heightmap.png" />
+    <EmbeddedResource Include="Resources\Textures\Objects\person.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\atlas_fern.png" />
-    <EmbeddedResource Include="Resources\atlas_grass.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\atlas_fern.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\atlas_grass.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\lamp.png" />
-    <EmbeddedResource Include="Resources\pine.png" />
+    <EmbeddedResource Include="Resources\Textures\Objects\lamp.png" />
+    <EmbeddedResource Include="Resources\Textures\Plants\pine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Textures\Skyboxes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

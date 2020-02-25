@@ -15,7 +15,7 @@ namespace XEngine.Core
 		public float AspectRatio { get => _AspectRatio; set => SetProjection(FieldOfView, value, NearClipPlane, FarClipPlane); }
 		private float _NearClipPlane = +0.1f;
 		public float NearClipPlane { get => _NearClipPlane; set => SetProjection(FieldOfView, AspectRatio, value, FarClipPlane); }
-		private float _FarClipPlane = +100.0f;
+		private float _FarClipPlane = +250.0f;
 		public float FarClipPlane { get => _FarClipPlane; set => SetProjection(FieldOfView, AspectRatio, NearClipPlane, value); }
 
 		public vec3 ViewDirection { get; private set; } = vector3.forward;

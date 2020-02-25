@@ -15,9 +15,8 @@ namespace open_world
 			Skybox = new Skybox(Color.Black);
 			FogDensity = 0.0f;
 
-			var AmbientLight = new AmbientLight(Color.White, 0.25f);
-			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
-			var ModelColor = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
+			var light = LightSource.Point(new vec3(-15.0f, 40.0f, 30.0f));
+			var model_color = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);
 
 			var cube = new Mesh { shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.COLOR }, };
 			var basic = new Material(Shader.Find("basic"));
@@ -26,14 +25,9 @@ namespace open_world
 			Model.mesh = new Mesh();
 			Model.mesh.LoadModel("male_head", VertexAttribute.POSITION | VertexAttribute.NORMAL).Wait();
 			Model.material = new Material(Shader.Find("phong"));
-			Model.material.Set("ambient_light_color", AmbientLight.color, true);
-			Model.material.Set("ambient_light_power", AmbientLight.power);
-			Model.material.Set("light_source_position", PointLight.position);
-			Model.material.Set("light_source_color", PointLight.color, true);
-			Model.material.Set("light_source_power", PointLight.power);
 			Model.material.Set("dampening", 10.0f);
 			Model.material.Set("reflectivity", 1.0f);
-			Model.material.Set("material_color", ModelColor, true);
+			Model.material.Set("material_color", model_color, true);
 
 			var User = new GameObject("User");
 			User.mesh = cube;
@@ -45,7 +39,7 @@ namespace open_world
 			var Light = new GameObject("Light");
 			Light.mesh = cube;
 			Light.material = basic;
-			Light.transform.position = PointLight.position;
+			Light.transform.position = light.position;
 
 			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
@@ -55,6 +49,7 @@ namespace open_world
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 
+			AddLight(light);
 			MainCamera.Following = User;
 		}
 	}

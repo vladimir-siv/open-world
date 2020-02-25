@@ -9,6 +9,26 @@ namespace XEngine.Shading
 
 	public sealed class Shader : IDisposable
 	{
+		public struct LightSourceLocations
+		{
+			public static readonly LightSourceLocations Empty = new LightSourceLocations(-1, -1, -1, -1);
+
+			public int position;
+			public int color;
+			public int power;
+			public int attenuation;
+
+			public bool Valid => position != -1 && color != -1 && power != -1 && attenuation != -1;
+
+			public LightSourceLocations(int position, int color, int power, int attenuation)
+			{
+				this.position = position;
+				this.color = color;
+				this.power = power;
+				this.attenuation = attenuation;
+			}
+		}
+
 		private static (string, string) Preprocess(string code)
 		{
 			int LineCount(string str) { return str.Length - str.Replace("\n", string.Empty).Length; }
@@ -140,9 +160,17 @@ namespace XEngine.Shading
 		public int Skybox { get; private set; }
 		public int FogDensity { get; private set; }
 		public int FogGradient { get; private set; }
+		public int AmbientLightColor { get; private set; }
+		public int AmbientLightPower { get; private set; }
+		public int LightSourceCount { get; private set; }
+		public List<LightSourceLocations> LightSources { get; private set; }
 
-		private Material Prepared = null;
 		private readonly Dictionary<string, int> Uniforms = new Dictionary<string, int>();
+
+		private int CameraState = 0;
+		private int AmbientState = 0;
+		private int LightingState = 0;
+		private Material Prepared = null;
 
 		private Shader(uint id, string name)
 		{
@@ -158,6 +186,16 @@ namespace XEngine.Shading
 			Skybox = gl.GetUniformLocation(id, "skybox");
 			FogDensity = gl.GetUniformLocation(id, "fog_density");
 			FogGradient = gl.GetUniformLocation(id, "fog_gradient");
+			AmbientLightColor = gl.GetUniformLocation(id, "ambient_light_color");
+			AmbientLightPower = gl.GetUniformLocation(id, "ambient_light_power");
+			LightSourceCount = gl.GetUniformLocation(id, "light_source_count");
+
+			var lightlocs = GetLightSourceLocations(0);
+			if (lightlocs.Valid) LightSources = new List<LightSourceLocations>((int)SceneManager.CurrentScene.ActiveLights) { lightlocs };
+
+			CameraState = SceneManager.CurrentScene.CameraState - 1;
+			AmbientState = SceneManager.CurrentScene.AmbientState - 1;
+			LightingState = SceneManager.CurrentScene.LightingState - 1;
 		}
 
 		internal void Clean()
@@ -173,23 +211,83 @@ namespace XEngine.Shading
 			XEngineContext.Shaders.Remove(Name);
 		}
 
-		public void Use(bool dontSendEyeProjectView = false)
+		private LightSourceLocations GetLightSourceLocations(int i)
+		{
+			var gl = XEngineContext.Graphics;
+			return new LightSourceLocations
+			(
+				gl.GetUniformLocation(Id, $"light_source_position[{i}]"),
+				gl.GetUniformLocation(Id, $"light_source_color[{i}]"),
+				gl.GetUniformLocation(Id, $"light_source_power[{i}]"),
+				gl.GetUniformLocation(Id, $"light_source_attenuation[{i}]")
+			);
+		}
+		internal void Invalidate()
+		{
+			if (CurrentShaderId == Id) CurrentShaderId = 0;
+			CameraState = SceneManager.CurrentScene.CameraState - 1;
+			AmbientState = SceneManager.CurrentScene.AmbientState - 1;
+			LightingState = SceneManager.CurrentScene.LightingState - 1;
+		}
+
+		public void Use()
 		{
 			if (Id == 0) throw new InvalidOperationException("Shader object was disposed.");
 			if (Id == CurrentShaderId) return;
 			var gl = XEngineContext.Graphics;
 			gl.UseProgram(Id);
 			CurrentShaderId = Id;
-			if (dontSendEyeProjectView) return;
+		}
+		public void Update()
+		{
+			var gl = XEngineContext.Graphics;
 			var scene = SceneManager.CurrentScene;
-			var camera = scene.MainCamera;
-			var skybox = scene.Skybox.SkyColor;
-			if (Eye != -1) gl.Uniform3(Eye, camera.Position.x, camera.Position.y, camera.Position.z);
-			if (Project != -1) gl.UniformMatrix4(Project, 1, false, camera.ViewToProjectData);
-			if (View != -1) gl.UniformMatrix4(View, 1, false, camera.WorldToViewData);
-			if (Skybox != -1) gl.Uniform4(Skybox, skybox.r, skybox.g, skybox.b, skybox.a);
-			if (FogDensity != -1) gl.Uniform1(FogDensity, scene.FogDensity);
-			if (FogGradient != -1) gl.Uniform1(FogGradient, scene.FogGradient);
+
+			if (scene.CameraState != CameraState)
+			{
+				CameraState = scene.CameraState;
+				var camera = scene.MainCamera;
+				if (Eye != -1) gl.Uniform3(Eye, camera.Position.x, camera.Position.y, camera.Position.z);
+				if (Project != -1) gl.UniformMatrix4(Project, 1, false, camera.ViewToProjectData);
+				if (View != -1) gl.UniformMatrix4(View, 1, false, camera.WorldToViewData);
+			}
+
+			if (AmbientState != scene.AmbientState)
+			{
+				AmbientState = scene.AmbientState;
+
+				var skybox = scene.Skybox.SkyColor;
+				var ambient = scene.AmbientLight;
+
+				if (Skybox != -1) gl.Uniform4(Skybox, skybox.r, skybox.g, skybox.b, skybox.a);
+				if (FogDensity != -1) gl.Uniform1(FogDensity, scene.FogDensity);
+				if (FogGradient != -1) gl.Uniform1(FogGradient, scene.FogGradient);
+				if (AmbientLightColor != -1) gl.Uniform3(AmbientLightColor, ambient.color.r, ambient.color.g, ambient.color.b);
+				if (AmbientLightPower != -1) gl.Uniform1(AmbientLightPower, ambient.power);
+			}
+
+			if (LightingState != scene.LightingState)
+			{
+				LightingState = scene.LightingState;
+
+				if (LightSourceCount != -1) gl.Uniform1(LightSourceCount, scene.LightCount);
+
+				if (LightSources != null)
+				{
+					for (var i = 0; i < scene.ActiveLights; ++i)
+					{
+						var light = scene.GetLight(i);
+						var lightLocation = LightSourceLocations.Empty;
+						if (i < LightSources.Count) lightLocation = LightSources[i];
+						else LightSources.Add(lightLocation = GetLightSourceLocations(i));
+						if (!lightLocation.Valid) throw new ApplicationException($"Shader '{Name}' does not have a light source with index '{lightLocation}'.");
+						gl.Uniform3(lightLocation.position, light.position.x, light.position.y, light.position.z);
+						gl.Uniform3(lightLocation.color, light.color.r, light.color.g, light.color.b);
+						gl.Uniform1(lightLocation.power, light.power);
+						gl.Uniform3(lightLocation.attenuation, light.attenuation.x0, light.attenuation.x1, light.attenuation.x2);
+					}
+				}
+			}
 		}
 		public bool IsUsing(string uniform)
 		{

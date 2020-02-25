@@ -94,7 +94,8 @@
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
     <Compile Include="XEngine\Lighting\AmbientLight.cs" />
-    <Compile Include="XEngine\Lighting\PointLight.cs" />
+    <Compile Include="XEngine\Lighting\Attenuation.cs" />
+    <Compile Include="XEngine\Lighting\LightSource.cs" />
     <Compile Include="XEngine\Resources\Textures.cs" />
     <Compile Include="XEngine\Scripting\XBehaviour.cs" />
     <Compile Include="XEngine\Shading\Color.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="XEngine\Shading\ShapeData.cs" />
     <Compile Include="XEngine\Shapes\Square.cs" />
     <Compile Include="XEngine\Shapes\Triangle.cs" />
+    <Compile Include="XEngine\Structures\Heap.cs" />
     <Compile Include="XEngine\Structures\Node.cs" />
     <Compile Include="XEngine\Structures\Pouch.cs" />
     <Compile Include="XEngine\Structures\Pouch3L.cs" />

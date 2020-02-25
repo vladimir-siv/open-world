@@ -40,10 +40,12 @@
 	
 	uniform vec3 ambient_light_color;
 	uniform float ambient_light_power;
-	
-	uniform vec3 light_source_position;
-	uniform vec3 light_source_color;
-	uniform float light_source_power;
+
+	uniform uint light_source_count;
+	uniform vec3 light_source_position[8];
+	uniform vec3 light_source_color[8];
+	uniform float light_source_power[8];
+	uniform vec3 light_source_attenuation[8];
 	
 	uniform float dampening;
 	uniform float reflectivity;
@@ -54,21 +56,29 @@
 	in float visibility;	// fog visibility
 	
 	out vec4 out_color;
+
+	vec3 phong(int i, vec3 normal_vector, vec3 eye_vector)
+	{
+		vec3 light_vector = light_source_position[i] - position;
+		float light_distance = length(light_vector);
+		light_vector = normalize(light_vector);
+		float attenuation =
+			light_source_attenuation[i].x +
+			light_source_attenuation[i].y * light_distance +
+			light_source_attenuation[i].z * light_distance * light_distance;
+
+		float diffuse = clamp(dot(light_vector, normal_vector), 0.0f, 1.0f);
+		float specular = pow(clamp(dot(reflect(-light_vector, normal_vector), eye_vector), 0.0f, 1.0f), dampening * 2.0f + 1.0f) * clamp(reflectivity, 0.0f, 1.0f);
+
+		return light_source_color[i] * light_source_power[i] * (diffuse + specular) / attenuation;
+	}
 	
 	void main(void)
 	{
 		vec3 normal_vector = normalize(normal);
-		vec3 light_vector = normalize(light_source_position - position);
 		vec3 eye_vector = normalize(eye - position);
-		float light_distance = distance(light_source_position, position);
-		float attenuation = 1.05f + 0.05f * light_distance * light_distance;
-		
-		vec3 ambient = ambient_light_color * ambient_light_power;
-		vec3 light_source = light_source_color * light_source_power;
-		
-		float diffuse = clamp(dot(light_vector, normal_vector), 0.0f, 1.0f);
-		float specular = pow(clamp(dot(reflect(-light_vector, normal_vector), eye_vector), 0.0f, 1.0f), dampening * 2.0f + 1.0f) * clamp(reflectivity, 0.0f, 1.0f);
-		
-		out_color = vec4(material_color * (ambient + light_source * (diffuse + specular) / attenuation), 1.0f);
+		vec3 light = ambient_light_color * ambient_light_power;
+		for (int i = 0; i < light_source_count; ++i) light = light + phong(i, normal_vector, eye_vector);
+		out_color = vec4(material_color * light, 1.0f);
 		out_color = mix(skybox, out_color, visibility);
 	}

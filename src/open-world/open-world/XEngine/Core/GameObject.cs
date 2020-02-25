@@ -116,6 +116,7 @@ namespace XEngine.Core
 			if (DisableRendering) return;
 			var gl = XEngineContext.Graphics;
 			material.shader.Use();
+			material.shader.Update();
 			mesh.Activate();
 			if (material.shader.Model != -1) gl.UniformMatrix4(material.shader.Model, 1, false, model);
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);

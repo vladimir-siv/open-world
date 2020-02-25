@@ -26,17 +26,19 @@ namespace open_world
 			var forward = 0.0f;
 			var right = 0.0f;
 			var up = 0.0f;
+			var shift = 1.0f;
 
 			if (Input.IsKeyDown(Key.W)) forward += 1.0f;
 			if (Input.IsKeyDown(Key.S)) forward -= 1.0f;
 			if (Input.IsKeyDown(Key.A)) right -= 1.0f;
 			if (Input.IsKeyDown(Key.D)) right += 1.0f;
+			if (Input.IsKeyDown(Key.LeftShift)) shift = 2.0f;
 			if (Input.MouseButtonsPressed(MouseButtons.XButton1)) up -= 1.0f;
 			if (Input.MouseButtonsPressed(MouseButtons.XButton2)) up += 1.0f;
-
+			
 			if (Input.MouseButtonsPressed(MouseButtons.Middle)) gameObject.transform.rotation -= rotation * RotationSpeed;
 			var directions = gameObject.transform.WorldSpaceUnits;
-			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed;
+			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed * shift;
 			
 			if (Input.IsKeyDown(Key.R)) gameObject.transform = new Transform(vector3.zero, vector3.zero, vector3.one);
 		}

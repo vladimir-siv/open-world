@@ -2,7 +2,6 @@
 using GlmNet;
 using XEngine;
 using XEngine.Core;
-using XEngine.Lighting;
 using XEngine.Resources;
 using XEngine.Terrains;
 using XEngine.Shading;
@@ -15,11 +14,6 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			Skybox = new Skybox();
-
-			var AmbientLight = new AmbientLight(Color.White, 0.25f);
-			var PointLight = new PointLight(-15.0f, 40.0f, 30.0f);
-
 			var terrain = (Terrain)null;
 			using (var heightmap = ManifestResourceManager.LoadAsBitmap("heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
 			
@@ -27,11 +21,6 @@ namespace open_world
 			Crate.mesh = new Mesh();
 			Crate.mesh.shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV };
 			Crate.material = new Material(Shader.Find("phong_texture"));
-			Crate.material.Set("ambient_light_color", AmbientLight.color, true);
-			Crate.material.Set("ambient_light_power", AmbientLight.power);
-			Crate.material.Set("light_source_position", PointLight.position);
-			Crate.material.Set("light_source_color", PointLight.color, true);
-			Crate.material.Set("light_source_power", PointLight.power);
 			Crate.material.Set("dampening", 10.0f);
 			Crate.material.Set("reflectivity", 0.1f);
 			Crate.material.Set("use_simulated_light", false);
@@ -41,11 +30,6 @@ namespace open_world
 			Pine.mesh = new Mesh();
 			Pine.mesh.LoadModel("pine", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
 			Pine.material = new Material(Shader.Find("phong_texture"));
-			Pine.material.Set("ambient_light_color", AmbientLight.color, true);
-			Pine.material.Set("ambient_light_power", AmbientLight.power);
-			Pine.material.Set("light_source_position", PointLight.position);
-			Pine.material.Set("light_source_color", PointLight.color, true);
-			Pine.material.Set("light_source_power", PointLight.power);
 			Pine.material.Set("dampening", 10.0f);
 			Pine.material.Set("reflectivity", 0.1f);
 			Pine.material.Set("use_simulated_light", false);
@@ -56,11 +40,6 @@ namespace open_world
 			Fern.mesh = new Mesh();
 			Fern.mesh.LoadModel("fern", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
 			Fern.material = new Material(Shader.Find("phong_texture"));
-			Fern.material.Set("ambient_light_color", AmbientLight.color, true);
-			Fern.material.Set("ambient_light_power", AmbientLight.power);
-			Fern.material.Set("light_source_position", PointLight.position);
-			Fern.material.Set("light_source_color", PointLight.color, true);
-			Fern.material.Set("light_source_power", PointLight.power);
 			Fern.material.Set("dampening", 10.0f);
 			Fern.material.Set("reflectivity", 0.1f);
 			Fern.material.Set("use_simulated_light", false);
@@ -71,22 +50,10 @@ namespace open_world
 			Player.AttachBehaviour(new PlayerController {  });
 			Player.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
 
-			var Light = new GameObject("Light");
-			Light.mesh = new Mesh();
-			Light.mesh.LoadUntexturedModel("lightbulb", VertexAttribute.POSITION).Wait();
-			Light.material = new Material(Shader.Find("unlit"));
-			Light.material.Set("material_color", new Color(0.92f, 0.89f, 0.23f, 1.0f), false);
-			Light.transform.position = PointLight.position;
-
 			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = terrain.Shape.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
 			Ground.material = new Material(Shader.Find("phong_terrain"));
-			Ground.material.Set("ambient_light_color", AmbientLight.color, true);
-			Ground.material.Set("ambient_light_power", AmbientLight.power);
-			Ground.material.Set("light_source_position", PointLight.position);
-			Ground.material.Set("light_source_color", PointLight.color, true);
-			Ground.material.Set("light_source_power", PointLight.power);
 			Ground.material.Set("dampening", 10.0f);
 			Ground.material.Set("reflectivity", 0.1f);
 			Ground.material.Set("tiles", terrain.Tiles);

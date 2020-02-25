@@ -1,7 +1,6 @@
 ﻿using GlmNet;
 using XEngine.Core;
 using XEngine.Lighting;
-using XEngine.Resources;
 using XEngine.Shading;
 using XEngine.Shapes;
 

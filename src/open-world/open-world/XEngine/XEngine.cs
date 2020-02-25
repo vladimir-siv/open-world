@@ -45,6 +45,7 @@ namespace XEngine
 			XEngineContext.Shaders.Clear();
 			foreach (var texture in XEngineContext.Textures) texture.Value.Dispose();
 			XEngineContext.Textures.Clear();
+			Texture.InvalidateBindingCache();
 			XEngineContext.SkyboxShader.Dispose();
 			Skybox.mesh = null;
 			XEngineContext.GLControl = null;

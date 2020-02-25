@@ -1,6 +1,5 @@
 ﻿using System;
 using GlmNet;
-using XEngine;
 using XEngine.Core;
 using XEngine.Resources;
 using XEngine.Terrains;
@@ -87,25 +86,6 @@ namespace open_world
 			}
 
 			MainCamera.Following = Player;
-
-			/*
-			Map.Generate
-			(
-				"field",
-				terrain,
-				Ground.transform.position,
-				new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
-				new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
-				new vec3(0.0f, 0.0f, 0.0f),
-				new vec3(0.0f, 360.0f, 0.0f),
-				vector3.one,
-				vector3.one,
-				500,
-				"crate0",
-				"pine0",
-				"fern0", "fern1", "fern2", "fern3"
-			);
-			//*/
 		}
 	}
 }

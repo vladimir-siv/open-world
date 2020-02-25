@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-using SharpGL;
 using GlmNet;
 
 namespace XEngine.Shading

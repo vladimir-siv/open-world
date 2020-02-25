@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using SharpGL;
 
@@ -6,6 +7,9 @@ namespace XEngine.Shading
 {
 	public abstract class Texture : IDisposable
 	{
+		private static Dictionary<uint, Texture> BindingCache = new Dictionary<uint, Texture>();
+		internal static void InvalidateBindingCache() => BindingCache.Clear();
+
 		private readonly uint[] glTextureArray = new uint[1] { 0u };
 
 		public uint TextureId => glTextureArray[0];
@@ -20,9 +24,11 @@ namespace XEngine.Shading
 
 		public void Activate(uint index = 0u)
 		{
+			if (BindingCache.TryGetValue(index, out var bound) && this == bound) return;
 			var gl = XEngineContext.Graphics;
 			gl.ActiveTexture(OpenGL.GL_TEXTURE0 + index);
 			gl.BindTexture(TextureType, glTextureArray[0]);
+			BindingCache[index] = this;
 		}
 
 		public virtual void Dispose()

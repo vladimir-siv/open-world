@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 using SharpGL;
-using SharpGL.SceneGraph.Assets;
 using GlmNet;
 
 namespace XEngine.Shading
@@ -12,7 +11,7 @@ namespace XEngine.Shading
 
 	public sealed class Material
 	{
-		private class ShaderDataCollection
+		private class ShaderData
 		{
 			private class Value
 			{
@@ -233,9 +232,10 @@ namespace XEngine.Shading
 
 			#endregion
 
-			public void Prepare(Shader shader)
+			public void Prepare(Shader shader, ShaderProperties properties, bool prepareNeeded = true)
 			{
 				if (shader == null) return;
+				if (!prepareNeeded) return;
 				
 				foreach (var key in Keys)
 				{
@@ -276,19 +276,8 @@ namespace XEngine.Shading
 				}
 			}
 		}
-
 		private class TexturePack
 		{
-			private static Dictionary<uint, Texture> BoundTextures = new Dictionary<uint, Texture>();
-			private static void Bind(Texture texture, uint index)
-			{
-				if (BoundTextures.TryGetValue(index, out var bound) && texture == bound) return;
-				BoundTextures[index] = texture;
-				var gl = XEngineContext.Graphics;
-				gl.ActiveTexture(OpenGL.GL_TEXTURE0 + index);
-				texture.Bind(gl);
-			}
-
 			private readonly Dictionary<string, (Texture, uint, uint)> Textures = new Dictionary<string, (Texture, uint, uint)>();
 			private readonly LinkedList<string> Keys = new LinkedList<string>();
 
@@ -318,8 +307,8 @@ namespace XEngine.Shading
 				foreach (var key in Keys)
 				{
 					var texture = Textures[key];
-					Bind(texture.Item1, (uint)index);
-
+					texture.Item1.Activate((uint)index);
+					
 					if (prepareNeeded) shader.SetScalar(key, index);
 
 					var overrideAtlasIndex = 0u;
@@ -343,11 +332,10 @@ namespace XEngine.Shading
 			}
 		}
 
-		private readonly ShaderDataCollection DataCollection = new ShaderDataCollection();
+		private readonly ShaderData Data = new ShaderData();
 		private readonly TexturePack Textures = new TexturePack();
 		
 		public Shader shader { get; set; }
-
 		public bool CullFace { get; set; } = true;
 
 		public Material() { }
@@ -356,26 +344,26 @@ namespace XEngine.Shading
 		#region Setters
 
 		public void Set(string name, bool val) => Set(name, val ? 1.0f : 0.0f);
-		public void Set(string name, int val) => DataCollection.Set(name, val);
-		public void Set(string name, uint val) => DataCollection.Set(name, val);
-		public void Set(string name, float val) => DataCollection.Set(name, val);
-		public void Set(string name, int[] val) => DataCollection.Set(name, val);
-		public void Set(string name, uint[] val) => DataCollection.Set(name, val);
-		public void Set(string name, float[] val) => DataCollection.Set(name, val);
-		public void Set(string name, Color val, bool rgb_only = false) => DataCollection.Set(name, val, rgb_only);
-		public void Set(string name, vec2 val) => DataCollection.Set(name, val);
-		public void Set(string name, vec3 val) => DataCollection.Set(name, val);
-		public void Set(string name, vec4 val) => DataCollection.Set(name, val);
-		public void Set(string name, Color[] val, bool rgb_only = false, bool keep_layout = true) => DataCollection.Set(name, val, rgb_only, keep_layout);
-		public void Set(string name, vec2[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
-		public void Set(string name, vec3[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
-		public void Set(string name, vec4[] val, bool keep_layout = true) => DataCollection.Set(name, val, keep_layout);
-		public void Set(string name, mat2 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
-		public void Set(string name, mat3 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
-		public void Set(string name, mat4 val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
-		public void Set(string name, mat2[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
-		public void Set(string name, mat3[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
-		public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) => DataCollection.Set(name, val, transpose, keep_layout);
+		public void Set(string name, int val) => Data.Set(name, val);
+		public void Set(string name, uint val) => Data.Set(name, val);
+		public void Set(string name, float val) => Data.Set(name, val);
+		public void Set(string name, int[] val) => Data.Set(name, val);
+		public void Set(string name, uint[] val) => Data.Set(name, val);
+		public void Set(string name, float[] val) => Data.Set(name, val);
+		public void Set(string name, Color val, bool rgb_only = false) => Data.Set(name, val, rgb_only);
+		public void Set(string name, vec2 val) => Data.Set(name, val);
+		public void Set(string name, vec3 val) => Data.Set(name, val);
+		public void Set(string name, vec4 val) => Data.Set(name, val);
+		public void Set(string name, Color[] val, bool rgb_only = false, bool keep_layout = true) => Data.Set(name, val, rgb_only, keep_layout);
+		public void Set(string name, vec2[] val, bool keep_layout = true) => Data.Set(name, val, keep_layout);
+		public void Set(string name, vec3[] val, bool keep_layout = true) => Data.Set(name, val, keep_layout);
+		public void Set(string name, vec4[] val, bool keep_layout = true) => Data.Set(name, val, keep_layout);
+		public void Set(string name, mat2 val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat3 val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat4 val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat2[] val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat3[] val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
+		public void Set(string name, mat4[] val, bool transpose = false, bool keep_layout = true) => Data.Set(name, val, transpose, keep_layout);
 
 		public void Set(string name, Texture texture) => Textures.Set(name, texture);
 		public void Set(string name, Texture texture, uint index, uint count) => Textures.Set(name, texture, index, count);
@@ -386,8 +374,8 @@ namespace XEngine.Shading
 		internal void Prepare(ShaderProperties properties = null)
 		{
 			if (shader == null) return;
-			bool prepareNeeded = shader.PrepareNeeded(this, markPrepared: true);
-			if (prepareNeeded) DataCollection.Prepare(shader);
+			var prepareNeeded = shader.PrepareNeeded(this, markPrepared: true);
+			Data.Prepare(shader, properties, prepareNeeded);
 			Textures.Prepare(shader, properties, prepareNeeded);
 		}
 	}

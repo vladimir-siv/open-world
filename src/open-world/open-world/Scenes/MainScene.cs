@@ -18,7 +18,7 @@ namespace open_world
 			Skybox = Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194));
 
 			var terrain = (Terrain)null;
-			using (var heightmap = ManifestResourceManager.LoadAsBitmap("Textures/Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
+			using (var heightmap = Resource.LoadCustomTexture("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
 			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -27,7 +27,7 @@ namespace open_world
 			Crate.material.Set("dampening", 10.0f);
 			Crate.material.Set("reflectivity", 0.1f);
 			Crate.material.Set("use_simulated_light", false);
-			Crate.material.Set("material_texture", Resource.LoadTexture("Objects/crate"));
+			Crate.material.Set("material_texture", Texture2D.FindBMP("Objects/crate"));
 
 			var Pine = new Prefab("Pine");
 			Pine.mesh = new Mesh();
@@ -36,7 +36,7 @@ namespace open_world
 			Pine.material.Set("dampening", 10.0f);
 			Pine.material.Set("reflectivity", 0.1f);
 			Pine.material.Set("use_simulated_light", false);
-			Pine.material.Set("material_texture", Resource.LoadPNGTexture("Plants/pine"), 0u, 9u);
+			Pine.material.Set("material_texture", Texture2D.FindPNG("Plants/pine"), 0u, 9u);
 			Pine.material.CullFace = false;
 
 			var Fern = new Prefab("Fern");
@@ -46,7 +46,7 @@ namespace open_world
 			Fern.material.Set("dampening", 10.0f);
 			Fern.material.Set("reflectivity", 0.1f);
 			Fern.material.Set("use_simulated_light", false);
-			Fern.material.Set("material_texture", Resource.LoadPNGTexture("Plants/atlas_fern"), 0u, 4u);
+			Fern.material.Set("material_texture", Texture2D.FindPNG("Plants/atlas_fern"), 0u, 4u);
 			Fern.material.CullFace = false;
 
 			var Player = new GameObject("Player");
@@ -60,11 +60,11 @@ namespace open_world
 			Ground.material.Set("dampening", 10.0f);
 			Ground.material.Set("reflectivity", 0.1f);
 			Ground.material.Set("tiles", terrain.Tiles);
-			Ground.material.Set("main_texture", Resource.LoadPNGTexture("Ground/ground_mud"));
-			Ground.material.Set("r_texture", Resource.LoadPNGTexture("Ground/ground_flowery"));
-			Ground.material.Set("g_texture", Resource.LoadPNGTexture("Ground/ground_grass"));
-			Ground.material.Set("b_texture", Resource.LoadPNGTexture("Ground/ground_path"));
-			Ground.material.Set("terrain_map", Resource.LoadPNGTexture("Ground/terrain"));
+			Ground.material.Set("main_texture", Texture2D.FindPNG("Ground/ground_mud"));
+			Ground.material.Set("r_texture", Texture2D.FindPNG("Ground/ground_flowery"));
+			Ground.material.Set("g_texture", Texture2D.FindPNG("Ground/ground_grass"));
+			Ground.material.Set("b_texture", Texture2D.FindPNG("Ground/ground_path"));
+			Ground.material.Set("terrain_map", Texture2D.FindPNG("Ground/terrain"));
 
 			using (var map = new Map("Maps/field"))
 			{

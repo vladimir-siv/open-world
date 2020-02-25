@@ -45,7 +45,7 @@ namespace open_world
 			Ground.mesh = new Mesh();
 			Ground.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
 			Ground.material = new Material(Shader.Find("unlit_texture"));
-			Ground.material.Set("material_texture", Resource.LoadTexture("Objects/crate"));
+			Ground.material.Set("material_texture", Texture2D.FindBMP("Objects/crate"));
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 

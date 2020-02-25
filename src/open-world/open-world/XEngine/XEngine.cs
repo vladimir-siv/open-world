@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 
 using SharpGL;
-using SharpGL.SceneGraph.Assets;
 
 namespace XEngine
 {
@@ -44,10 +43,8 @@ namespace XEngine
 			XEngineContext.Graphics.UseProgram(0);
 			foreach (var shader in XEngineContext.Shaders) shader.Value.Clean();
 			XEngineContext.Shaders.Clear();
-			foreach (var texture in XEngineContext.Textures) texture.Value.Destroy(XEngineContext.Graphics);
+			foreach (var texture in XEngineContext.Textures) texture.Value.Dispose();
 			XEngineContext.Textures.Clear();
-			foreach (var skybox in XEngineContext.Skyboxes) skybox.Value.Dispose();
-			XEngineContext.Skyboxes.Clear();
 			XEngineContext.SkyboxShader.Dispose();
 			Skybox.mesh = null;
 			XEngineContext.GLControl = null;
@@ -61,7 +58,6 @@ namespace XEngine
 
 		internal static Dictionary<string, Shader> Shaders { get; } = new Dictionary<string, Shader>();
 		internal static Dictionary<string, Texture> Textures { get; } = new Dictionary<string, Texture>();
-		internal static Dictionary<string, Skybox> Skyboxes { get; } = new Dictionary<string, Skybox>();
 
 		internal static Shader SkyboxShader { get; set; } = null;
 

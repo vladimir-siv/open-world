@@ -105,7 +105,10 @@
     <Compile Include="XEngine\Core\Scene.cs" />
     <Compile Include="XEngine\Core\SceneManager.cs" />
     <Compile Include="XEngine\Core\Transform.cs" />
+    <Compile Include="XEngine\Shading\CubeMap.cs" />
     <Compile Include="XEngine\Shading\ShaderProperties.cs" />
+    <Compile Include="XEngine\Shading\Texture.cs" />
+    <Compile Include="XEngine\Shading\Texture2D.cs" />
     <Compile Include="XEngine\Shading\Vertex.cs" />
     <Compile Include="XEngine\Common\Math.cs" />
     <Compile Include="XEngine\Host.cs" />
@@ -218,7 +221,14 @@
     <EmbeddedResource Include="Resources\Textures\Objects\lamp.png" />
     <EmbeddedResource Include="Resources\Textures\Plants\pine.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\back.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\bottom.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\front.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\left.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\right.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Night\top.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\back.png" />
     <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\bottom.png" />

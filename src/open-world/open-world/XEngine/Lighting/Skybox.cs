@@ -145,7 +145,7 @@ namespace XEngine.Lighting
 						texture.Width,
 						texture.Height,
 						0,
-						OpenGL.GL_RGBA,
+						OpenGL.GL_BGRA,
 						OpenGL.GL_UNSIGNED_BYTE,
 						texture.Data
 					);

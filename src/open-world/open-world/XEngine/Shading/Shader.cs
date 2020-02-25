@@ -70,7 +70,7 @@ namespace XEngine.Shading
 
 			return (vertex_shader, fragment_shader);
 		}
-		private static uint Build(string shaderName)
+		private static uint Build(string code)
 		{
 			var gl = XEngineContext.Graphics;
 
@@ -105,7 +105,7 @@ namespace XEngine.Shading
 				return null;
 			}
 
-			var shaderCode = Preprocess(ManifestResourceManager.LoadShader(shaderName));
+			var shaderCode = Preprocess(code);
 			var shaderProgramId = gl.CreateProgram();
 
 			var vertexShaderId = gl.CreateShader(OpenGL.GL_VERTEX_SHADER);
@@ -135,13 +135,25 @@ namespace XEngine.Shading
 
 			return shaderProgramId;
 		}
+		private static uint Create(string shaderName, bool lookUpInternally = false)
+		{
+			var code = (string)null;
+			if (lookUpInternally) code = ManifestResourceManager.LoadInternalShader(shaderName);
+			else code = ManifestResourceManager.LoadShader(shaderName);
+			return Build(code);
+		}
 
+		internal static Shader CreateInternal(string shaderName)
+		{
+			var id = Create(shaderName, true);
+			return new Shader(id, shaderName);
+		}
 		public static Shader Find(string shaderName)
 		{
 			var shaders = XEngineContext.Shaders;
 			var found = shaders.TryGetValue(shaderName, out var shader);
 			if (found) return shader;
-			var id = Build(shaderName);
+			var id = Create(shaderName);
 			shader = new Shader(id, shaderName);
 			shaders.Add(shaderName, shader);
 			return shader;
@@ -193,9 +205,11 @@ namespace XEngine.Shading
 			var lightlocs = GetLightSourceLocations(0);
 			if (lightlocs.Valid) LightSources = new List<LightSourceLocations>((int)SceneManager.CurrentScene.ActiveLights) { lightlocs };
 
-			CameraState = SceneManager.CurrentScene.CameraState - 1;
-			AmbientState = SceneManager.CurrentScene.AmbientState - 1;
-			LightingState = SceneManager.CurrentScene.LightingState - 1;
+			var scene = SceneManager.CurrentScene;
+			if (scene == null) return;
+			CameraState = scene.CameraState - 1;
+			AmbientState = scene.AmbientState - 1;
+			LightingState = scene.LightingState - 1;
 		}
 
 		internal void Clean()

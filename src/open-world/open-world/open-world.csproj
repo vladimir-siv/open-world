@@ -89,7 +89,7 @@
     <Compile Include="XEngine\Core\Camera.cs" />
     <Compile Include="XEngine\Common\Serialization.cs" />
     <Compile Include="XEngine\Core\Prefab.cs" />
-    <Compile Include="XEngine\Core\Skybox.cs" />
+    <Compile Include="XEngine\Lighting\Skybox.cs" />
     <Compile Include="XEngine\Interaction\Input.cs" />
     <Compile Include="XEngine\Interaction\Key.cs" />
     <Compile Include="XEngine\Interaction\MouseButtons.cs" />
@@ -158,6 +158,7 @@
     <EmbeddedResource Include="Shaders\phong_terrain.glsl" />
     <EmbeddedResource Include="Resources\Models\person.obj" />
     <EmbeddedResource Include="Resources\Models\pine.obj" />
+    <EmbeddedResource Include="XEngine\BuiltIn\Shaders\skybox.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -216,8 +217,14 @@
     <EmbeddedResource Include="Resources\Textures\Objects\lamp.png" />
     <EmbeddedResource Include="Resources\Textures\Plants\pine.png" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\Textures\Skyboxes\" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\back.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\bottom.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\front.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\left.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\right.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Cloudy\top.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

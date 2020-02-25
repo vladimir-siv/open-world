@@ -4,6 +4,7 @@ using XEngine;
 using XEngine.Core;
 using XEngine.Resources;
 using XEngine.Terrains;
+using XEngine.Lighting;
 using XEngine.Shading;
 using XEngine.Shapes;
 
@@ -14,6 +15,9 @@ namespace open_world
 	{
 		protected override void Init()
 		{
+			Skybox = Skybox.Find("Cloudy");
+			MainCamera.FarClipPlane = 1000.0f;
+
 			var terrain = (Terrain)null;
 			using (var heightmap = ManifestResourceManager.LoadAsBitmap("Textures/Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
 			

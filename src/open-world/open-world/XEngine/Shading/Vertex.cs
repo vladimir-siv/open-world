@@ -39,6 +39,7 @@ namespace XEngine.Shading
 		public vec3 normal { get; set; }
 		public vec2 uv { get; set; }
 
+		public vertex(vec3 position) : this(position, Color.Black.rgb) { }
 		public vertex(vec3 position, vec3 color) : this(position, color, new vec3(+0.0f, +0.0f, +0.0f)) { }
 		public vertex(vec3 position, vec3 color, vec3 normal) : this(position, color, normal, new vec2(0.0f, 0.0f)) { }
 		public vertex(vec3 position, vec3 color, vec3 normal, vec2 uv)

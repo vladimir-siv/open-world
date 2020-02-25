@@ -12,7 +12,7 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			Skybox = new Skybox(Color.Black);
+			Skybox = Skybox.Black;
 			FogDensity = 0.0f;
 
 			var light = LightSource.Point(new vec3(-15.0f, 40.0f, 30.0f));

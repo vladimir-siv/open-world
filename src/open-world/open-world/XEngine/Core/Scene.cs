@@ -103,6 +103,7 @@ namespace XEngine.Core
 				++AmbientState;
 			}
 		}
+		public float SkyboxScale { get; set; } = 1000.0f;
 
 		private float _FogDensity = 0.0125f;
 		public float FogDensity
@@ -200,6 +201,7 @@ namespace XEngine.Core
 
 			AmbientState = 0;
 			if (Skybox != null) gl.ClearColor(Skybox.SkyColor.r, Skybox.SkyColor.g, Skybox.SkyColor.b, Skybox.SkyColor.a);
+			SkyboxScale = 1000.0f;
 			_FogDensity = 0.0125f;
 			_FogGradient = 10f;
 
@@ -216,7 +218,7 @@ namespace XEngine.Core
 			XEngineState.Reset();
 			Invalidate();
 			Init();
-			if (Skybox == null) Skybox = new Skybox();
+			if (Skybox == null) Skybox = Skybox.Default;
 			if (Lights.Count == 0) AddLight(LightSource.Sun);
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
@@ -275,6 +277,8 @@ namespace XEngine.Core
 			{
 				gameObject.Draw();
 			}
+
+			Skybox?.Draw(SkyboxScale);
 		}
 	}
 }

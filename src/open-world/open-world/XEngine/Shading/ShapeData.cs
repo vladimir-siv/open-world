@@ -1,9 +1,31 @@
 ﻿using System;
 
+using GlmNet;
+
 namespace XEngine.Shading
 {
 	public struct ShapeData
 	{
+		public static vertex[] Positions3f(params float[] positions)
+		{
+			var vertices = new vertex[positions.Length / 3];
+			
+			for (var i = 0; i < vertices.Length; ++i)
+			{
+				vertices[i] = new vertex
+				(
+					new vec3
+					(
+						positions[3 * i + 0],
+						positions[3 * i + 1],
+						positions[3 * i + 2]
+					)
+				);
+			}
+
+			return vertices;
+		}
+
 		public vertex[] Vertices { get; private set; }
 		public int[] Indices { get; private set; }
 

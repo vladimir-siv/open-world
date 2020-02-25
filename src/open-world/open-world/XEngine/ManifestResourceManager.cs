@@ -26,6 +26,7 @@ namespace XEngine
 			var location = string.Format("{0}.{1}", executingAssembly.GetName().Name.Replace('-', '_'), pathToDots);
 			return executingAssembly.GetManifestResourceStream(location);
 		}
+
 		public static Bitmap LoadBitmap(string name)
 		{
 			using (var stream = LoadFromResources($"{name}.bmp"))
@@ -42,6 +43,26 @@ namespace XEngine
 					return new Bitmap(image);
 				}
 			}
+		}
+
+		internal static string LoadInternalShader(string shaderName) => LoadInternalFile($"XEngine/BuiltIn/Shaders/{shaderName}.glsl");
+
+		internal static string LoadInternalFile(string fileName)
+		{
+			using (var stream = LoadInternal(fileName))
+			{
+				using (var reader = new StreamReader(stream))
+				{
+					return reader.ReadToEnd();
+				}
+			}
+		}
+		internal static Stream LoadInternal(string resourceName)
+		{
+			var thisAssembly = typeof(ManifestResourceManager).Assembly;
+			var pathToDots = resourceName.Replace("\\", ".").Replace("/", ".");
+			var location = string.Format("{0}.{1}", thisAssembly.GetName().Name.Replace('-', '_'), pathToDots);
+			return thisAssembly.GetManifestResourceStream(location);
 		}
 	}
 }

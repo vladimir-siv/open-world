@@ -10,6 +10,7 @@ namespace XEngine
 {
 	using XEngine.Core;
 	using XEngine.Shading;
+	using XEngine.Lighting;
 	using XEngine.Interaction;
 
     public static class XEngineActivator
@@ -29,6 +30,8 @@ namespace XEngine
 				type.GetMethod(attr.MethodName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
 			}
 
+			XEngineContext.SkyboxShader = Shader.CreateInternal("skybox");
+
 			SceneManager.LoadScene(SceneManager.MainSceneId);
 		}
 
@@ -41,6 +44,10 @@ namespace XEngine
 			XEngineContext.Shaders.Clear();
 			foreach (var texture in XEngineContext.Textures) texture.Value.Destroy(XEngineContext.Graphics);
 			XEngineContext.Textures.Clear();
+			foreach (var skybox in XEngineContext.Skyboxes) skybox.Value.Dispose();
+			XEngineContext.Skyboxes.Clear();
+			XEngineContext.SkyboxShader.Dispose();
+			Skybox.mesh = null;
 			XEngineContext.GLControl = null;
 		}
 	}
@@ -49,8 +56,12 @@ namespace XEngine
 	{
 		internal static OpenGLControl GLControl { get; set; } = null;
 		internal static OpenGL Graphics => GLControl.OpenGL;
+
 		internal static Dictionary<string, Shader> Shaders { get; } = new Dictionary<string, Shader>();
 		internal static Dictionary<string, Texture> Textures { get; } = new Dictionary<string, Texture>();
+		internal static Dictionary<string, Skybox> Skyboxes { get; } = new Dictionary<string, Skybox>();
+
+		internal static Shader SkyboxShader { get; set; } = null;
 
 		public static void Draw()
 		{

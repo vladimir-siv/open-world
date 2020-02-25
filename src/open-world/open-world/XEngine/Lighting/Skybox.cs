@@ -208,6 +208,7 @@ namespace XEngine.Lighting
 			gl.UniformMatrix4(shader.Project, 1, false, project);
 			gl.UniformMatrix4(shader.View, 1, false, view);
 			shader.SetScalar("scale", scale);
+			shader.SetVec4("sky_color", SkyColor.r, SkyColor.g, SkyColor.b, SkyColor.a);
 
 			mesh.Activate();
 			gl.DrawArrays(OpenGL.GL_TRIANGLES, 0, SkyboxShape.Geometry.VertexCount);

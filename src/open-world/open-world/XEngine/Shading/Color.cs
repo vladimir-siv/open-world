@@ -11,6 +11,8 @@ namespace XEngine.Shading
 		public static readonly Color Gray = new Color(0.5f, 0.5f, 0.5f, 1.0f);
 		public static readonly Color DeepSky = new Color(0.529f, 0.808f, 0.922f, 1.0f);
 
+		public static Color FromBytes(byte r, byte g, byte b, byte a = 255) => new Color(r / 255.0f, g / 255.0f, b / 255.0f);
+
 		public vec4 vectorized;
 
 		public float r

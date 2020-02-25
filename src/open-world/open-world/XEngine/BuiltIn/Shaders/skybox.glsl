@@ -22,7 +22,11 @@
 #pragma shader fragment
 
 	#version 430 core
+
+	const float LOWER_L = +00.0f;
+	const float UPPER_L = +30.0f;
 	
+	uniform vec4 sky_color;
 	uniform samplerCube sky_map;
 	
 	in vec3 tex;
@@ -31,5 +35,6 @@
 	
 	void main(void)
 	{
-		out_color = texture(sky_map, tex);
+		float factor = clamp((tex.y - LOWER_L) / (UPPER_L - LOWER_L), 0.0f, 1.0f);
+		out_color = mix(sky_color, texture(sky_map, tex), factor);
 	}

@@ -105,7 +105,7 @@ namespace XEngine.Core
 		}
 		public float SkyboxScale { get; set; } = 250.0f;
 
-		private float _FogDensity = 0.005f;
+		private float _FogDensity = 0.009f;
 		public float FogDensity
 		{
 			get
@@ -202,7 +202,7 @@ namespace XEngine.Core
 			AmbientState = 0;
 			if (Skybox != null) gl.ClearColor(Skybox.SkyColor.r, Skybox.SkyColor.g, Skybox.SkyColor.b, Skybox.SkyColor.a);
 			SkyboxScale = 250.0f;
-			_FogDensity = 0.005f;
+			_FogDensity = 0.009f;
 			_FogGradient = 10f;
 
 			_AmbientLight = AmbientLight.Bright;

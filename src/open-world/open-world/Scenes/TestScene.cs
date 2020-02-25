@@ -11,8 +11,8 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			Skybox = Skybox.Black;
-			FogDensity = 0.0f;
+			Sky.StaticSkybox = Skybox.Black;
+			Sky.FogDensity = 0.0f;
 
 			var light = LightSource.Point(new vec3(-15.0f, 40.0f, 30.0f));
 			var model_color = new Color(232.0f / 255.0f, 176.0f / 255.0f, 141.0f / 255.0f);

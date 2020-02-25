@@ -34,5 +34,16 @@ namespace XEngine.Structures
 			if (Count == 0) throw new InvalidOperationException("Collection is empty.");
 			return First.Value;
 		}
+
+		public TValue Second()
+		{
+			if (Count < 2) throw new InvalidOperationException("Collection is empty or the second element does not exist.");
+			return First.Next.Value;
+		}
+
+		public void Clear()
+		{
+			while (Count > 0) Dequeue();
+		}
 	}
 }

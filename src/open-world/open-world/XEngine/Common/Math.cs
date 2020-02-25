@@ -3,6 +3,8 @@ using GlmNet;
 
 namespace XEngine.Common
 {
+	using XEngine.Shading;
+
 	public static class scalar
 	{
 		public static uint BitCount(this uint v)
@@ -125,5 +127,14 @@ namespace XEngine.Common
 			dest[3] = src[3];
 			return dest;
 		}
+	}
+
+	public static class algebra
+	{
+		public static float lerp(float v1, float v2, float a) => v1 * (1.0f - a) + v2 * a;
+		public static vec2 lerp(vec2 v1, vec2 v2, float a) => v1 * (1.0f - a) + v2 * a;
+		public static vec3 lerp(vec3 v1, vec3 v2, float a) => v1 * (1.0f - a) + v2 * a;
+		public static vec4 lerp(vec4 v1, vec4 v2, float a) => v1 * (1.0f - a) + v2 * a;
+		public static Color lerp(Color v1, Color v2, float a) => v1 * (1.0f - a) + v2 * a;
 	}
 }

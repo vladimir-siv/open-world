@@ -14,7 +14,8 @@ namespace open_world
 	{
 		protected override void Init()
 		{
-			Skybox = Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194));
+			Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
+			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 
 			var terrain = (Terrain)null;
 			using (var heightmap = Resource.LoadCustomTexture("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);

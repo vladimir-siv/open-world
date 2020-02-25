@@ -208,7 +208,7 @@ namespace XEngine.Shading
 			var scene = SceneManager.CurrentScene;
 			if (scene == null) return;
 			CameraState = scene.CameraState - 1;
-			AmbientState = scene.AmbientState - 1;
+			AmbientState = scene.Sky.AmbientState - 1;
 			LightingState = scene.LightingState - 1;
 		}
 
@@ -240,7 +240,7 @@ namespace XEngine.Shading
 		{
 			if (CurrentShaderId == Id) CurrentShaderId = 0;
 			CameraState = SceneManager.CurrentScene.CameraState - 1;
-			AmbientState = SceneManager.CurrentScene.AmbientState - 1;
+			AmbientState = SceneManager.CurrentScene.Sky.AmbientState - 1;
 			LightingState = SceneManager.CurrentScene.LightingState - 1;
 		}
 
@@ -266,16 +266,16 @@ namespace XEngine.Shading
 				if (View != -1) gl.UniformMatrix4(View, 1, false, camera.WorldToViewData);
 			}
 
-			if (AmbientState != scene.AmbientState)
+			if (AmbientState != scene.Sky.AmbientState)
 			{
-				AmbientState = scene.AmbientState;
+				AmbientState = scene.Sky.AmbientState;
 
-				var skybox = scene.Skybox.SkyColor;
-				var ambient = scene.AmbientLight;
+				var skybox = scene.Sky.SkyColor;
+				var ambient = scene.Sky.AmbientLight;
 
 				if (Skybox != -1) gl.Uniform4(Skybox, skybox.r, skybox.g, skybox.b, skybox.a);
-				if (FogDensity != -1) gl.Uniform1(FogDensity, scene.FogDensity);
-				if (FogGradient != -1) gl.Uniform1(FogGradient, scene.FogGradient);
+				if (FogDensity != -1) gl.Uniform1(FogDensity, scene.Sky.FogDensity);
+				if (FogGradient != -1) gl.Uniform1(FogGradient, scene.Sky.FogGradient);
 				if (AmbientLightColor != -1) gl.Uniform3(AmbientLightColor, ambient.color.r, ambient.color.g, ambient.color.b);
 				if (AmbientLightPower != -1) gl.Uniform1(AmbientLightPower, ambient.power);
 			}

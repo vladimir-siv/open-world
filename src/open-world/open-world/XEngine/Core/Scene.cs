@@ -82,74 +82,11 @@ namespace XEngine.Core
 		private readonly Algorithms Algs = new Algorithms();
 
 		public Camera MainCamera { get; private set; } = new Camera();
-		internal int CameraState { get; private set; } = 0;
+		internal int CameraState { get; private set; }
 
-		internal int AmbientState { get; private set; } = 0;
+		public Sky Sky { get; private set; }
 
-		private Skybox _Skybox = null;
-		public Skybox Skybox
-		{
-			get
-			{
-				return _Skybox;
-			}
-			set
-			{
-				if (_Skybox == value) return;
-				_Skybox = value;
-				var color = value.SkyColor;
-				var gl = XEngineContext.Graphics;
-				gl.ClearColor(color.r, color.g, color.b, color.a);
-				++AmbientState;
-			}
-		}
-		public float SkyboxScale { get; set; } = 250.0f;
-
-		private float _FogDensity = 0.009f;
-		public float FogDensity
-		{
-			get
-			{
-				return _FogDensity;
-			}
-			set
-			{
-				if (value == _FogDensity) return;
-				_FogDensity = value;
-				++AmbientState;
-			}
-		}
-		private float _FogGradient = 10f;
-		public float FogGradient
-		{
-			get
-			{
-				return _FogGradient;
-			}
-			set
-			{
-				if (value == _FogGradient) return;
-				_FogGradient = value;
-				++AmbientState;
-			}
-		}
-
-		private AmbientLight _AmbientLight = AmbientLight.Bright;
-		public AmbientLight AmbientLight
-		{
-			get
-			{
-				return _AmbientLight;
-			}
-			set
-			{
-				if (AmbientLight.AreEqual(value, _AmbientLight)) return;
-				AmbientLight = value;
-				++AmbientState;
-			}
-		}
-
-		public uint ActiveLights { get; set; } = 8u;
+		public uint ActiveLights { get; set; }
 		internal readonly LinkedList<LightSource> Lights = new LinkedList<LightSource>();
 		internal int LightingState => Algs.LightingState;
 		internal uint LightCount => Algs.LightCount;
@@ -199,13 +136,15 @@ namespace XEngine.Core
 			MainCamera.LocalRotation = vector3.zero;
 			CameraState = 0;
 
-			AmbientState = 0;
-			if (Skybox != null) gl.ClearColor(Skybox.SkyColor.r, Skybox.SkyColor.g, Skybox.SkyColor.b, Skybox.SkyColor.a);
-			SkyboxScale = 250.0f;
-			_FogDensity = 0.009f;
-			_FogGradient = 10f;
+			Sky = new Sky();
 
-			_AmbientLight = AmbientLight.Bright;
+			gl.ClearColor
+			(
+				Sky.StaticSkybox.SkyColor.r,
+				Sky.StaticSkybox.SkyColor.g,
+				Sky.StaticSkybox.SkyColor.b,
+				Sky.StaticSkybox.SkyColor.a
+			);
 
 			ActiveLights = 8u;
 
@@ -218,10 +157,10 @@ namespace XEngine.Core
 			XEngineState.Reset();
 			Invalidate();
 			Init();
-			if (Skybox == null) Skybox = Skybox.Default;
 			if (Lights.Count == 0) AddLight(LightSource.Sun);
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
+			Sky.BeginCycle();
 			Initialized = true;
 		}
 		internal void _Draw()
@@ -273,12 +212,12 @@ namespace XEngine.Core
 		}
 		protected void DrawScene()
 		{
+			Sky.Draw();
+
 			foreach (var gameObject in Algs.DrawableObjectPouch.Retrieve())
 			{
 				gameObject.Draw();
 			}
-
-			Skybox?.Draw(SkyboxScale);
 		}
 	}
 }

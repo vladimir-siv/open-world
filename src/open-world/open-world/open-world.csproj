@@ -90,6 +90,7 @@
     <Compile Include="XEngine\Common\Serialization.cs" />
     <Compile Include="XEngine\Core\Prefab.cs" />
     <Compile Include="XEngine\Core\Time.cs" />
+    <Compile Include="XEngine\Lighting\Sky.cs" />
     <Compile Include="XEngine\Lighting\Skybox.cs" />
     <Compile Include="XEngine\Interaction\Input.cs" />
     <Compile Include="XEngine\Interaction\Key.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="XEngine\Lighting\AmbientLight.cs" />
     <Compile Include="XEngine\Lighting\Attenuation.cs" />
     <Compile Include="XEngine\Lighting\LightSource.cs" />
+    <Compile Include="XEngine\Lighting\SkyboxCycle.cs" />
     <Compile Include="XEngine\Resources\Textures.cs" />
     <Compile Include="XEngine\Scripting\XBehaviour.cs" />
     <Compile Include="XEngine\Shading\Color.cs" />

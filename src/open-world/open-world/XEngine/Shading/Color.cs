@@ -43,6 +43,10 @@ namespace XEngine.Shading
 		public Color(float r, float g, float b, float a) : this(new vec4(r, g, b, a)) { }
 		public Color(vec4 rgba) { vectorized = rgba; }
 
+		public static Color operator +(Color c1, Color c2) => new Color(c1.vectorized + c2.vectorized);
+		public static Color operator *(Color c, float v) => new Color(c.vectorized * v);
+		public static Color operator *(float v, Color c) => new Color(c.vectorized * v);
+
 		public static bool AreEqual(Color c1, Color c2) => c1.vectorized == c2.vectorized;
 	}
 }

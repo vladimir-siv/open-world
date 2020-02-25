@@ -32,6 +32,8 @@ namespace XEngine
 
 			XEngineContext.SkyboxShader = Shader.CreateInternal("skybox");
 
+			Time.Init();
+
 			SceneManager.LoadScene(SceneManager.MainSceneId);
 		}
 
@@ -66,6 +68,7 @@ namespace XEngine
 		public static void Draw()
 		{
 			Input.Update();
+			Time.Update();
 			SceneManager.CurrentScene._Draw();
 			Input.Late();
 		}

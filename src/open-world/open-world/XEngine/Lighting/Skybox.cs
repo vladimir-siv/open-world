@@ -3,11 +3,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 
 using SharpGL;
+using GlmNet;
 
 namespace XEngine.Lighting
 {
 	using XEngine.Core;
 	using XEngine.Shading;
+	using XEngine.Common;
 
 	public class Skybox : IDisposable
 	{
@@ -187,6 +189,12 @@ namespace XEngine.Lighting
 		private bool plain = true;
 		private uint id = 0;
 
+		private float rotation = 0.0f;
+		private mat4 transform = mat4.identity();
+		private float[] transform_cache = new float[16];
+
+		public float RotationSpeed { get; set; } = 1.0f;
+
 		public Color SkyColor { get; }
 
 		private Skybox(Color skycolor) { SkyColor = skycolor; }
@@ -196,17 +204,19 @@ namespace XEngine.Lighting
 			if (plain) return;
 			var gl = XEngineContext.Graphics;
 			var shader = XEngineContext.SkyboxShader;
-			shader.Use();
+
+			rotation += RotationSpeed * Time.DeltaTime / 1000.0f;
 
 			var camera = SceneManager.CurrentScene.MainCamera;
-			var project = camera.ViewToProjectData;
-			var view = camera.WorldToViewData;
+			transform = camera.WorldToView.copy_to(transform);
+			transform = quaternion.euler(transform, 0.0f, rotation, 0.0f);
+			transform_cache = transform.serialize(transform_cache);
+			transform_cache[12] = transform_cache[13] = transform_cache[14] = 0.0f;
 
-			view[12] = view[13] = view[14] = 0.0f;
-
+			shader.Use();
 			gl.BindTexture(OpenGL.GL_TEXTURE_CUBE_MAP, id);
-			gl.UniformMatrix4(shader.Project, 1, false, project);
-			gl.UniformMatrix4(shader.View, 1, false, view);
+			gl.UniformMatrix4(shader.Project, 1, false, camera.ViewToProjectData);
+			gl.UniformMatrix4(shader.View, 1, false, transform_cache);
 			shader.SetScalar("scale", scale);
 			shader.SetVec4("sky_color", SkyColor.r, SkyColor.g, SkyColor.b, SkyColor.a);
 

@@ -100,5 +100,28 @@ namespace XEngine.Core
 			WorldToView = glm.lookAt(Position, Position + ViewDirection, FlyDirection);
 			WorldToView.serialize(WorldToViewData);
 		}
+
+		public vec3 ScreenToWorld(vec2 screen, float zdistance = 1.0f) => Position + ScreenToWorldRay(screen) * zdistance;
+		public vec3 ScreenToWorldRay(vec2 screen)
+		{
+			var invViewToProject = glm.inverse(ViewToProject);
+			var invWorldToView = glm.inverse(WorldToView);
+
+			var clip = new vec4
+			(
+				2.0f * screen.x / XEngineContext.GLControl.Width - 1.0f,
+				1.0f - 2.0f * screen.y / XEngineContext.GLControl.Height,
+				-1.0f,
+				1.0f
+			);
+
+			var view = invViewToProject * clip;
+			view.z = -1.0f;
+			view.w = +0.0f;
+
+			var world = invWorldToView * view;
+
+			return world.to_vec3().normalize();
+		}
 	}
 }

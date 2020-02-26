@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using GlmNet;
 
 namespace XEngine.Common
@@ -40,6 +41,8 @@ namespace XEngine.Common
 			float l3 = 1.0f - l1 - l2;
 			return l1 * p1.y + l2 * p2.y + l3 * p3.y;
 		}
+
+		public static vec2 to_vec2(this Point point) => new vec2(point.X, point.Y);
 	}
 
 	public static class vector3

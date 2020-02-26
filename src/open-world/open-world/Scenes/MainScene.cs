@@ -51,7 +51,7 @@ namespace open_world
 
 			var Player = new GameObject("Player");
 			Player.AttachBehaviour(new PlayerController {  });
-			Player.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
+			Player.transform.position = new vec3(+0.0f, +0.0f, +0.0f);
 
 			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();

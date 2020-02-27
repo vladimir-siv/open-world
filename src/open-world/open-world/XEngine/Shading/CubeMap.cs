@@ -65,7 +65,8 @@ namespace XEngine.Shading
 
 			var gl = XEngineContext.Graphics;
 
-			gl.BindTexture(OpenGL.GL_TEXTURE_CUBE_MAP, TextureId);
+			Activate();
+			//gl.BindTexture(OpenGL.GL_TEXTURE_CUBE_MAP, TextureId);
 
 			for (var i = 0u; i < 6u; ++i)
 			{

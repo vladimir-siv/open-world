@@ -55,7 +55,8 @@ namespace XEngine.Shading
 				Width = value.Width;
 				Height = value.Height;
 
-				gl.BindTexture(OpenGL.GL_TEXTURE_2D, TextureId);
+				Activate();
+				//gl.BindTexture(OpenGL.GL_TEXTURE_2D, TextureId);
 
 				var bitmapData = value.LockBits
 				(

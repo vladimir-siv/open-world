@@ -19,7 +19,7 @@ namespace XEngine.Terrains
 		public static Terrain Generate(float length, uint tiles, HeightMap heightmap)
 		{
 			if (heightmap == null) throw new ArgumentNullException(nameof(heightmap));
-			var terrain = new Terrain(length, tiles, heightmap.Length - 1u);
+			var terrain = new Terrain(length, tiles, heightmap.Granularity);
 			terrain.Generate(heightmap);
 			terrain.Shape = new GeometricShape(new ShapeData(terrain.Vertices, terrain.Indices));
 			return terrain;

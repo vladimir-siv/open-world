@@ -7,6 +7,7 @@ using GlmNet;
 using XEngine;
 using XEngine.Core;
 using XEngine.Terrains;
+using XEngine.Common;
 
 namespace open_world
 {
@@ -31,9 +32,7 @@ namespace open_world
 
 			var path = Path.Combine(Environment.CurrentDirectory, $"..\\..\\Resources\\Maps\\{mapName}.generated.map");
 
-			var rnd = new Random();
-
-			float RndFloat(float from, float to) => from + (to - from) * (float)rnd.NextDouble();
+			float RndFloat(float from, float to) => from + (to - from) * (float)RNG.Double();
 
 			using (var stream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write))
 			{
@@ -41,7 +40,7 @@ namespace open_world
 				{
 					for (var i = 0; i < object_count; ++i)
 					{
-						var name = object_names[rnd.Next(object_names.Length)];
+						var name = object_names[RNG.Int(object_names.Length)];
 
 						var pos = new vec3
 						(

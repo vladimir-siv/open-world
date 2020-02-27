@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace XEngine.Common
 {
@@ -15,5 +16,13 @@ namespace XEngine.Common
 			if (@this.TryGetValue(key, out var value)) return value;
 			else return default;
 		}
+	}
+
+	public static class RNG
+	{
+		private static Random rng = new Random();
+
+		public static double Double() => rng.NextDouble();
+		public static int Int(int maxValue) => rng.Next(maxValue);
 	}
 }

@@ -17,8 +17,9 @@ namespace open_world
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 
 			var terrain = (Terrain)null;
-			using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
-			
+			//using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
+			terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(50u));
+
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
 			Crate.mesh.shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV };

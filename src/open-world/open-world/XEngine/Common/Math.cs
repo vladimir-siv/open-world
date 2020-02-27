@@ -139,5 +139,12 @@ namespace XEngine.Common
 		public static vec3 lerp(vec3 v1, vec3 v2, float a) => v1 * (1.0f - a) + v2 * a;
 		public static vec4 lerp(vec4 v1, vec4 v2, float a) => v1 * (1.0f - a) + v2 * a;
 		public static Color lerp(Color v1, Color v2, float a) => v1 * (1.0f - a) + v2 * a;
+
+		public static float cerp(float a, float b, float blend)
+		{
+			var theta = blend * Math.PI;
+			var f = (float)(1.0f - Math.Cos(theta)) * 0.5f;
+			return a * (1.0f - f) + b * f;
+		}
 	}
 }

@@ -130,6 +130,7 @@
     <Compile Include="XEngine\Structures\Pouch3L.cs" />
     <Compile Include="XEngine\Structures\Queue.cs" />
     <Compile Include="XEngine\Terrains\HeightMap.cs" />
+    <Compile Include="XEngine\Terrains\ProceduralHeightMap.cs" />
     <Compile Include="XEngine\Terrains\Terrain.cs" />
     <Compile Include="XEngine\Terrains\TextureHeightMap.cs" />
     <Compile Include="XEngine\XEngine.cs" />

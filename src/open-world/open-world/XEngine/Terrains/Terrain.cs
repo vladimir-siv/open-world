@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 
 using GlmNet;
 
@@ -17,11 +16,10 @@ namespace XEngine.Terrains
 			terrain.Shape = new GeometricShape(new ShapeData(terrain.Vertices, terrain.Indices));
 			return terrain;
 		}
-		public static Terrain Generate(float length, uint tiles, Bitmap heightmap, float heightfactor = 20.0f)
+		public static Terrain Generate(float length, uint tiles, HeightMap heightmap)
 		{
 			if (heightmap == null) throw new ArgumentNullException(nameof(heightmap));
-			if (heightmap.Width != heightmap.Height) throw new ArgumentException("Height map must be of equal dimensions.");
-			var terrain = new Terrain(length, tiles, (uint)heightmap.Width - 1u, heightfactor);
+			var terrain = new Terrain(length, tiles, heightmap.Length - 1u);
 			terrain.Generate(heightmap);
 			terrain.Shape = new GeometricShape(new ShapeData(terrain.Vertices, terrain.Indices));
 			return terrain;
@@ -30,30 +28,26 @@ namespace XEngine.Terrains
 		public float Length { get; }
 		public uint Tiles { get; }
 		public uint Granularity { get; }
-		public float HeightFactor { get; }
 
 		private vertex[] Vertices = null;
 		private int[] Indices = null;
 
 		public GeometricShape Shape { get; private set; }
 
-		private Terrain(float length, uint tiles, uint granularity, float heightfactor = 20.0f)
+		private Terrain(float length, uint tiles, uint granularity)
 		{
 			if (length <= 0.0f) throw new ArgumentException("Length must be positive.");
 			if (granularity == 0) throw new ArgumentException("Granularity must be positive.");
 			if (tiles == 0) throw new ArgumentException("Tiles must be positive.");
-			if (heightfactor < 0.0f) throw new ArgumentException("Height factor must be positive.");
-
+			
 			Length = length;
 			Granularity = granularity;
 			Tiles = tiles;
-			HeightFactor = heightfactor;
 		}
 
-		private void Generate(Bitmap heightmap = null)
+		private void Generate(HeightMap heightmap = null)
 		{
 			var vert_count = Granularity + 1u;
-			float h(uint x, uint z) => (heightmap?.GetPixel((int)x, (int)z).GetBrightness() - 0.5f) * 2.0f ?? 0.0f;
 			int index(uint x, uint z) => (int)(x + z * vert_count);
 
 			Vertices = new vertex[vert_count * vert_count];
@@ -69,7 +63,7 @@ namespace XEngine.Terrains
 				{
 					Vertices[index(x, z)] = new vertex
 					(
-						new vec3(x * delta_xz - Length / 2.0f, h(x, z) * HeightFactor, z * delta_xz - Length / 2.0f),
+						new vec3(x * delta_xz - Length / 2.0f, heightmap?.GetHeight(x, z) ?? 0.0f, z * delta_xz - Length / 2.0f),
 						color,
 						vector3.up,
 						new vec2(x * delta_uv, z * delta_uv)

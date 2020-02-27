@@ -1,7 +1,6 @@
 ﻿using System;
 using GlmNet;
 using XEngine.Core;
-using XEngine.Resources;
 using XEngine.Terrains;
 using XEngine.Lighting;
 using XEngine.Shading;
@@ -18,7 +17,7 @@ namespace open_world
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 
 			var terrain = (Terrain)null;
-			using (var heightmap = Resource.LoadCustomTexture("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap, 20.0f);
+			using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
 			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();

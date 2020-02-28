@@ -48,7 +48,7 @@ namespace open_world
 			Ground.transform.position = new vec3(0.0f, -20.0f, 0.0f);
 			Ground.transform.scale = new vec3(2.0f, 2.0f, 2.0f);
 
-			AddLight(light);
+			Add(light);
 			MainCamera.Following = User;
 		}
 	}

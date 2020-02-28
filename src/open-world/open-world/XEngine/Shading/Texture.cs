@@ -7,7 +7,7 @@ namespace XEngine.Shading
 {
 	public abstract class Texture : IDisposable
 	{
-		private static Dictionary<uint, Texture> BindingCache = new Dictionary<uint, Texture>();
+		private static readonly Dictionary<uint, Texture> BindingCache = new Dictionary<uint, Texture>();
 		internal static void InvalidateBindingCache() => BindingCache.Clear();
 		internal static void InvalidateBinding(uint i) { if (BindingCache.ContainsKey(i)) BindingCache.Remove(i); }
 
@@ -21,6 +21,10 @@ namespace XEngine.Shading
 		{
 			var gl = XEngineContext.Graphics;
 			gl.GenTextures(1, glTextureArray);
+		}
+		protected Texture(uint id)
+		{
+			glTextureArray[0] = id;
 		}
 
 		public void Activate(uint index = 0u)

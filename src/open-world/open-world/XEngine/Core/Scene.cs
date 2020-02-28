@@ -80,13 +80,14 @@ namespace XEngine.Core
 		public static Scene Resolve(string sceneId) => SceneCache[sceneId];
 
 		public string SceneId { get; internal set; } = string.Empty;
-		private bool Initialized = false;
+		protected bool Initialized { get; private set; } = false;
+		protected uint DrawCalls { get; set; } = 0u;
 		private DateTime InitTime;
 		public float ElapsedTime => (float)(DateTime.Now - InitTime).TotalMilliseconds;
 
 		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT;
 		private readonly Algorithms Algs = new Algorithms();
-
+		
 		public Camera MainCamera { get; private set; } = new Camera();
 		internal int CameraState { get; private set; }
 
@@ -130,7 +131,7 @@ namespace XEngine.Core
 		
 		internal readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
 
-		public void AddLight(LightSource lightSource)
+		public void Add(LightSource lightSource)
 		{
 			Lights.AddLast(lightSource);
 		}
@@ -139,7 +140,7 @@ namespace XEngine.Core
 			Lights.Clear();
 		}
 
-		internal void Add(GameObject gameObject)
+		public void Add(GameObject gameObject)
 		{
 			GameObjects.AddLast(gameObject);
 			
@@ -149,12 +150,18 @@ namespace XEngine.Core
 				gameObject.Start();
 			}
 		}
-		public void Clear()
+		public void ClearGameObjects()
 		{
 			foreach (var gameObject in GameObjects) gameObject.Dispose();
 			GameObjects.Clear();
 		}
 
+		public void Clear()
+		{
+			ClearGameObjects();
+			ClearLights();
+		}
+		
 		private void Invalidate()
 		{
 			var gl = XEngineContext.Graphics;
@@ -188,12 +195,12 @@ namespace XEngine.Core
 			XEngineState.Reset();
 			Invalidate();
 			Init();
-			if (Lights.Count == 0) AddLight(LightSource.Sun);
+			if (Lights.Count == 0) Add(LightSource.Sun);
 			Sky.BeginCycle();
 			InitTime = DateTime.Now;
+			Initialized = true;
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
-			Initialized = true;
 		}
 		internal void _Draw()
 		{
@@ -203,20 +210,18 @@ namespace XEngine.Core
 			foreach (var gameObject in GameObjects) gameObject.Late();
 			var gl = XEngineContext.Graphics;
 			if (ClearStrategy != 0u) gl.Clear(ClearStrategy);
-			if (FrameBuffer.IsDefaultBound) gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
 			Draw();
 		}
 		internal void _Exit()
 		{
 			if (!Initialized) return;
-			Initialized = false;
 			Clear();
-			ClearLights();
 			Exit();
+			Initialized = false;
 		}
 
 		protected virtual void Init() { }
-		protected virtual void Draw() { Prepare(); SyncScene(); DrawScene(); }
+		protected virtual void Draw() { DrawCalls = 1u; Prepare(); SyncScene(); Viewport(); DrawScene(); }
 		protected virtual void Exit() { }
 
 		protected void Prepare()
@@ -240,15 +245,30 @@ namespace XEngine.Core
 			}
 
 			MainCamera.Adjust(); ++CameraState;
+
+			Sky.Update();
 			Algs.UpdateLights(Lights, MainCamera.Position, ActiveLights);
+		}
+		protected void Viewport()
+		{
+			if (FrameBuffer.IsDefaultBound)
+			{
+				var gl = XEngineContext.Graphics;
+				gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
+			}
 		}
 		protected void DrawScene()
 		{
-			Sky.Draw();
-
-			foreach (var gameObject in Algs.DrawableObjectPouch.Retrieve())
+			if (DrawCalls > 0u)
 			{
-				gameObject.Draw();
+				--DrawCalls;
+
+				Sky.Draw();
+
+				foreach (var gameObject in Algs.DrawableObjectPouch.Redeem(DrawCalls == 0u))
+				{
+					gameObject.Draw();
+				}
 			}
 		}
 	}

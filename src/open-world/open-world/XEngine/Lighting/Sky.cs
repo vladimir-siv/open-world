@@ -102,8 +102,9 @@ namespace XEngine.Lighting
 			Cycle.CycleMode = false;
 		}
 
-		private void Update()
+		internal void Update()
 		{
+			if (!Cycle.CycleMode) return;
 			if (TransitionSpeed < 0.0f) throw new ApplicationException("Transition speed cannot be negative.");
 			var deltaTime = Time.DeltaTime / 1000.0f;
 			Cycle.Rotation += RotationSpeed * deltaTime;
@@ -120,7 +121,6 @@ namespace XEngine.Lighting
 		internal void Draw()
 		{
 			if (!Cycle.CycleMode) return;
-			Update();
 			Cycle.Draw();
 		}
 	}

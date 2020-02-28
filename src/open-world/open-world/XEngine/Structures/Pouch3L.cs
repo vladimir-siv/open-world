@@ -59,8 +59,23 @@ namespace XEngine.Structures
 			RandomAccessL1.Add(key1, Head);
 			Keys.Add(Head, (key1, null, null));
 		}
-
 		public IEnumerable<TValue> Retrieve()
+		{
+			for (var i1 = Head; i1 != null; i1 = i1.Next)
+			{
+				for (var i2 = (Node<object>)i1.Value; i2 != null; i2 = i2.Next)
+				{
+					for (var i3 = (Node<object>)i2.Value; i3 != null; i3 = i3.Next)
+					{
+						for (var i4 = (Node<object>)i3.Value; i4 != null; i4 = i4.Next)
+						{
+							yield return (TValue)i4.Value;
+						}
+					}
+				}
+			}
+		}
+		public IEnumerable<TValue> Recover()
 		{
 			var temp = (Node<object>)null;
 			var key = ((TKey1)null, (TKey2)null, (TKey3)null);
@@ -110,5 +125,6 @@ namespace XEngine.Structures
 			Head = null;
 			Count = 0;
 		}
+		public IEnumerable<TValue> Redeem(bool last) => last ? Recover() : Retrieve();
 	}
 }

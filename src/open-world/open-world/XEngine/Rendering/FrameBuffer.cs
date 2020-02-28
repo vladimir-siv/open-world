@@ -43,8 +43,10 @@ namespace XEngine.Rendering
 			gl.DrawBuffer(OpenGL.GL_COLOR_ATTACHMENT0_EXT);
 
 			if (attachments.HasFlag(FBOAttachment.TextureAttachment)) AddTextureAttachment();
-			if (attachments.HasFlag(FBOAttachment.DepthTextureAttachment)) AddDepthTextureAttachment();
-			if (attachments.HasFlag(FBOAttachment.DepthBufferAttachment)) AddDepthBufferAttachment();
+			//if (attachments.HasFlag(FBOAttachment.DepthTextureAttachment)) AddDepthTextureAttachment();
+			//if (attachments.HasFlag(FBOAttachment.DepthBufferAttachment)) AddDepthBufferAttachment();
+
+			gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, 0u);
 		}
 
 		private void AddTextureAttachment()
@@ -78,9 +80,9 @@ namespace XEngine.Rendering
 		public void Bind()
 		{
 			var gl = XEngineContext.Graphics;
-			
+
 			Texture.InvalidateBinding(0u);
-			gl.ActiveTexture(0u);
+			gl.ActiveTexture(OpenGL.GL_TEXTURE0 + 0u);
 			gl.BindTexture(OpenGL.GL_TEXTURE_2D, 0u);
 
 			if (Id == CurrentBound) return;

@@ -67,12 +67,14 @@ namespace XEngine.Core
 
 		private readonly LinkedList<XBehaviour> Scripts = new LinkedList<XBehaviour>();
 
-		public GameObject(string name, params XBehaviour[] scripts)
+		public static GameObject CreateUnlinked(string name, params XBehaviour[] scripts) => new GameObject(name, false, scripts);
+		public GameObject(string name, params XBehaviour[] scripts) : this(name, true, scripts) { }
+		internal GameObject(string name, bool add, params XBehaviour[] scripts)
 		{
 			if (string.IsNullOrEmpty(name)) throw new ArgumentException("GameObject name cannot be null or empty.");
 			this.name = name;
 			foreach (var script in scripts) AttachBehaviour(script);
-			SceneManager.CurrentScene.Add(this);
+			if (add) SceneManager.CurrentScene.Add(this);
 		}
 
 		public void AttachBehaviour(XBehaviour script)

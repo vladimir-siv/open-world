@@ -44,6 +44,7 @@ namespace open_world
 
 			if (Input.MouseButtonsPressed(MouseButtons.Left)) UI.Status.Text = MainCamera.ScreenToWorld(Input.LocalMousePosition).ToString();
 			if (Input.MouseButtonsPressed(MouseButtons.Right)) UI.Status.Text = gameObject.transform.position.ToString();
+			if (Input.IsKeyDown(Key.T)) UI.Status.Text = CurrentScene.ElapsedTime.ToString();
 		}
 	}
 }

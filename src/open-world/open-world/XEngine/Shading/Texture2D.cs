@@ -37,9 +37,10 @@ namespace XEngine.Shading
 			return texture;
 		}
 
+		internal static Texture2D Yield(uint id) => new Texture2D(id);
 		internal static Texture2D Yield(string name = null)
 		{
-			var name_key = name.ToLower();
+			var name_key = name?.ToLower();
 
 			if (name_key != null)
 			{
@@ -63,6 +64,7 @@ namespace XEngine.Shading
 		public int Height { get; private set; } = 0;
 
 		private Texture2D() { }
+		private Texture2D(uint id) : base(id) { }
 
 		internal void InitEmpty(int width, int height)
 		{
@@ -77,17 +79,17 @@ namespace XEngine.Shading
 			(
 				OpenGL.GL_TEXTURE_2D,
 				0,
-				OpenGL.GL_RGBA, // maybe without alpha channel?
+				OpenGL.GL_RGB,
 				Width,
 				Height,
 				0,
-				OpenGL.GL_RGBA, // maybe without alpha channel?
+				OpenGL.GL_RGB,
 				OpenGL.GL_UNSIGNED_BYTE,
 				IntPtr.Zero
 			);
 
-			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
-			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, new uint[] { OpenGL.GL_LINEAR });
+			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, new uint[] { OpenGL.GL_LINEAR });
 		}
 
 		internal void InitDepth(int width, int height)
@@ -112,8 +114,8 @@ namespace XEngine.Shading
 				IntPtr.Zero
 			);
 
-			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
-			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, new uint[] { OpenGL.GL_LINEAR });
+			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, new uint[] { OpenGL.GL_LINEAR });
 		}
 
 		private Bitmap Image

@@ -3,6 +3,7 @@ using GlmNet;
 using XEngine.Core;
 using XEngine.Terrains;
 using XEngine.Lighting;
+using XEngine.Rendering;
 using XEngine.Shading;
 using XEngine.Shapes;
 
@@ -11,9 +12,12 @@ namespace open_world
 	[GenerateScene("OpenWorld.MainScene", isMain: true)]
 	public class MainScene : Scene
 	{
+		private FrameBuffer TestFBO = null;
+		private GameObject RenderDisplayTest = null;
+
 		protected override void Init()
 		{
-			AddLight(LightSource.Sun);
+			Add(LightSource.Sun);
 
 			Sky.Cycle.Add(Skybox.Find("Daylight", Color.FromBytes(216, 229, 235)));
 			//Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
@@ -146,12 +150,12 @@ namespace open_world
 				if (i % 2 == 0)
 				{
 					Lantern.Instantiate(leos[i]);
-					AddLight(LightSource.Point(leos[i] + lanternDelta, Color.White, 10.0f));
+					Add(LightSource.Point(leos[i] + lanternDelta, Color.White, 10.0f));
 				}
 				else
 				{
 					Lamp.Instantiate(leos[i]);
-					AddLight(LightSource.Point(leos[i] + lampDelta, Color.White, 10.0f));
+					Add(LightSource.Point(leos[i] + lampDelta, Color.White, 10.0f));
 				}
 			}
 			
@@ -217,6 +221,54 @@ namespace open_world
 			}
 
 			MainCamera.Following = Player;
+		}
+
+		protected override void Draw()
+		{
+			if (TestFBO == null)
+			{
+				TestFBO = new FrameBuffer
+				(
+					256, 256,
+					FBOAttachment.TextureAttachment
+					|
+					FBOAttachment.DepthBufferAttachment
+				);
+			}
+
+			if (RenderDisplayTest == null)
+			{
+				RenderDisplayTest = GameObject.CreateUnlinked("TestObject");
+				RenderDisplayTest.mesh = new Mesh();
+				RenderDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
+				RenderDisplayTest.material = new Material(Shader.Find("unlit_texture"));
+				RenderDisplayTest.material.Set("material_texture", TestFBO.TextureAttachment);
+				RenderDisplayTest.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
+			}
+
+			DrawCalls = 2u;
+
+			Prepare();
+			SyncScene();
+
+			TestFBO.Bind();
+			DrawScene();
+			TestFBO.Unbind();
+
+			Viewport();
+			DrawScene();
+
+			RenderDisplayTest?.Sync();
+			RenderDisplayTest?.Draw();
+		}
+
+		protected override void Exit()
+		{
+			TestFBO?.Dispose();
+			TestFBO = null;
+
+			RenderDisplayTest?.Dispose();
+			RenderDisplayTest = null;
 		}
 	}
 }

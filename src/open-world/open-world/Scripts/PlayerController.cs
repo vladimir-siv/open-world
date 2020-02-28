@@ -40,7 +40,7 @@ namespace open_world
 			var directions = gameObject.transform.WorldSpaceUnits;
 			gameObject.transform.position += (forward * directions.forward + right * directions.right + up * vector3.up).normalize() * MovementSpeed * shift;
 			
-			if (Input.IsKeyDown(Key.R)) gameObject.transform = new Transform(vector3.zero, vector3.zero, vector3.one);
+			if (Input.IsKeyDown(Key.R)) gameObject.transform = new Transform(new vec3(+0.0f, +10.0f, +0.0f), vector3.zero, vector3.one);
 		}
 	}
 }

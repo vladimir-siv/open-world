@@ -42,27 +42,33 @@ namespace open_world
 					{
 						var name = object_names[RNG.Int(object_names.Length)];
 
-						var pos = new vec3
-						(
-							RndFloat(pos_from.x, pos_to.x),
-							RndFloat(pos_from.y, pos_to.y),
-							RndFloat(pos_from.z, pos_to.z)
-						);
-						var rot = new vec3
-						(
-							RndFloat(rot_from.x, rot_to.x),
-							RndFloat(rot_from.y, rot_to.y),
-							RndFloat(rot_from.z, rot_to.z)
-						);
-						var scl = new vec3
-						(
-							RndFloat(scl_from.x, scl_to.x),
-							RndFloat(scl_from.y, scl_to.y),
-							RndFloat(scl_from.z, scl_to.z)
-						);
+						while (true)
+						{
+							var pos = new vec3
+							(
+								RndFloat(pos_from.x, pos_to.x),
+								RndFloat(pos_from.y, pos_to.y),
+								RndFloat(pos_from.z, pos_to.z)
+							);
+							var rot = new vec3
+							(
+								RndFloat(rot_from.x, rot_to.x),
+								RndFloat(rot_from.y, rot_to.y),
+								RndFloat(rot_from.z, rot_to.z)
+							);
+							var scl = new vec3
+							(
+								RndFloat(scl_from.x, scl_to.x),
+								RndFloat(scl_from.y, scl_to.y),
+								RndFloat(scl_from.z, scl_to.z)
+							);
 
-						pos.y += (name.StartsWith("crate") ? 0.5f : 0.0f) + terrain.CalculateLocalHeight(pos.x - terrain_position.x, pos.z - terrain_position.z);
-						writer.WriteLine($"{name}:{pos.x},{pos.y},{pos.z}:{rot.x},{rot.y},{rot.z}:{scl.x},{scl.y},{scl.z}");
+							var height = terrain.CalculateLocalHeight(pos.x - terrain_position.x, pos.z - terrain_position.z);
+							if (height < 0.1) continue;
+							pos.y += height;
+							writer.WriteLine($"{name}:{pos.x},{pos.y},{pos.z}:{rot.x},{rot.y},{rot.z}:{scl.x},{scl.y},{scl.z}");
+							break;
+						}
 					}
 				}
 			}

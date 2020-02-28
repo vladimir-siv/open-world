@@ -85,7 +85,7 @@ namespace XEngine.Lighting
 
 		public float RotationSpeed { get; set; } = 1.0f;
 		public float TransitionSpeed { get; set; } = 1.0f;
-		public float SkyboxDuration { get; set; } = 2.0f;
+		public float SkyboxDuration { get; set; } = 10.0f;
 		private float RemainingDuration = 0.0f;
 
 		public void BeginCycle()

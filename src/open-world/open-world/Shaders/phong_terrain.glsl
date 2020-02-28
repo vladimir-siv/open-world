@@ -87,7 +87,7 @@
 	void main(void)
 	{
 		vec4 weights = texture(terrain_map, uv / tiles);
-		vec4 main_texture_c = texture(main_texture, uv) * (1.0f - (weights.r + weights.g + weights.b));
+		vec4 main_texture_c = texture(main_texture, uv) * (1.0f - weights.a);
 		vec4 r_texture_c = texture(r_texture, uv) * weights.r;
 		vec4 g_texture_c = texture(g_texture, uv) * weights.g;
 		vec4 b_texture_c = texture(b_texture, uv) * weights.b;

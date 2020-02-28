@@ -9,7 +9,7 @@ namespace XEngine.Terrains
 		private const int W1 = 49632;
 		private const int W2 = 325176;
 
-		public float Amplitude { get; set; } = 50.0f;
+		public float Amplitude { get; set; } = 75.0f;
 		public uint Octaves { get; set; } = 3u;
 		public float Roughness { get; set; } = 0.25f;
 

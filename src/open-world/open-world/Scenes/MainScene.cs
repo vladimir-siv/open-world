@@ -18,7 +18,7 @@ namespace open_world
 
 			var terrain = (Terrain)null;
 			//using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
-			terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(50u));
+			terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(100u, 8357));
 
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -29,19 +29,29 @@ namespace open_world
 			Crate.material.Set("use_simulated_light", false);
 			Crate.material.Set("material_texture", Texture2D.FindBMP("Objects/crate"));
 
-			var Pine = new Prefab("Pine");
-			Pine.mesh = new Mesh();
-			Pine.mesh.LoadModel("pine", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
-			Pine.material = new Material(Shader.Find("phong_texture"));
-			Pine.material.Set("dampening", 10.0f);
-			Pine.material.Set("reflectivity", 0.1f);
-			Pine.material.Set("use_simulated_light", false);
-			Pine.material.Set("material_texture", Texture2D.FindPNG("Plants/pine"), 0u, 9u);
-			Pine.material.CullFace = false;
+			var Tree = new Prefab("Tree");
+			Tree.mesh = new Mesh();
+			Tree.mesh.LoadModel("tree", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Tree.material = new Material(Shader.Find("phong_texture"));
+			Tree.material.Set("dampening", 10.0f);
+			Tree.material.Set("reflectivity", 0.1f);
+			Tree.material.Set("use_simulated_light", false);
+			Tree.material.Set("material_texture", Texture2D.FindPNG("Plants/tree"));
+			Tree.material.CullFace = false;
+
+			var Cherry = new Prefab("Cherry");
+			Cherry.mesh = new Mesh();
+			Cherry.mesh.LoadModel("cherry", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Cherry.material = new Material(Shader.Find("phong_texture"));
+			Cherry.material.Set("dampening", 10.0f);
+			Cherry.material.Set("reflectivity", 0.1f);
+			Cherry.material.Set("use_simulated_light", false);
+			Cherry.material.Set("material_texture", Texture2D.FindPNG("Plants/cherry"));
+			Cherry.material.CullFace = false;
 
 			var Fern = new Prefab("Fern");
 			Fern.mesh = new Mesh();
-			Fern.mesh.LoadModel("fern", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
+			Fern.mesh.LoadModel("fern", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
 			Fern.material = new Material(Shader.Find("phong_texture"));
 			Fern.material.Set("dampening", 10.0f);
 			Fern.material.Set("reflectivity", 0.1f);
@@ -49,9 +59,27 @@ namespace open_world
 			Fern.material.Set("material_texture", Texture2D.FindPNG("Plants/atlas_fern"), 0u, 4u);
 			Fern.material.CullFace = false;
 
+			var Boulder = new Prefab("Boulder");
+			Boulder.mesh = new Mesh();
+			Boulder.mesh.LoadModel("boulder", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Boulder.material = new Material(Shader.Find("phong_texture"));
+			Boulder.material.Set("dampening", 10.0f);
+			Boulder.material.Set("reflectivity", 0.1f);
+			Boulder.material.Set("use_simulated_light", false);
+			Boulder.material.Set("material_texture", Texture2D.FindPNG("Objects/boulder"));
+
+			var Barrel = new Prefab("Barrel");
+			Barrel.mesh = new Mesh();
+			Barrel.mesh.LoadModel("barrel", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Barrel.material = new Material(Shader.Find("phong_texture"));
+			Barrel.material.Set("dampening", 10.0f);
+			Barrel.material.Set("reflectivity", 0.1f);
+			Barrel.material.Set("use_simulated_light", false);
+			Barrel.material.Set("material_texture", Texture2D.FindPNG("Objects/barrel"));
+
 			var Player = new GameObject("Player");
 			Player.AttachBehaviour(new PlayerController {  });
-			Player.transform.position = new vec3(+0.0f, +0.0f, +0.0f);
+			Player.transform.position = new vec3(+0.0f, +10.0f, +0.0f);
 
 			var Ground = new GameObject("Ground");
 			Ground.mesh = new Mesh();
@@ -66,23 +94,71 @@ namespace open_world
 			Ground.material.Set("b_texture", Texture2D.FindPNG("Ground/ground_path"));
 			Ground.material.Set("terrain_map", Texture2D.FindPNG("Ground/terrain"));
 
+			var Water = new GameObject("Water");
+			Water.mesh = new Mesh();
+			Water.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION };
+			Water.material = new Material(Shader.Find("unlit"));
+			Water.material.Set("material_color", Color.FromBytes(66, 135, 245));
+			Water.transform.scale = new vec3(25.0f, 25.0f, 25.0f);
+
+			/*
+			Map.Generate
+			(
+				"field",
+				terrain,
+				Ground.transform.position,
+				new vec3(-terrain.Length * 0.45f, 0.0f, -terrain.Length * 0.45f),
+				new vec3(+terrain.Length * 0.45f, 0.0f, +terrain.Length * 0.45f),
+				new vec3(0.0f, 0.0f, 0.0f),
+				new vec3(0.0f, 360.0f, 0.0f),
+				XEngine.Common.vector3.one,
+				XEngine.Common.vector3.one,
+				500,
+				"crate0",
+				"tree0",
+				"cherry0",
+				"fern0", "fern1", "fern2", "fern3",
+				"boulder0",
+				"barrel0"
+			);
+			//*/
+
 			using (var map = new Map("Maps/field"))
 			{
 				while (map.Read(out var descriptor))
 				{
 					var atlas_index = Convert.ToUInt32(descriptor.name[descriptor.name.Length - 1] - '0');
-					var obj = (GameObject)null;
+					var transform = descriptor.transform;
 
 					switch (descriptor.name.Remove(descriptor.name.Length - 1))
 					{
-						case "crate": obj = Crate.Instantiate(descriptor.transform); break;
-						case "pine": obj = Pine.Instantiate(descriptor.transform); break;
-						case "fern": obj = Fern.Instantiate(descriptor.transform); break;
+						case "crate":
+							transform.position.y += 1.5f;
+							transform.scale = new vec3(3.0f, 3.0f, 3.0f);
+							Crate.Instantiate(transform);
+							break;
+						case "tree":
+							transform.scale = new vec3(+5.0f, +5.0f, +5.0f);
+							Tree.Instantiate(transform);
+							break;
+						case "cherry":
+							transform.scale = new vec3(+5.0f, +5.0f, +5.0f);
+							Cherry.Instantiate(transform);
+							break;
+						case "fern":
+							var obj = Fern.Instantiate(transform);
+							obj.properties = new ShaderProperties();
+							obj.properties.SetAtlasIndex("material_texture", atlas_index);
+							break;
+						case "boulder":
+							Boulder.Instantiate(transform);
+							break;
+						case "barrel":
+							transform.scale = new vec3(+10.0f, +10.0f, +10.0f);
+							Barrel.Instantiate(transform);
+							break;
 						default: break;
 					}
-
-					obj.properties = new ShaderProperties();
-					obj.properties.SetAtlasIndex("material_texture", atlas_index);
 				}
 			}
 

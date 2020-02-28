@@ -36,13 +36,18 @@
 			this.cbMode3 = new System.Windows.Forms.CheckBox();
 			this.cbMode2 = new System.Windows.Forms.CheckBox();
 			this.cbMode1 = new System.Windows.Forms.CheckBox();
+			this.pnlStatus = new System.Windows.Forms.Panel();
+			this.lblStatus = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.OpenGLControl)).BeginInit();
 			this.pnlUI.SuspendLayout();
+			this.pnlStatus.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// OpenGLControl
 			// 
-			this.OpenGLControl.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.OpenGLControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.OpenGLControl.DrawFPS = false;
 			this.OpenGLControl.FrameRate = 60;
 			this.OpenGLControl.Location = new System.Drawing.Point(0, 25);
@@ -51,7 +56,7 @@
 			this.OpenGLControl.RenderContextType = SharpGL.RenderContextType.NativeWindow;
 			this.OpenGLControl.RenderTrigger = SharpGL.RenderTrigger.TimerBased;
 			this.OpenGLControl.Size = new System.Drawing.Size(800, 600);
-			this.OpenGLControl.TabIndex = 0;
+			this.OpenGLControl.TabIndex = 1;
 			this.OpenGLControl.OpenGLInitialized += new System.EventHandler(this.OpenGLControl_OpenGLInitialized);
 			this.OpenGLControl.OpenGLDraw += new SharpGL.RenderEventHandler(this.OpenGLControl_OpenGLDraw);
 			// 
@@ -67,7 +72,7 @@
 			this.pnlUI.Location = new System.Drawing.Point(0, 0);
 			this.pnlUI.Name = "pnlUI";
 			this.pnlUI.Size = new System.Drawing.Size(800, 25);
-			this.pnlUI.TabIndex = 1;
+			this.pnlUI.TabIndex = 0;
 			// 
 			// btnPrevScene
 			// 
@@ -133,11 +138,30 @@
 			this.cbMode1.Text = "Mode1";
 			this.cbMode1.UseVisualStyleBackColor = true;
 			// 
+			// pnlStatus
+			// 
+			this.pnlStatus.Controls.Add(this.lblStatus);
+			this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.pnlStatus.Location = new System.Drawing.Point(0, 625);
+			this.pnlStatus.Name = "pnlStatus";
+			this.pnlStatus.Size = new System.Drawing.Size(800, 25);
+			this.pnlStatus.TabIndex = 2;
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.AutoSize = true;
+			this.lblStatus.Location = new System.Drawing.Point(25, 6);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(37, 13);
+			this.lblStatus.TabIndex = 0;
+			this.lblStatus.Text = "Status";
+			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(800, 625);
+			this.ClientSize = new System.Drawing.Size(800, 650);
+			this.Controls.Add(this.pnlStatus);
 			this.Controls.Add(this.pnlUI);
 			this.Controls.Add(this.OpenGLControl);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -150,6 +174,8 @@
 			((System.ComponentModel.ISupportInitialize)(this.OpenGLControl)).EndInit();
 			this.pnlUI.ResumeLayout(false);
 			this.pnlUI.PerformLayout();
+			this.pnlStatus.ResumeLayout(false);
+			this.pnlStatus.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -164,6 +190,8 @@
 		internal System.Windows.Forms.CheckBox cbMode4;
 		internal System.Windows.Forms.Button btnPrevScene;
 		internal System.Windows.Forms.Button btnNextScene;
+		private System.Windows.Forms.Panel pnlStatus;
+		internal System.Windows.Forms.Label lblStatus;
 	}
 }
 

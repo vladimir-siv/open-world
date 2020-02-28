@@ -13,6 +13,8 @@ namespace open_world
 	{
 		protected override void Init()
 		{
+			AddLight(LightSource.Sun);
+
 			Sky.Cycle.Add(Skybox.Find("Daylight", Color.FromBytes(216, 229, 235)));
 			//Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
@@ -79,6 +81,26 @@ namespace open_world
 			Barrel.material.Set("use_simulated_light", false);
 			Barrel.material.Set("material_texture", Texture2D.FindPNG("Objects/barrel"));
 
+			var Lantern = new Prefab("Lantern");
+			Lantern.mesh = new Mesh();
+			Lantern.mesh.LoadModel("lantern", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Lantern.material = new Material(Shader.Find("phong_texture_light_source"));
+			Lantern.material.Set("dampening", 10.0f);
+			Lantern.material.Set("reflectivity", 0.5f);
+			Lantern.material.Set("use_simulated_light", false);
+			Lantern.material.Set("material_texture", Texture2D.FindPNG("Objects/lantern"));
+			Lantern.material.Set("brightness_map", Texture2D.FindPNG("Maps/lantern"));
+
+			var Lamp = new Prefab("Lamp");
+			Lamp.mesh = new Mesh();
+			Lamp.mesh.LoadModel("lamp", VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV).Wait();
+			Lamp.material = new Material(Shader.Find("phong_texture_light_source"));
+			Lamp.material.Set("dampening", 10.0f);
+			Lamp.material.Set("reflectivity", 0.5f);
+			Lamp.material.Set("use_simulated_light", false);
+			Lamp.material.Set("material_texture", Texture2D.FindPNG("Objects/lamp"));
+			Lamp.material.Set("brightness_map", Texture2D.FindPNG("Objects/lamp"));
+
 			var Lighting = new GameObject("Lighting");
 			Lighting.AttachBehaviour(new LightingController { });
 
@@ -104,6 +126,34 @@ namespace open_world
 			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION);
 			Water.material = new Material(Shader.Find("water"));
 			Water.material.Set("material_color", Color.FromBytes(66, 135, 245));
+
+			var leos = new[]
+			{
+				new vec3(+66.65484f, +20.54087f, +14.08892f),
+				new vec3(-70.22906f, +18.10966f, +24.74698f),
+				new vec3(-49.59372f, +24.86368f, -92.01048f),
+				new vec3(+2.849623f, +18.29142f, +44.42444f),
+				new vec3(-51.86799f, +23.97442f, +127.3762f),
+			};
+
+			var lanternDelta = new vec3(0.6468048f, 12.84496f, -5.352559f);
+			var lampDelta = new vec3(0.0f, 11.55653f, 0.0f);
+
+			for (var i = 0; i < leos.Length; ++i)
+			{
+				leos[i].y = terrain.CalculateLocalHeight(leos[i].x, leos[i].z);
+				
+				if (i % 2 == 0)
+				{
+					Lantern.Instantiate(leos[i]);
+					AddLight(LightSource.Point(leos[i] + lanternDelta, Color.White, 10.0f));
+				}
+				else
+				{
+					Lamp.Instantiate(leos[i]);
+					AddLight(LightSource.Point(leos[i] + lampDelta, Color.White, 10.0f));
+				}
+			}
 			
 			/*
 			Map.Generate

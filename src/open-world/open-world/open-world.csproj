@@ -170,6 +170,7 @@
     <EmbeddedResource Include="Resources\Models\pine.obj" />
     <EmbeddedResource Include="XEngine\BuiltIn\Shaders\skybox.glsl" />
     <EmbeddedResource Include="Shaders\water.glsl" />
+    <EmbeddedResource Include="Shaders\phong_texture_light_source.glsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

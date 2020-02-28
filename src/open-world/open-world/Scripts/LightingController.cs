@@ -37,8 +37,6 @@ namespace open_world
 			var sky = CurrentScene.Sky;
 			var current_time = (CurrentScene.ElapsedTime / 1000.0f) % day_duration;
 
-
-
 			if (dusk <= current_time && current_time <= midnight)
 			{
 				var k = (current_time - dusk) / (midnight - dusk);

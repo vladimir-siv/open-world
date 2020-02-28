@@ -3,6 +3,7 @@ using XEngine.Core;
 
 using Button = System.Windows.Forms.Button;
 using CheckBox = System.Windows.Forms.CheckBox;
+using Label = System.Windows.Forms.Label;
 
 namespace open_world
 {
@@ -15,6 +16,7 @@ namespace open_world
 		public static CheckBox Mode2 { get; private set; } = null;
 		public static CheckBox Mode3 { get; private set; } = null;
 		public static CheckBox Mode4 { get; private set; } = null;
+		public static Label Status { get; private set; } = null;
 
 		private static void Init()
 		{
@@ -25,6 +27,7 @@ namespace open_world
 			Mode2 = MainForm.cbMode2;
 			Mode3 = MainForm.cbMode3;
 			Mode4 = MainForm.cbMode4;
+			Status = MainForm.lblStatus;
 			SceneManager.SceneChanged += OnSceneChanged;
 		}
 
@@ -36,6 +39,8 @@ namespace open_world
 			MainForm.cbMode2.Checked = false;
 			MainForm.cbMode3.Checked = false;
 			MainForm.cbMode4.Checked = false;
+
+			Status.Text = "Status";
 
 			if (current.SceneId == "OpenWorld.MainScene")
 			{

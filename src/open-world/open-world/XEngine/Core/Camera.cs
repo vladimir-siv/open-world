@@ -35,6 +35,8 @@ namespace XEngine.Core
 
 		private mat4 transform = mat4.identity();
 		private mat4 rotate = mat4.identity();
+		private mat4 reflected_transform = mat4.identity();
+		private mat4 reflected_rotate = mat4.identity();
 
 		public Camera()
 		{
@@ -98,6 +100,31 @@ namespace XEngine.Core
 			StrafeDirection = (rotate * vector4.right).to_vec3();
 			FlyDirection = (rotate * vector4.up).to_vec3();
 
+			WorldToView = glm.lookAt(Position, Position + ViewDirection, FlyDirection);
+			WorldToView.serialize(WorldToViewData);
+		}
+		public void Reflect(float height = 0.0f)
+		{
+			var position = Position;
+			position.y -= (position.y - height) * 2.0f;
+			var rotation = Rotation;
+			rotation.x = -rotation.x;
+
+			reflected_transform = reflected_transform.identify();
+			reflected_rotate = reflected_rotate.identify();
+
+			reflected_transform = glm.translate(reflected_transform, position);
+			//reflected_transform = quaternion.euler(reflected_transform, rotation);
+			reflected_rotate = quaternion.euler(reflected_rotate, rotation);
+
+			var viewDirection = (reflected_rotate * vector4.forward).to_vec3();
+			var flyDirection = (reflected_rotate * vector4.up).to_vec3();
+
+			WorldToView = glm.lookAt(position, position + viewDirection, flyDirection);
+			WorldToView.serialize(WorldToViewData);
+		}
+		public void ReflectBack()
+		{
 			WorldToView = glm.lookAt(Position, Position + ViewDirection, FlyDirection);
 			WorldToView.serialize(WorldToViewData);
 		}

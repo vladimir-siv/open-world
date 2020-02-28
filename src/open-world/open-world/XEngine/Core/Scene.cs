@@ -85,11 +85,27 @@ namespace XEngine.Core
 		private DateTime InitTime;
 		public float ElapsedTime => (float)(DateTime.Now - InitTime).TotalMilliseconds;
 
-		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT;
+		protected uint ClearStrategy { get; set; }
 		private readonly Algorithms Algs = new Algorithms();
-		
+
+		protected internal bool ClipDistance { get; protected set; }
+		private vec4 _ClipPlane;
+		protected internal vec4 ClipPlane
+		{
+			get
+			{
+				if (ClipDistance) return _ClipPlane;
+				else return new vec4(0.0f, 0.0f, 0.0f, 0.0f);
+			}
+			protected set
+			{
+				_ClipPlane = value;
+			}
+		}
+
 		public Camera MainCamera { get; private set; } = new Camera();
 		internal int CameraState { get; private set; }
+		protected void UpdateCamera() => ++CameraState;
 
 		public Sky Sky { get; private set; }
 
@@ -166,10 +182,12 @@ namespace XEngine.Core
 		{
 			var gl = XEngineContext.Graphics;
 
-			ClearStrategy = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT;
-
+			ClearStrategy = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT;
 			Algs.Invalidate();
 
+			ClipDistance = false;
+			ClipPlane = new vec4(0.0f, 0.0f, 0.0f, 0.0f);
+			
 			MainCamera.LocalPosition = vector3.zero;
 			MainCamera.LocalRotation = vector3.zero;
 			CameraState = 0;

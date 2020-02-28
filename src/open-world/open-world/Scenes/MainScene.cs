@@ -12,8 +12,9 @@ namespace open_world
 	[GenerateScene("OpenWorld.MainScene", isMain: true)]
 	public class MainScene : Scene
 	{
-		private FrameBuffer TestFBO = null;
-		private GameObject RenderDisplayTest = null;
+		private WaterFrameBuffers WFB = null;
+		private GameObject ReflectionDisplayTest = null;
+		private GameObject RefractionDisplayTest = null;
 
 		protected override void Init()
 		{
@@ -225,50 +226,67 @@ namespace open_world
 
 		protected override void Draw()
 		{
-			if (TestFBO == null)
+			if (WFB == null)
 			{
-				TestFBO = new FrameBuffer
-				(
-					256, 256,
-					FBOAttachment.TextureAttachment
-					|
-					FBOAttachment.DepthBufferAttachment
-				);
+				WFB = new WaterFrameBuffers();
 			}
 
-			if (RenderDisplayTest == null)
+			if (ReflectionDisplayTest == null)
 			{
-				RenderDisplayTest = GameObject.CreateUnlinked("TestObject");
-				RenderDisplayTest.mesh = new Mesh();
-				RenderDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
-				RenderDisplayTest.material = new Material(Shader.Find("unlit_texture"));
-				RenderDisplayTest.material.Set("material_texture", TestFBO.TextureAttachment);
-				RenderDisplayTest.transform.position = new vec3(+0.0f, +5.0f, +0.0f);
+				ReflectionDisplayTest = GameObject.CreateUnlinked("ReflectionTestObject");
+				ReflectionDisplayTest.mesh = new Mesh();
+				ReflectionDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
+				ReflectionDisplayTest.material = new Material(Shader.Find("unlit_texture"));
+				ReflectionDisplayTest.material.Set("material_texture", WFB.ReflectionFBO.TextureAttachment);
+				ReflectionDisplayTest.transform.position = new vec3(+10.0f, +5.0f, +0.0f);
 			}
 
-			DrawCalls = 2u;
+			if (RefractionDisplayTest == null)
+			{
+				RefractionDisplayTest = GameObject.CreateUnlinked("RefractionTestObject");
+				RefractionDisplayTest.mesh = new Mesh();
+				RefractionDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
+				RefractionDisplayTest.material = new Material(Shader.Find("unlit_texture"));
+				RefractionDisplayTest.material.Set("material_texture", WFB.RefractionFBO.TextureAttachment);
+				RefractionDisplayTest.transform.position = new vec3(-10.0f, +5.0f, +0.0f);
+			}
 
+			DrawCalls = 3u;
 			Prepare();
 			SyncScene();
+			ClipDistance = true;
 
-			TestFBO.Bind();
+			ClipPlane = new vec4(0.0f, +1.0f, 0.0f, 0.0f);
+			WFB.ReflectionFBO.Bind();
+			MainCamera.Reflect();
+			UpdateCamera();
 			DrawScene();
-			TestFBO.Unbind();
 
+			ClipPlane = new vec4(0.0f, -1.0f, 0.0f, 0.0f);
+			WFB.RefractionFBO.Bind();
+			MainCamera.ReflectBack();
+			UpdateCamera();
+			DrawScene();
+
+			ClipDistance = false;
+			FrameBuffer.BindRenderingWindow();
 			Viewport();
 			DrawScene();
 
-			RenderDisplayTest?.Sync();
-			RenderDisplayTest?.Draw();
+			ReflectionDisplayTest?.Sync();
+			ReflectionDisplayTest?.Draw();
+
+			RefractionDisplayTest?.Sync();
+			RefractionDisplayTest?.Draw();
 		}
 
 		protected override void Exit()
 		{
-			TestFBO?.Dispose();
-			TestFBO = null;
+			WFB?.Dispose();
+			WFB = null;
 
-			RenderDisplayTest?.Dispose();
-			RenderDisplayTest = null;
+			ReflectionDisplayTest?.Dispose();
+			ReflectionDisplayTest = null;
 		}
 	}
 }

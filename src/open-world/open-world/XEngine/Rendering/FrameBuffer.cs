@@ -10,7 +10,7 @@ namespace XEngine.Rendering
 	{
 		private static uint CurrentBound = 0u;
 		public static bool IsDefaultBound => CurrentBound == 0u;
-		public static void UnbindCurrent()
+		public static void BindRenderingWindow()
 		{
 			var gl = XEngineContext.Graphics;
 			gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, 0u);
@@ -94,7 +94,7 @@ namespace XEngine.Rendering
 		}
 		public void Unbind()
 		{
-			if (Id == CurrentBound) UnbindCurrent();
+			if (Id == CurrentBound) BindRenderingWindow();
 		}
 
 		public void Dispose()

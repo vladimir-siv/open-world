@@ -164,6 +164,7 @@ namespace XEngine.Shading
 		public uint Id { get; private set; }
 		public string Name { get; private set; }
 
+		public int ClipPlane { get; private set; }
 		public int Eye { get; private set; }
 		public int Project { get; private set; }
 		public int View { get; private set; }
@@ -190,6 +191,7 @@ namespace XEngine.Shading
 			Name = name;
 
 			var gl = XEngineContext.Graphics;
+			ClipPlane = gl.GetUniformLocation(id, "clip_plane");
 			Eye = gl.GetUniformLocation(id, "eye");
 			Project = gl.GetUniformLocation(id, "project");
 			View = gl.GetUniformLocation(id, "view");
@@ -256,6 +258,9 @@ namespace XEngine.Shading
 		{
 			var gl = XEngineContext.Graphics;
 			var scene = SceneManager.CurrentScene;
+			var clip = scene.ClipPlane;
+
+			if (ClipPlane != -1) gl.Uniform4(ClipPlane, clip.x, clip.y, clip.z, clip.w);
 
 			if (scene.CameraState != CameraState)
 			{

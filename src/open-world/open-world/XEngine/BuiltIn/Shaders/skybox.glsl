@@ -16,6 +16,7 @@
 	{
 		position = in_position * scale;
 		gl_Position = project * view * vec4(position, 1.0f);
+		gl_ClipDistance[0] = 0.0f;
 	}
 
 #pragma shader fragment

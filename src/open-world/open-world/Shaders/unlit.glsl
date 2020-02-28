@@ -3,7 +3,8 @@
 #pragma shader vertex
 
 	#version 430 core
-	
+
+	uniform vec4 clip_plane;
 	uniform mat4 project;
 	uniform mat4 view;
 	uniform mat4 model;
@@ -12,7 +13,9 @@
 	
 	void main(void)
 	{
-		gl_Position = project * view * model * in_position;
+		vec4 world_position = model * in_position;
+		gl_Position = project * view * world_position;
+		gl_ClipDistance[0] = dot(world_position, clip_plane);
 	}
 
 #pragma shader fragment

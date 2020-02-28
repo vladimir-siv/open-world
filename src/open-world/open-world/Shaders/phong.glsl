@@ -4,6 +4,7 @@
 
 	#version 430 core
 	
+	uniform vec4 clip_plane;
 	uniform mat4 project;
 	uniform mat4 view;
 	uniform mat4 model;
@@ -29,6 +30,7 @@
 		visibility = min(exp(-pow(length(view_position.xyz) * fog_density, fog_gradient)), 1.0f);
 
 		gl_Position = project * view_position;
+		gl_ClipDistance[0] = dot(world_position, clip_plane);
 	}
 
 #pragma shader fragment

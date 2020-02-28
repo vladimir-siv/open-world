@@ -124,6 +124,23 @@ namespace XEngine
 			}
 		}
 
+		private static bool _ClipDistance = false;
+		public static bool ClipDistance
+		{
+			get
+			{
+				return _ClipDistance;
+			}
+			set
+			{
+				if (value == _ClipDistance) return;
+				_ClipDistance = value;
+				var gl = XEngineContext.Graphics;
+				if (_ClipDistance) gl.Enable(OpenGL.GL_CLIP_DISTANCE0);
+				else gl.Disable(OpenGL.GL_CLIP_DISTANCE0);
+			}
+		}
+
 		private static Color _ClearColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 		public static Color ClearColor
 		{
@@ -145,6 +162,7 @@ namespace XEngine
 			DepthTest = true;
 			CullFace = true;
 			Texture2D = true;
+			ClipDistance = true;
 		}
 	}
 

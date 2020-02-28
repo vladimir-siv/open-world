@@ -4,7 +4,8 @@
 
 	public abstract class XBehaviour
 	{
-		protected static Camera MainCamera => SceneManager.CurrentScene.MainCamera;
+		protected static Scene CurrentScene => SceneManager.CurrentScene;
+		protected static Camera MainCamera => CurrentScene.MainCamera;
 		protected internal GameObject gameObject;
 
 		internal void _Awake() => Awake();

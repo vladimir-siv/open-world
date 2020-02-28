@@ -40,7 +40,7 @@ namespace XEngine.Lighting
 			set
 			{
 				if (AmbientLight.AreEqual(value, _AmbientLight)) return;
-				AmbientLight = value;
+				_AmbientLight = value;
 				++AmbientState;
 			}
 		}
@@ -83,9 +83,10 @@ namespace XEngine.Lighting
 			}
 		}
 
-		public float RotationSpeed { get; set; } = 1.0f;
-		public float TransitionSpeed { get; set; } = 1.0f;
+		public float RotationSpeed { get; set; } = 0.5f;
+		public float TransitionSpeed { get; set; } = 0.1f;
 		public float SkyboxDuration { get; set; } = 10.0f;
+		public float TransitionDuration { get; set; } = 2.0f;
 		private float RemainingDuration = 0.0f;
 
 		public void BeginCycle()
@@ -106,12 +107,12 @@ namespace XEngine.Lighting
 			if (TransitionSpeed < 0.0f) throw new ApplicationException("Transition speed cannot be negative.");
 			var deltaTime = Time.DeltaTime / 1000.0f;
 			Cycle.Rotation += RotationSpeed * deltaTime;
-			var deltaTransition = TransitionSpeed * deltaTime / 10.0f;
-			RemainingDuration -= deltaTransition;
+			var delta = TransitionSpeed * deltaTime;
+			RemainingDuration -= delta;
 			if (RemainingDuration >= 0.0f) return;
-			Cycle.Transition += deltaTransition;
+			Cycle.Transition += delta;
 			++AmbientState;
-			if (Cycle.Transition <= 1.0f) return;
+			if (Cycle.Transition <= TransitionDuration) return;
 			Cycle.Transition = 0.0f;
 			Cycle.Swap();
 			RemainingDuration = SkyboxDuration;

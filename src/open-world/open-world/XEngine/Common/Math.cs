@@ -8,6 +8,12 @@ namespace XEngine.Common
 
 	public static class scalar
 	{
+		public static float Clamp(this float v, float min, float max)
+		{
+			if (v < min) return min;
+			if (v > max) return max;
+			return v;
+		}
 		public static uint BitCount(this uint v)
 		{
 			v -= ((v >> 1) & 0x55555555);

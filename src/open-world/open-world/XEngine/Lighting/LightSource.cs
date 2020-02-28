@@ -8,7 +8,7 @@ namespace XEngine.Lighting
 	public struct LightSource
 	{
 		public static readonly LightSource PitchBlack = new LightSource(vector3.zero, Color.Black, 0.0f, Attenuation.None);
-		public static LightSource Sun => new LightSource(new vec3(0.0f, 500.0f, 0.0f), Color.White, 1.0f, Attenuation.None, true);
+		public static readonly LightSource Sun = new LightSource(new vec3(0.0f, 500.0f, 0.0f), Color.White, 1.0f, Attenuation.None, true) { name = "Sun" };
 
 		public static LightSource Point(vec3 position) => Point(position, Color.White);
 		public static LightSource Point(vec3 position, Color color) => Point(position, color, 60.0f);
@@ -18,6 +18,7 @@ namespace XEngine.Lighting
 		public static LightSource Directional(vec3 position, Color color) => Directional(position, color, 1.0f);
 		public static LightSource Directional(vec3 position, Color color, float power) => new LightSource(position, color, power, Attenuation.None);
 
+		public string name;
 		public vec3 position;
 		public Color color;
 		public float power;
@@ -31,6 +32,7 @@ namespace XEngine.Lighting
 		public LightSource(vec3 position, Color color, float power, Attenuation attenuation) : this(position, color, power, attenuation, false) { }
 		public LightSource(vec3 position, Color color, float power, Attenuation attenuation, bool important)
 		{
+			name = null;
 			this.position = position;
 			this.color = color;
 			this.power = power;

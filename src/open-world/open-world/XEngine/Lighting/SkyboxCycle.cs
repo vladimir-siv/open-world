@@ -12,7 +12,7 @@ namespace XEngine.Lighting
 
     public class SkyboxCycle
 	{
-		private Queue<Skybox> Cycle = new Queue<Skybox>();
+		private readonly Queue<Skybox> Cycle = new Queue<Skybox>();
 		public bool CycleMode { get; set; } = false;
 		public int SkyCount => Cycle.Count;
 

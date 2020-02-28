@@ -71,6 +71,8 @@ namespace XEngine.Core
 					while (SyncObjectPouch.Retrieve(current, out var child)) ObjectQueue.Enqueue(child);
 				}
 			}
+
+			public void OnLightingStateChange() => ++LightingState;
 		}
 
 		internal static Dictionary<string, Scene> SceneCache = new Dictionary<string, Scene>();
@@ -78,7 +80,10 @@ namespace XEngine.Core
 
 		public string SceneId { get; internal set; } = string.Empty;
 		private bool Initialized = false;
-		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT | OpenGL.GL_STENCIL_BUFFER_BIT;
+		private DateTime InitTime;
+		public float ElapsedTime => (float)(DateTime.Now - InitTime).TotalMilliseconds;
+
+		protected uint ClearStrategy { get; set; } = OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT;
 		private readonly Algorithms Algs = new Algorithms();
 
 		public Camera MainCamera { get; private set; } = new Camera();
@@ -88,13 +93,38 @@ namespace XEngine.Core
 
 		public uint ActiveLights { get; set; }
 		internal readonly LinkedList<LightSource> Lights = new LinkedList<LightSource>();
+		internal readonly Dictionary<string, float> Intensity = new Dictionary<string, float>();
 		internal int LightingState => Algs.LightingState;
 		internal uint LightCount => Algs.LightCount;
 		internal LightSource GetLight(int i)
 		{
 			if (i >= ActiveLights) throw new ApplicationException("Invalid light requested.");
-			if (i < Algs.LightCount) return Algs.OrderedLights[i];
+			
+			if (i < Algs.LightCount)
+			{
+				var light = Algs.OrderedLights[i];
+
+				if
+				(
+					light.name != null
+					&&
+					Intensity.TryGetValue(light.name, out var intensity)
+				)
+					light.power *= intensity.Clamp(0.0f, 100.0f) / 100.0f;
+				
+				return light;
+			}
 			else return LightSource.PitchBlack;
+		}
+		public void SetLightIntensity(string name, float intensity)
+		{
+			Intensity[name] = intensity;
+			Algs.OnLightingStateChange();
+		}
+		public void ClearLightIntensity(string name)
+		{
+			Intensity.Remove(name);
+			Algs.OnLightingStateChange();
 		}
 		
 		internal readonly LinkedList<GameObject> GameObjects = new LinkedList<GameObject>();
@@ -158,9 +188,10 @@ namespace XEngine.Core
 			Invalidate();
 			Init();
 			if (Lights.Count == 0) AddLight(LightSource.Sun);
+			Sky.BeginCycle();
+			InitTime = DateTime.Now;
 			foreach (var gameObject in GameObjects) gameObject.Awake();
 			foreach (var gameObject in GameObjects) gameObject.Start();
-			Sky.BeginCycle();
 			Initialized = true;
 		}
 		internal void _Draw()

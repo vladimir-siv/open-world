@@ -14,12 +14,13 @@ namespace open_world
 		protected override void Init()
 		{
 			Sky.Cycle.Add(Skybox.Find("Daylight", Color.FromBytes(216, 229, 235)));
-			Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
+			//Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 
 			var terrain = (Terrain)null;
 			//using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
 			terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(100u, 8357));
+			var water_terrain = Terrain.GenerateFlat(1000.0f, 1u, 1000u);
 
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -78,6 +79,9 @@ namespace open_world
 			Barrel.material.Set("use_simulated_light", false);
 			Barrel.material.Set("material_texture", Texture2D.FindPNG("Objects/barrel"));
 
+			var Lighting = new GameObject("Lighting");
+			Lighting.AttachBehaviour(new LightingController { });
+
 			var Player = new GameObject("Player");
 			Player.AttachBehaviour(new PlayerController {  });
 			Player.transform.position = new vec3(+0.0f, +10.0f, +0.0f);
@@ -97,11 +101,10 @@ namespace open_world
 
 			var Water = new GameObject("Water");
 			Water.mesh = new Mesh();
-			Water.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION };
-			Water.material = new Material(Shader.Find("unlit"));
+			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION);
+			Water.material = new Material(Shader.Find("water"));
 			Water.material.Set("material_color", Color.FromBytes(66, 135, 245));
-			Water.transform.scale = new vec3(25.0f, 25.0f, 25.0f);
-
+			
 			/*
 			Map.Generate
 			(

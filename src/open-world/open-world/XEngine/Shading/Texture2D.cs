@@ -37,12 +37,84 @@ namespace XEngine.Shading
 			return texture;
 		}
 
+		internal static Texture2D Yield(string name = null)
+		{
+			var name_key = name.ToLower();
+
+			if (name_key != null)
+			{
+				name_key = $"<Yield_2D>:{name}";
+				
+				if (XEngineContext.Textures.TryGetValue(name_key, out var found))
+				{
+					return (Texture2D)found;
+				}
+			}
+
+			var texture = new Texture2D();
+
+			if (name_key != null) XEngineContext.Textures.Add(name_key, texture);
+			return texture;
+		}
+
 		protected override uint TextureType => OpenGL.GL_TEXTURE_2D;
 
 		public int Width { get; private set; } = 0;
 		public int Height { get; private set; } = 0;
 
 		private Texture2D() { }
+
+		internal void InitEmpty(int width, int height)
+		{
+			var gl = XEngineContext.Graphics;
+
+			Width = width;
+			Height = height;
+
+			Activate();
+
+			gl.TexImage2D
+			(
+				OpenGL.GL_TEXTURE_2D,
+				0,
+				OpenGL.GL_RGBA, // maybe without alpha channel?
+				Width,
+				Height,
+				0,
+				OpenGL.GL_RGBA, // maybe without alpha channel?
+				OpenGL.GL_UNSIGNED_BYTE,
+				IntPtr.Zero
+			);
+
+			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
+			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+		}
+
+		internal void InitDepth(int width, int height)
+		{
+			var gl = XEngineContext.Graphics;
+
+			Width = width;
+			Height = height;
+
+			Activate();
+
+			gl.TexImage2D
+			(
+				OpenGL.GL_TEXTURE_2D,
+				0,
+				OpenGL.GL_DEPTH_COMPONENT32,
+				Width,
+				Height,
+				0,
+				OpenGL.GL_DEPTH_COMPONENT,
+				OpenGL.GL_FLOAT,
+				IntPtr.Zero
+			);
+
+			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
+			gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
+		}
 
 		private Bitmap Image
 		{

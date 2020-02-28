@@ -9,6 +9,7 @@ namespace XEngine.Shading
 	{
 		private static Dictionary<uint, Texture> BindingCache = new Dictionary<uint, Texture>();
 		internal static void InvalidateBindingCache() => BindingCache.Clear();
+		internal static void InvalidateBinding(uint i) { if (BindingCache.ContainsKey(i)) BindingCache.Remove(i); }
 
 		private readonly uint[] glTextureArray = new uint[1] { 0u };
 

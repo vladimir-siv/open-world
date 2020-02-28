@@ -6,6 +6,7 @@ using GlmNet;
 namespace XEngine.Core
 {
 	using XEngine.Structures;
+	using XEngine.Rendering;
 	using XEngine.Shading;
 	using XEngine.Lighting;
 	using XEngine.Common;
@@ -202,7 +203,7 @@ namespace XEngine.Core
 			foreach (var gameObject in GameObjects) gameObject.Late();
 			var gl = XEngineContext.Graphics;
 			if (ClearStrategy != 0u) gl.Clear(ClearStrategy);
-			gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
+			if (FrameBuffer.IsDefaultBound) gl.Viewport(0, 0, XEngineContext.GLControl.Width, XEngineContext.GLControl.Height);
 			Draw();
 		}
 		internal void _Exit()

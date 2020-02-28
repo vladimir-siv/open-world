@@ -13,6 +13,7 @@ namespace open_world
 	{
 		protected override void Init()
 		{
+			Sky.Cycle.Add(Skybox.Find("Daylight", Color.FromBytes(216, 229, 235)));
 			Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 

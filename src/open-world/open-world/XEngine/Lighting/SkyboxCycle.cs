@@ -16,7 +16,7 @@ namespace XEngine.Lighting
 		public bool CycleMode { get; set; } = false;
 		public int SkyCount => Cycle.Count;
 
-		public float Scale { get; set; } = 250.0f;
+		public float Scale { get; set; } = 750.0f;
 		public float Rotation { get; set; } = 0.0f;
 		public float Transition { get; set; } = 0.0f;
 

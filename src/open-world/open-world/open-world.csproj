@@ -257,5 +257,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Textures\Plants\tree.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\back.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\bottom.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\front.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\left.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\right.png" />
+    <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\top.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

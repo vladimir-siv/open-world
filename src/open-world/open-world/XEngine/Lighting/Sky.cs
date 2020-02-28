@@ -45,7 +45,7 @@ namespace XEngine.Lighting
 			}
 		}
 
-		private float _FogDensity = 0.009f;
+		private float _FogDensity = 0.005f;
 		public float FogDensity
 		{
 			get

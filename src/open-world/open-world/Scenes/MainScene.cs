@@ -19,7 +19,7 @@ namespace open_world
 		{
 			WFB = new WaterFrameBuffers();
 
-			var water_terrain = Terrain.GenerateFlat(1000.0f, 50u, 1000u);
+			var water_terrain = Terrain.GenerateFlat(1000.0f, 25u, 1000u);
 
 			Water = GameObject.CreateUnlinked("Water");
 			Water.mesh = new Mesh();
@@ -29,7 +29,7 @@ namespace open_world
 			Water.material.Set("wave_strength", 0.02f);
 			Water.material.Set("wave_speed", 0.03f);
 			Water.material.Set("wave_timestamp", 0.0f);
-			Water.material.Set("reflectiveness", 5.0f);
+			Water.material.Set("reflectiveness", 2.5f);
 			Water.material.Set("reflection", WFB.ReflectionFBO.TextureAttachment);
 			Water.material.Set("refraction", WFB.RefractionFBO.TextureAttachment);
 			Water.material.Set("dudv", Texture2D.FindPNG("Maps/water_dudv"));

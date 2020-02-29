@@ -73,10 +73,9 @@
 
 		float wave_form = mod(wave_speed * wave_timestamp, 1.0f);
 
-		vec2 distortion1 = (texture(dudv, vec2(uv.x + wave_form, uv.y)).rg * 2.0f - 1.0f) * wave_strength;
-		vec2 distortion2 = (texture(dudv, vec2(+uv.x + wave_form, uv.y + wave_form)).rg * 2.0f - 1.0f) * wave_strength;
-
-		vec2 distortion = distortion1 + distortion2;
+		vec2 duv = texture(dudv, vec2(uv.x + wave_form, uv.y)).rg * 0.1;
+		duv = uv + vec2(duv.x, duv.y + wave_form);
+		vec2 distortion = (texture(dudv, duv).rg * 2.0 - 1.0) * wave_strength;
 
 		reflect += distortion;
 		refract += distortion;

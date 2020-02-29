@@ -333,7 +333,7 @@ namespace XEngine.Shading
 		{
 			if (material.shader != this) throw new InvalidOperationException("Material is not using this shader.");
 			if (CurrentShaderId != Id) throw new InvalidOperationException("Shader not active (call Use() method before this).");
-			if (material == Prepared || material == null) return false;
+			if (material == null || !material.IsDynamic && material == Prepared) return false;
 			if (markPrepared) Prepared = material;
 			return true;
 		}

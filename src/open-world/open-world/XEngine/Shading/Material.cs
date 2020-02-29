@@ -336,6 +336,7 @@ namespace XEngine.Shading
 		
 		public Shader shader { get; set; }
 		public bool CullFace { get; set; } = true;
+		internal bool IsDynamic { get; private set; } = false;
 
 		public Material() { }
 		public Material(Shader shader) { this.shader = shader; }
@@ -377,5 +378,6 @@ namespace XEngine.Shading
 			Data.Prepare(shader, properties, prepareNeeded);
 			Textures.Prepare(shader, properties, prepareNeeded);
 		}
+		public void MarkDynamic() => IsDynamic = true;
 	}
 }

@@ -271,6 +271,8 @@
     <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\right.png" />
     <EmbeddedResource Include="Resources\Textures\Skyboxes\Daylight\top.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Textures\Maps\water_dudv.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -19,15 +19,20 @@ namespace open_world
 		{
 			WFB = new WaterFrameBuffers();
 
-			var water_terrain = Terrain.GenerateFlat(1000.0f, 1u, 1000u);
+			var water_terrain = Terrain.GenerateFlat(1000.0f, 50u, 1000u);
 
 			Water = GameObject.CreateUnlinked("Water");
 			Water.mesh = new Mesh();
-			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION);
+			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION | VertexAttribute.UV);
 			Water.material = new Material(Shader.Find("water"));
 			Water.material.Set("water_color", Color.FromBytes(66, 135, 245));
+			Water.material.Set("wave_strength", 0.02f);
+			Water.material.Set("wave_speed", 0.03f);
+			Water.material.Set("wave_timestamp", 0.0f);
 			Water.material.Set("reflection", WFB.ReflectionFBO.TextureAttachment);
 			Water.material.Set("refraction", WFB.RefractionFBO.TextureAttachment);
+			Water.material.Set("dudv", Texture2D.FindPNG("Maps/water_dudv"));
+			Water.material.MarkDynamic();
 		}
 
 		protected override void Init()
@@ -234,6 +239,8 @@ namespace open_world
 
 		protected override void Draw()
 		{
+			Water.material.Set("wave_timestamp", ElapsedTime / 1000.0f);
+
 			DrawCalls = 3u;
 			Prepare();
 			SyncScene();

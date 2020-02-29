@@ -8,7 +8,7 @@ namespace XEngine.Lighting
 	public struct LightSource
 	{
 		public static readonly LightSource PitchBlack = new LightSource(vector3.zero, Color.Black, 0.0f, Attenuation.None);
-		public static readonly LightSource Sun = new LightSource(new vec3(0.0f, 500.0f, 0.0f), Color.White, 1.0f, Attenuation.None, true) { name = "Sun" };
+		public static readonly LightSource Sun = new LightSource(new vec3(100.0f, 500.0f, 25.0f), Color.White, 1.0f, Attenuation.None, true) { name = "Sun" };
 
 		public static LightSource Point(vec3 position) => Point(position, Color.White);
 		public static LightSource Point(vec3 position, Color color) => Point(position, color, 60.0f);

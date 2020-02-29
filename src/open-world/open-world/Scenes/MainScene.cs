@@ -13,8 +13,22 @@ namespace open_world
 	public class MainScene : Scene
 	{
 		private WaterFrameBuffers WFB = null;
-		private GameObject ReflectionDisplayTest = null;
-		private GameObject RefractionDisplayTest = null;
+		private GameObject Water = null;
+
+		private void CreateWater()
+		{
+			WFB = new WaterFrameBuffers();
+
+			var water_terrain = Terrain.GenerateFlat(1000.0f, 1u, 1000u);
+
+			Water = GameObject.CreateUnlinked("Water");
+			Water.mesh = new Mesh();
+			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION);
+			Water.material = new Material(Shader.Find("water"));
+			Water.material.Set("water_color", Color.FromBytes(66, 135, 245));
+			Water.material.Set("reflection", WFB.ReflectionFBO.TextureAttachment);
+			Water.material.Set("refraction", WFB.RefractionFBO.TextureAttachment);
+		}
 
 		protected override void Init()
 		{
@@ -24,10 +38,8 @@ namespace open_world
 			//Sky.Cycle.Add(Skybox.Find("Cloudy", Color.FromBytes(145, 180, 194)));
 			Sky.Cycle.Add(Skybox.Find("Night", Color.Black));
 
-			var terrain = (Terrain)null;
 			//using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
-			terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(100u, 8357));
-			var water_terrain = Terrain.GenerateFlat(1000.0f, 1u, 1000u);
+			var terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(100u, 8357));
 
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
@@ -126,12 +138,6 @@ namespace open_world
 			Ground.material.Set("b_texture", Texture2D.FindPNG("Ground/ground_path"));
 			Ground.material.Set("terrain_map", Texture2D.FindPNG("Ground/terrain"));
 
-			var Water = new GameObject("Water");
-			Water.mesh = new Mesh();
-			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION);
-			Water.material = new Material(Shader.Find("water"));
-			Water.material.Set("material_color", Color.FromBytes(66, 135, 245));
-
 			var leos = new[]
 			{
 				new vec3(+66.65484f, +20.54087f, +14.08892f),
@@ -221,36 +227,13 @@ namespace open_world
 				}
 			}
 
+			CreateWater();
+
 			MainCamera.Following = Player;
 		}
 
 		protected override void Draw()
 		{
-			if (WFB == null)
-			{
-				WFB = new WaterFrameBuffers();
-			}
-
-			if (ReflectionDisplayTest == null)
-			{
-				ReflectionDisplayTest = GameObject.CreateUnlinked("ReflectionTestObject");
-				ReflectionDisplayTest.mesh = new Mesh();
-				ReflectionDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
-				ReflectionDisplayTest.material = new Material(Shader.Find("unlit_texture"));
-				ReflectionDisplayTest.material.Set("material_texture", WFB.ReflectionFBO.TextureAttachment);
-				ReflectionDisplayTest.transform.position = new vec3(+10.0f, +5.0f, +0.0f);
-			}
-
-			if (RefractionDisplayTest == null)
-			{
-				RefractionDisplayTest = GameObject.CreateUnlinked("RefractionTestObject");
-				RefractionDisplayTest.mesh = new Mesh();
-				RefractionDisplayTest.mesh.shape = new Plane() { Attributes = VertexAttribute.POSITION | VertexAttribute.UV };
-				RefractionDisplayTest.material = new Material(Shader.Find("unlit_texture"));
-				RefractionDisplayTest.material.Set("material_texture", WFB.RefractionFBO.TextureAttachment);
-				RefractionDisplayTest.transform.position = new vec3(-10.0f, +5.0f, +0.0f);
-			}
-
 			DrawCalls = 3u;
 			Prepare();
 			SyncScene();
@@ -273,11 +256,8 @@ namespace open_world
 			Viewport();
 			DrawScene();
 
-			ReflectionDisplayTest?.Sync();
-			ReflectionDisplayTest?.Draw();
-
-			RefractionDisplayTest?.Sync();
-			RefractionDisplayTest?.Draw();
+			Water?.Sync();
+			Water?.Draw();
 		}
 
 		protected override void Exit()
@@ -285,8 +265,8 @@ namespace open_world
 			WFB?.Dispose();
 			WFB = null;
 
-			ReflectionDisplayTest?.Dispose();
-			ReflectionDisplayTest = null;
+			Water?.Dispose();
+			Water = null;
 		}
 	}
 }

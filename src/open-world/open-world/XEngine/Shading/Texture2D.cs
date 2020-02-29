@@ -88,6 +88,7 @@ namespace XEngine.Shading
 				IntPtr.Zero
 			);
 
+			gl.GenerateMipmapEXT(OpenGL.GL_TEXTURE_2D);
 			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, new uint[] { OpenGL.GL_LINEAR });
 			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, new uint[] { OpenGL.GL_LINEAR });
 		}
@@ -114,6 +115,7 @@ namespace XEngine.Shading
 				IntPtr.Zero
 			);
 
+			gl.GenerateMipmapEXT(OpenGL.GL_TEXTURE_2D);
 			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, new uint[] { OpenGL.GL_LINEAR });
 			gl.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, new uint[] { OpenGL.GL_LINEAR });
 		}
@@ -153,6 +155,7 @@ namespace XEngine.Shading
 
 				value.UnlockBits(bitmapData);
 
+				gl.GenerateMipmapEXT(OpenGL.GL_TEXTURE_2D);
 				gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
 				gl.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
 			}

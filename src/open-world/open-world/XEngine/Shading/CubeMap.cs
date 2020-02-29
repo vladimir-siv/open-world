@@ -93,6 +93,7 @@ namespace XEngine.Shading
 				bitmap.UnlockBits(bitmapData);
 			}
 
+			gl.GenerateMipmapEXT(OpenGL.GL_TEXTURE_CUBE_MAP);
 			gl.TexParameter(OpenGL.GL_TEXTURE_CUBE_MAP, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_LINEAR);
 			gl.TexParameter(OpenGL.GL_TEXTURE_CUBE_MAP, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_LINEAR);
 		}

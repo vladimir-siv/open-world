@@ -28,7 +28,7 @@ namespace open_world
 
 			dusk = sky_duration - day_offset;
 			midnight = sky_duration + transition_duration - day_offset;
-			dawn = midnight + sky_duration + day_offset;
+			dawn = midnight + sky_duration + day_offset / 2.0f;
 			noon = day_duration;
 		}
 

@@ -274,5 +274,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Textures\Maps\water_dudv.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Textures\Maps\water_normal_map.png" />
+    <EmbeddedResource Include="Resources\Textures\Maps\water_normal_map_nonmatching.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

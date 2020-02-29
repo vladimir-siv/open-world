@@ -30,9 +30,12 @@ namespace open_world
 			Water.material.Set("wave_speed", 0.03f);
 			Water.material.Set("wave_timestamp", 0.0f);
 			Water.material.Set("reflectiveness", 2.5f);
+			Water.material.Set("dampening", 10.0f);
+			Water.material.Set("reflectivity", 1.0f);
 			Water.material.Set("reflection", WFB.ReflectionFBO.TextureAttachment);
 			Water.material.Set("refraction", WFB.RefractionFBO.TextureAttachment);
 			Water.material.Set("dudv", Texture2D.FindPNG("Maps/water_dudv"));
+			Water.material.Set("lighting_map", Texture2D.FindPNG("Maps/water_normal_map"));
 			Water.material.MarkDynamic();
 		}
 

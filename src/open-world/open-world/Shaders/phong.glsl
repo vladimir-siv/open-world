@@ -58,7 +58,7 @@
 	in float visibility;	// fog visibility
 	
 	out vec4 out_color;
-
+	
 	vec3 phong(int i, vec3 normal_vector, vec3 eye_vector)
 	{
 		vec3 light_vector = light_source_position[i] - position;

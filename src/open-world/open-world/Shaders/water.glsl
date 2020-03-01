@@ -1,9 +1,9 @@
 ﻿Water Shader
 
 #pragma shader vertex
-
+	
 	#version 430 core
-
+	
 	uniform vec4 clip_plane;
 	uniform mat4 project;
 	uniform mat4 view;
@@ -12,28 +12,43 @@
 	uniform float fog_density;
 	uniform float fog_gradient;
 	
+	uniform float terrain_length;
+	uniform float terrain_max_height;
+	uniform float terrain_min_height;
+	uniform sampler2D terrain_heightmap;
+	
 	in layout(location = 0) vec4 in_position;
 	in layout(location = 1) vec4 in_normal;
 	in layout(location = 2) vec2 in_uv;
-
+	
 	out vec4 clip_position;
 	out vec3 position;
 	out vec3 normal;
 	out vec2 uv;
+	out float depth;
 	out float visibility;
 	
 	void main(void)
 	{
+		float t_limit = terrain_length / 2.0f;
+		
 		vec4 world_position = model * in_position;
 		vec4 world_normal = rotate * in_normal;
 		vec4 view_position = view * world_position;
 		
-		visibility = min(exp(-pow(length(view_position.xyz) * fog_density, fog_gradient)), 1.0f);
-
 		clip_position = project * view_position;
 		position = world_position.xyz;
 		normal = world_normal.xyz;
 		uv = in_uv;
+		
+		float xf = (in_position.x + t_limit) / terrain_length;
+		float zf = (in_position.z + t_limit) / terrain_length;
+		float height = mix(terrain_min_height, terrain_max_height, texture(terrain_heightmap, vec2(xf, zf)).r);
+		
+		float off = float((in_position.x < -t_limit || t_limit < in_position.x) || (in_position.z < -t_limit || t_limit < in_position.z));
+		depth = off * 3.402823466e+38 + (off - 1.0f) * height;
+		
+		visibility = min(exp(-pow(length(view_position.xyz) * fog_density, fog_gradient)), 1.0f);
 
 		gl_Position = clip_position;
 		gl_ClipDistance[0] = dot(world_position, clip_plane);
@@ -56,6 +71,9 @@
 	uniform vec3 light_source_attenuation[8];
 	
 	uniform vec4 water_color;
+	uniform float water_color_factor;
+	uniform float water_edge_clearness;
+	uniform float water_edge_blend;
 	uniform float wave_strength;
 	uniform float wave_speed;
 	uniform float wave_timestamp;
@@ -73,6 +91,7 @@
 	in vec3 position;
 	in vec3 normal;
 	in vec2 uv;
+	in float depth;
 	in float visibility;
 	
 	out vec4 out_color;
@@ -97,40 +116,41 @@
 	{
 		vec3 normal_vector = normalize(normal);
 		vec3 eye_vector = normalize(eye - position.xyz);
-
+		
 		vec2 refract = (clip_position.xy / clip_position.w) / 2.0f + 0.5f;
 		vec2 reflect = vec2(refract.x, -refract.y);
-
+		
 		float wave_form = mod(wave_speed * wave_timestamp, 1.0f);
-
+		
 		vec2 duv = texture(dudv, vec2(uv.x + wave_form, uv.y)).rg * 0.1;
 		duv = uv + vec2(duv.x, duv.y + wave_form);
-		vec2 distortion = (texture(dudv, duv).rg * 2.0 - 1.0) * wave_strength;
-
+		vec2 distortion = (texture(dudv, duv).rg * 2.0 - 1.0) * wave_strength * clamp(depth, 0.0f, water_edge_clearness) / water_edge_clearness;
+		
 		reflect += distortion;
 		refract += distortion;
-
+		
 		reflect.x = clamp(reflect.x, +0.001f, +0.999f);
 		reflect.y = clamp(reflect.y, -0.999f, -0.001f);
-
+		
 		refract.x = clamp(refract.x, +0.001f, +0.999f);
 		refract.y = clamp(refract.y, +0.001f, +0.999f);
-
+		
 		vec4 reflect_color = texture(reflection, reflect);
 		vec4 refract_color = texture(refraction, refract);
-
+		
 		float refractiveness = dot(eye_vector, normal_vector);
 		refractiveness = pow(refractiveness, max(reflectiveness, 0.0f));
-
+		
 		vec4 light_map_normal = texture(lighting_map, duv);
 		normal_vector = vec3(light_map_normal.r * 2.0f - 1.0f, light_map_normal.b, light_map_normal.g * 2.0f - 1.0f);
 		normal_vector = normalize(normal_vector);
-
+		
 		vec3 light = ambient_light_color * (0.5f - ambient_light_power);
 		for (int i = 0; i < light_source_count; ++i) light = light + phong(i, normal_vector, eye_vector);
-
+		
 		out_color = mix(reflect_color, refract_color, refractiveness);
-		out_color = mix(water_color, out_color, 0.75f);
+		out_color = mix(water_color, out_color, water_color_factor);
 		out_color = vec4(out_color.xyz * light, 1.0f);
 		out_color = mix(skybox, out_color, visibility);
+		out_color.a = clamp(depth, 0.0f, water_edge_blend) / water_edge_blend;
 	}

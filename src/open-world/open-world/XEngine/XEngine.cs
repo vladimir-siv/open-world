@@ -141,6 +141,23 @@ namespace XEngine
 			}
 		}
 
+		private static bool _Blending = false;
+		public static bool Blending
+		{
+			get
+			{
+				return _Blending;
+			}
+			set
+			{
+				if (value == _Blending) return;
+				_Blending = value;
+				var gl = XEngineContext.Graphics;
+				if (_Blending) { gl.Enable(OpenGL.GL_BLEND); gl.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA); }
+				else { gl.Disable(OpenGL.GL_BLEND); }
+			}
+		}
+
 		private static Color _ClearColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 		public static Color ClearColor
 		{
@@ -163,6 +180,7 @@ namespace XEngine
 			CullFace = true;
 			Texture2D = true;
 			ClipDistance = true;
+			Blending = false;
 		}
 	}
 

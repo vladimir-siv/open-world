@@ -336,6 +336,7 @@ namespace XEngine.Shading
 		
 		public Shader shader { get; set; }
 		public bool CullFace { get; set; } = true;
+		public bool Blend { get; set; } = false;
 		internal bool IsDynamic { get; private set; } = false;
 
 		public Material() { }

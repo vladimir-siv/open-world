@@ -15,17 +15,21 @@ namespace open_world
 		private WaterFrameBuffers WFB = null;
 		private GameObject Water = null;
 
-		private void CreateWater()
+		private void CreateWater(Terrain terrain)
 		{
 			WFB = new WaterFrameBuffers();
 
 			var water_terrain = Terrain.GenerateFlat(1000.0f, 25u, 1000u);
-
+			var terrain_heightmap = Texture2D.Yield("$terrain/heightmap", terrain.ToBitmap(500u));
+			
 			Water = GameObject.CreateUnlinked("Water");
 			Water.mesh = new Mesh();
 			Water.mesh.shape = water_terrain.Shape.Use(VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV);
 			Water.material = new Material(Shader.Find("water"));
 			Water.material.Set("water_color", Color.FromBytes(66, 135, 245));
+			Water.material.Set("water_color_factor", 0.75f);
+			Water.material.Set("water_edge_clearness", 25.0f);
+			Water.material.Set("water_edge_blend", 2.5f);
 			Water.material.Set("wave_strength", 0.04f);
 			Water.material.Set("wave_speed", 0.03f);
 			Water.material.Set("wave_timestamp", 0.0f);
@@ -36,6 +40,11 @@ namespace open_world
 			Water.material.Set("refraction", WFB.RefractionFBO.TextureAttachment);
 			Water.material.Set("dudv", Texture2D.FindPNG("Maps/water_dudv"));
 			Water.material.Set("lighting_map", Texture2D.FindPNG("Maps/water_normal_map"));
+			Water.material.Set("terrain_length", terrain.Length);
+			Water.material.Set("terrain_max_height", terrain.MaxHeight);
+			Water.material.Set("terrain_min_height", terrain.MinHeight);
+			Water.material.Set("terrain_heightmap", terrain_heightmap);
+			Water.material.Blend = true;
 			Water.material.MarkDynamic();
 		}
 
@@ -49,7 +58,7 @@ namespace open_world
 
 			//using (var heightmap = new TextureHeightMap("Ground/heightmap.png")) terrain = Terrain.Generate(500.0f, 50u, heightmap);
 			var terrain = Terrain.Generate(500.0f, 50u, new ProceduralHeightMap(100u, 8357));
-
+			
 			var Crate = new Prefab("Crate");
 			Crate.mesh = new Mesh();
 			Crate.mesh.shape = new Cube() { Attributes = VertexAttribute.POSITION | VertexAttribute.NORMAL | VertexAttribute.UV };
@@ -236,7 +245,7 @@ namespace open_world
 				}
 			}
 
-			CreateWater();
+			CreateWater(terrain);
 
 			MainCamera.Following = Player;
 		}
@@ -250,7 +259,7 @@ namespace open_world
 			SyncScene();
 			ClipDistance = true;
 
-			ClipPlane = new vec4(0.0f, +1.0f, 0.0f, 0.0f);
+			ClipPlane = new vec4(0.0f, +1.0f, 0.0f, +1.0f);
 			WFB.ReflectionFBO.Bind();
 			MainCamera.Reflect();
 			UpdateCamera();

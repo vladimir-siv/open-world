@@ -124,6 +124,7 @@ namespace XEngine.Core
 			if (material.shader.Rotate != -1) gl.UniformMatrix4(material.shader.Rotate, 1, false, rotate);
 			material.Prepare(properties);
 			XEngineState.CullFace = material.CullFace;
+			XEngineState.Blending = material.Blend;
 			gl.DrawElements(mesh.shape.OpenGLShapeType, mesh.shape.IndexCount, OpenGL.GL_UNSIGNED_INT, IntPtr.Zero);
 		}
 

@@ -57,6 +57,25 @@ namespace XEngine.Shading
 			if (name_key != null) XEngineContext.Textures.Add(name_key, texture);
 			return texture;
 		}
+		public static Texture Yield(string name, Bitmap bmp, bool dispose = true)
+		{
+			if (name == null) throw new ArgumentNullException(nameof(name));
+
+			var name_key = name.ToLower();
+
+			if (XEngineContext.Textures.ContainsKey(name_key))
+			{
+				throw new InvalidOperationException($"Texture with name '{name}' already exists.");
+			}
+
+			var texture = new Texture2D();
+			texture.Image = bmp;
+
+			if (dispose) bmp.Dispose();
+
+			XEngineContext.Textures.Add(name_key, texture);
+			return texture;
+		}
 
 		protected override uint TextureType => OpenGL.GL_TEXTURE_2D;
 

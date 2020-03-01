@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 using GlmNet;
 
@@ -32,6 +33,9 @@ namespace XEngine.Terrains
 		private vertex[] Vertices = null;
 		private int[] Indices = null;
 
+		public float MaxHeight { get; private set; } = float.NegativeInfinity;
+		public float MinHeight { get; private set; } = float.PositiveInfinity;
+		
 		public GeometricShape Shape { get; private set; }
 
 		private Terrain(float length, uint tiles, uint granularity)
@@ -61,9 +65,14 @@ namespace XEngine.Terrains
 			{
 				for (var x = 0u; x < vert_count; ++x)
 				{
+					var y = heightmap?.GetHeight(x, z) ?? 0.0f;
+
+					if (y > MaxHeight) MaxHeight = y;
+					if (y < MinHeight) MinHeight = y;
+					
 					Vertices[index(x, z)] = new vertex
 					(
-						new vec3(x * delta_xz - Length / 2.0f, heightmap?.GetHeight(x, z) ?? 0.0f, z * delta_xz - Length / 2.0f),
+						new vec3(x * delta_xz - Length / 2.0f, y, z * delta_xz - Length / 2.0f),
 						color,
 						vector3.up,
 						new vec2(x * delta_uv, z * delta_uv)
@@ -138,6 +147,29 @@ namespace XEngine.Terrains
 			var point = new vec2(x, z);
 
 			return xo + zo >= 1.0f ? point.bcerp(p1, p2, p3) : point.bcerp(p0, p2, p1);
+		}
+
+		public Bitmap ToBitmap(uint granularity)
+		{
+			var vert_count = granularity + 1u;
+			var d = Length / granularity;
+			var l2 = Length / 2.0f;
+			
+			var bmp = new Bitmap((int)vert_count, (int)vert_count);
+
+			for (var z = 0u; z < vert_count; ++z)
+			{
+				for (var x = 0u; x < vert_count; ++x)
+				{
+					var xf = x * d - l2;
+					var zf = z * d - l2;
+					var y = CalculateLocalHeight(xf, zf);
+					var b = (int)(255 * (y - MinHeight) / (MaxHeight - MinHeight));
+					bmp.SetPixel((int)x, (int)z, System.Drawing.Color.FromArgb(255, b, b, b));
+				}
+			}
+
+			return bmp;
 		}
 	}
 }

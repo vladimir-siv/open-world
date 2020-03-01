@@ -43,8 +43,8 @@ namespace XEngine.Rendering
 			gl.DrawBuffer(OpenGL.GL_COLOR_ATTACHMENT0_EXT);
 
 			if (attachments.HasFlag(FBOAttachment.TextureAttachment)) AddTextureAttachment();
-			//if (attachments.HasFlag(FBOAttachment.DepthTextureAttachment)) AddDepthTextureAttachment();
-			//if (attachments.HasFlag(FBOAttachment.DepthBufferAttachment)) AddDepthBufferAttachment();
+			if (attachments.HasFlag(FBOAttachment.DepthTextureAttachment)) AddDepthTextureAttachment();
+			if (attachments.HasFlag(FBOAttachment.DepthBufferAttachment)) AddDepthBufferAttachment();
 
 			gl.BindFramebufferEXT(OpenGL.GL_FRAMEBUFFER_EXT, 0u);
 		}

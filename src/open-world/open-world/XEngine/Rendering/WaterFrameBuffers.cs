@@ -19,14 +19,14 @@ namespace XEngine.Rendering
 			(
 				REFLECTION_WIDTH,
 				REFLECTION_HEIGHT,
-				FBOAttachment.TextureAttachment | FBOAttachment.DepthBufferAttachment
+				FBOAttachment.TextureAttachment// | FBOAttachment.DepthBufferAttachment
 			);
 
 			RefractionFBO = new FrameBuffer
 			(
 				REFRACTION_WIDTH,
 				REFRACTION_HEIGHT,
-				FBOAttachment.TextureAttachment | FBOAttachment.DepthTextureAttachment
+				FBOAttachment.TextureAttachment// | FBOAttachment.DepthBufferAttachment
 			);
 		}
 
